@@ -200,7 +200,7 @@ export default async function IndividualBlogPage({ params }: { params: Promise<{
                     <div className="flex flex-col gap-6">
                     {relatedBlogs.length > 0 ? (
                         relatedBlogs.map(relatedPost => (
-                        <Link key={relatedPost.id} href={`/blog/articles/${relatedPost.slug}`} className="group block">
+                        <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`} className="group block">
                             <div className="flex gap-4 items-start">
                                 {/* Thumbnail */}
                                 <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
