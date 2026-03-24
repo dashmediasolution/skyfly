@@ -77,7 +77,7 @@ export function BookingForm() {
 
           {/* 🚀 THE NEW TRAVELPAYOUTS WIDGET 🚀 */}
           <div className="w-full max-w-5xl mx-auto relative z-20">
-            <TravelpayoutsWidget />
+          <TravelpayoutsWidget />
           </div>
 
         </div>
