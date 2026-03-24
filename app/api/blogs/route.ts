@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; // Keep your preferred import
+import prisma from '@/lib/prisma'; 
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth.config"; // Ensure this path matches your setup
+import { authOptions } from "@/lib/auth.config"; 
 
-// --- POST (Create Blog with Multiple Categories) ---
+// --- POST (Create Blog with Multiple Categories + Focus Keyword) ---
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    // 1. Validate 'categories' array instead of single 'category'
+    // 1. Validate required fields
     if (!data.title || !data.slug || !data.categories || data.categories.length === 0 || !data.content || !data.image) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -28,14 +28,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'This slug (blog URL) is already in use.' }, { status: 409 });
     }
 
-    // 3. Create the blog post (Saving categories array)
+    // 3. Create the blog post
     const newBlog = await prisma.blog.create({
       data: {
         title: data.title,
         slug: data.slug,
-        categories: data.categories, // <--- SAVING ARRAY
+        categories: data.categories,
         content: data.content,
         image: data.image,
+        
+        // 👇 NEW: Save the Focus Keyword (default to empty string if missing)
+        focusKeyword: data.focusKeyword || "", 
+        
         metaTitle: data.metaTitle,
         metaDesc: data.metaDesc,
         metaKeywords: data.metaKeywords,
@@ -54,7 +58,7 @@ export async function POST(req: Request) {
   }
 }
 
-// --- GET (Fetch Blogs with Optional Category Filter & Pagination) ---
+// --- GET (Fetch Blogs) ---
 export async function GET(req: Request) {
     const url = new URL(req.url);
     const categoryName = url.searchParams.get('category');
@@ -67,7 +71,6 @@ export async function GET(req: Request) {
     const whereClause: any = {};
 
     if (categoryName) {
-        // Correct Prisma syntax for filtering a String[] array
         whereClause.categories = { has: categoryName };
     }
 
@@ -87,10 +90,8 @@ export async function GET(req: Request) {
             id: blog.id,
             title: blog.title,
             slug: blog.slug,
-            
-            // ✅ FIX: Pass the full array to the frontend so cards can show multiple badges
             categories: blog.categories, 
-
+            
             // Fallbacks for backward compatibility
             category: (blog.categories && blog.categories.length > 0) ? blog.categories[0] : "Uncategorized",
             categorySlug: (blog.categories && blog.categories.length > 0) ? blog.categories[0].toLowerCase().replace(/\s+/g, '-') : "uncategorized",
@@ -100,6 +101,10 @@ export async function GET(req: Request) {
             authorName: blog.author?.name || "Unknown Author",
             publishDate: new Date(blog.createdAt).toLocaleDateString('en-GB'),
             content: blog.content,
+            
+            // 👇 NEW: Include focusKeyword in response
+            focusKeyword: blog.focusKeyword || "",
+
             metaTitle: blog.metaTitle,
             metaDesc: blog.metaDesc,
             metaKeywords: blog.metaKeywords,

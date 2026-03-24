@@ -4,9 +4,10 @@ import '@/globals.css'; // <-- Loads the global CSS
 import { SessionProvider } from "@/components/auth/session-provider";
 import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
+import Script from 'next/script';
 
 
-const figtree = Figtree({ 
+const figtree = Figtree({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
 });
@@ -74,6 +75,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+       <Script 
+          src="https://emrldtp.cc/NTExMDMz.js?t=511033" 
+          strategy="afterInteractive" 
+        />
+      </head>
       {/* Use the font here */}
       <body className={`${figtree.className}`}>
         {/* SessionProvider and Toaster wrap EVERYTHING */}

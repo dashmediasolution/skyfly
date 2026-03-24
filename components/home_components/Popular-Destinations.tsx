@@ -56,10 +56,6 @@ interface DestinationImageCardProps {
 function DestinationImageCard({ imageUrl, category, title, href }: DestinationImageCardProps) {
   return (
     <Link href={href} className="block group h-full w-full">
-      {/* UPDATED: Removed fixed width (w-[250px]). 
-         Now uses w-full to fill the carousel slot.
-         Increased height to h-[400px] for a better poster look.
-      */}
       <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-md group-hover:shadow-xl">
         {/* Background Image */}
         <Image
