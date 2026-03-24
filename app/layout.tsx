@@ -78,7 +78,7 @@ export default async function RootLayout({
       <head>
        <Script 
           src="https://emrldtp.cc/NTExMDMz.js?t=511033" 
-          strategy="afterInteractive" 
+          strategy="beforeInteractive" 
         />
       </head>
       {/* Use the font here */}
