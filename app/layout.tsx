@@ -76,21 +76,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          data-noptimize="1"
-          data-cfasync="false"
-          data-wpfc-render="false"
-          data-no-defer="1"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                  var script = document.createElement("script");
-                  script.async = 1;
-                  script.src = 'https://emrldtp.cc/NTExMDMz.js?t=511033';
-                  document.head.appendChild(script);
-              })();
-            `,
-          }}
+        <Script 
+          src="https://emrldtp.cc/NTExMDMz.js?t=511033" 
+          strategy="afterInteractive" 
         />
       </head>
       {/* Use the font here */}
