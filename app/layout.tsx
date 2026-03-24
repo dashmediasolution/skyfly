@@ -76,9 +76,17 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-       <Script 
-          src="https://emrldtp.cc/NTExMDMz.js?t=511033" 
-          strategy="beforeInteractive" 
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                  var script = document.createElement("script");
+                  script.async = 1;
+                  script.src = 'https://emrldtp.cc/NTExMDMz.js?t=511033';
+                  document.head.appendChild(script);
+              })();
+            `,
+          }}
         />
       </head>
       {/* Use the font here */}
