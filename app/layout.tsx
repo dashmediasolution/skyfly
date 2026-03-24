@@ -77,6 +77,10 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <script
+          data-noptimize="1"
+          data-cfasync="false"
+          data-wpfc-render="false"
+          data-no-defer="1"
           dangerouslySetInnerHTML={{
             __html: `
               (function () {
