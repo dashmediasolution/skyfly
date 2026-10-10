@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     default: 'SkyFlyWithUs - Cheap Flights and Travel Blogs',
     template: '%s | SkyFlyWithUs', // %s will be replaced by the page's title
   },
+   verification: {
+        google: "ag0nLen_8F-Yes_X1qwJRCHvc_hNnblzOSXncz2RAW0",
+    },
   description: 'Book cheap flights and read travel blogs on SkyFlyWithUs.',
   robots: {
     index: false, // Tells search engines NOT to index any page
