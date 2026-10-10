@@ -4,8 +4,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log("🔄 Starting migration...")
-
+ 
   // 1. Get all blogs using a raw query to access the hidden 'category' field
   // (Prisma hides fields not in schema, so we use findRaw)
   const allBlogs = await prisma.blog.findRaw({}) as unknown as any[]

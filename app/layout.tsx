@@ -5,6 +5,7 @@ import { SessionProvider } from "@/components/auth/session-provider";
 import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
 import Script from 'next/script';
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 
 const figtree = Figtree({
@@ -88,6 +89,7 @@ export default async function RootLayout({
           {children} {/* <-- This will be your (main) or (dashboard) layout */}
           <Toaster />
         </SessionProvider>
+        <GoogleAnalytics gaId="G-XJF89G4WG3" />
       </body>
     </html>
   );
