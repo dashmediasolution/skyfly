@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Figtree } from 'next/font/google'; // Or Quicksand, just keep it consistent
-import '@/globals.css'; // <-- Loads the global CSS
+import "../globals.css";
 import { SessionProvider } from "@/components/auth/session-provider";
 import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
@@ -13,62 +13,94 @@ const figtree = Figtree({
   weight: ['300', '400', '500', '600', '700'],
 });
 
-export const metadata: Metadata = {
 
-  metadataBase: new URL('https://skyflywithus.com'),
+export const metadata: Metadata = {
+  metadataBase: new URL("https://skyflywithus.com"),
 
   title: {
-    default: 'SkyFlyWithUs - Cheap Flights and Travel Blogs',
-    template: '%s | SkyFlyWithUs', // %s will be replaced by the page's title
+    default: "SkyFlyWithUs - Cheap Flights and Travel Blogs",
+    template: "%s | SkyFlyWithUs",
   },
-   verification: {
-        google: "ag0nLen_8F-Yes_X1qwJRCHvc_hNnblzOSXncz2RAW0",
-    },
-  description: 'Book cheap flights and read travel blogs on SkyFlyWithUs.',
+
+  description: "Book cheap flights and read travel blogs on SkyFlyWithUs.",
+
+  verification: {
+    google: "ag0nLen_8F-Yes_X1qwJRCHvc_hNnblzOSXncz2RAW0",
+  },
+
+  alternates: {
+    canonical: "/",
+  },
+
+  authors: [{ name: "skyflywithus.com" }],
+  publisher: "skyflywithus.com",
+
   robots: {
-    index: false, // Tells search engines NOT to index any page
-    follow: false, // Tells search engines NOT to follow any links from any page
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
-  // 1. ICONS (Favicon, Apple Touch, Shortcut)
+
+  other: {
+    pragma: "no-cache",
+    Language: "English",
+    Copyright: "skyflywithus.com",
+    distribution: "Global",
+    country: "USA",
+    rating: "general",
+    "googlebot-image": "index,follow",
+    "MSNBot-Media": "index,follow",
+    Author: "Public",
+    "Resource-Type": "document",
+    YahooSeeker: "index,follow",
+    "geo.region": "US-FL",
+    "geo.placename": "Panama City",
+    "geo.position": "30.181372;-85.697392",
+    ICBM: "30.181372, -85.697392",
+  },
+
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.png', type: 'image/png' },
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png" },
     ],
-    shortcut: ['/favicon.icon'],
+    shortcut: ["/favicon.ico"],
     apple: [
-      { url: '/apple-touch-icon.png' },
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
 
-  // 2. OPEN GRAPH (Facebook, WhatsApp, Instagram, LinkedIn)
   openGraph: {
     title: "SkyFlyWithUs - Fly For Less",
-    description: "Compare hundreds of airlines and book the cheapest flights instantly. No hidden fees.",
-    url: 'https://skyflywithus.com',
-    siteName: 'SkyFlyWithUs',
+    description:
+      "Compare hundreds of airlines and explore affordable flight options with SkyFlyWithUs.",
+    url: "https://skyflywithus.com/",
+    siteName: "SkyFlyWithUs",
     images: [
       {
-        url: '/og-image.jpg', // Must be in public folder, approx 1200x630px
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: 'SkyFlyWithUs - Flight Booking Platform',
+        alt: "SkyFlyWithUs - Flight Booking Platform",
       },
     ],
-    locale: 'en_US',
-    type: 'website',
+    locale: "en_US",
+    type: "website",
   },
 
-  // 3. TWITTER CARDS (Twitter/X)
   twitter: {
-    card: 'summary_large_image', // Shows the big image
+    card: "summary_large_image",
     title: "SkyFlyWithUs - Best Flight Deals",
-    description: "Don't overpay for flights. Compare prices and book smart with SkyFlyWithUs.",
-    images: ['/og-image.jpg'], // Re-use the OG image or a specific Twitter one
-    creator: '@SkyFlyWithUs', // Your Twitter handle
+    description:
+      "Explore affordable flights, compare options, and plan your next trip with SkyFlyWithUs.",
+    images: ["/og-image.jpg"],
+    creator: "@SkyFlyWithUs",
   },
 };
+
 
 export default async function RootLayout({
   children,

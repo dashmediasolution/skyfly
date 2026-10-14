@@ -66,7 +66,7 @@ export default function ContactPageClient() {
   };
 
   return (
-    <main className="w-full py-24 bg-[#FFF5EB]/50 min-h-screen">
+    <main className="w-full py-24 bg-primary/10 min-h-screen">
       
       {/* Container to align content properly */}
       <div className="container mx-auto px-6 mt-10">
@@ -75,7 +75,7 @@ export default function ContactPageClient() {
           
           {/* Left Side: Contact Info */}
           <div className="max-w-lg space-y-3 lg:pt-10">
-            <h3 className="text-[#FF8C00] text-lg font-bold uppercase tracking-wider">Contact Us</h3>
+            <h3 className="text-primary text-lg font-bold uppercase tracking-wider">Contact Us</h3>
             <p className="text-black dark:text-white text-4xl font-bold sm:text-5xl leading-tight">
               Let us know how <br /> we can help
             </p>
@@ -88,7 +88,7 @@ export default function ContactPageClient() {
               <ul className="space-y-6">
                 {contactMethods.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-x-4">
-                    <div className="flex-none p-3 rounded-full bg-white border border-gray-200 text-[#FF8C00]">
+                    <div className="flex-none p-3 rounded-full bg-white border border-gray-200 text-primary">
                         {item.icon}
                     </div>
                     <div>
@@ -106,7 +106,7 @@ export default function ContactPageClient() {
           </div>
 
           {/* Right Side: Form */}
-          <div className="flex-1 p-8 sm:p-10 border border-orange-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl mt-12 lg:mt-0 sm:max-w-lg lg:max-w-md">
+          <div className="flex-1 p-8 sm:p-10 border border-green-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl mt-12 lg:mt-0 sm:max-w-lg lg:max-w-md">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="full-name" className="font-medium text-gray-700 dark:text-gray-200">
@@ -119,7 +119,7 @@ export default function ContactPageClient() {
                   placeholder="John Doe"
                   required
                   disabled={loading}
-                  className="h-11 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-[#FF8C00]"
+                  className="h-11 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-primary"
                 />
               </div>
               <div className="space-y-2">
@@ -133,7 +133,7 @@ export default function ContactPageClient() {
                   placeholder="john@example.com"
                   required
                   disabled={loading}
-                  className="h-11 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-[#FF8C00]"
+                  className="h-11 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-primary"
                 />
               </div>
               <div className="space-y-2">
@@ -146,7 +146,7 @@ export default function ContactPageClient() {
                   type="text"
                   placeholder="Your Company"
                   disabled={loading}
-                  className="h-11 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-[#FF8C00]"
+                  className="h-11 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-primary"
                 />
               </div>
               <div className="space-y-2">
@@ -158,13 +158,13 @@ export default function ContactPageClient() {
                   name="message"
                   required
                   placeholder="How can we help you?"
-                  className="h-36 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-[#FF8C00] resize-none"
+                  className="h-36 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus-visible:ring-primary resize-none"
                   disabled={loading}
                 />
               </div>
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-bold bg-[#FF8C00] hover:bg-[#ff9514] text-white rounded-lg shadow-md transition-all hover:shadow-lg mt-2"
+                className="w-full h-12 text-base font-bold bg-primary/80 hover:bg-primary text-white rounded-lg shadow-md transition-all hover:shadow-lg mt-2"
                 disabled={loading}
               >
                 {loading ? "Sending Message..." : "Send Message"}

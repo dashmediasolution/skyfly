@@ -53,12 +53,12 @@ const Testimonial = React.forwardRef<HTMLDivElement, TestimonialProps>(
           <div className="flex items-center gap-4 justify-start pt-4">
               <Avatar>
                 {image && <AvatarImage src={image} alt={name} />}
-                <AvatarFallback>{name[0]}</AvatarFallback>
+                <AvatarFallback className="bg-primary">{name[0]}</AvatarFallback>
               </Avatar>
 
               <div className="flex flex-col">
                 <h3 className="font-semibold text-gray-900 dark:text-white">{name}</h3>
-                <p className="text-sm text-[#FF8C00] font-medium"> {/* Orange for role */}
+                <p className="text-sm text-primary font-medium"> {/* Orange for role */}
                   {role}
                   {company && <span className="text-gray-500 font-normal"> @ {company}</span>}
                 </p>

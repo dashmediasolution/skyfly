@@ -53,7 +53,7 @@ const TermsAndConditionsPage: React.FC = () => {
             <p>
               Our website provides general information about flights and travel. While we have Professional duties to keep our content <strong>accurate and helpful</strong>, we cannot guarantee that all information is always complete or up to date.
             </p>
-            <p className="mt-2 p-3 bg-yellow-50 border-l-4 border-yellow-500 italic">
+            <p className="mt-2 p-3 bg-primary-50 border-l-4 border-green-500 italic">
               We are not legally responsible for any issues, losses, or decisions that result from using the information on our site. We recommend verifying details with airlines or official sources before making any travel plans.
             </p>
           </section>

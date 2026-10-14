@@ -33,7 +33,7 @@ export function Testimonials() {
                 {/* Header - Left Aligned */}
                 <div className="text-left max-w-xl space-y-4">
                     <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
-                        Reviews & <span className='text-[#FF8C00]'>Experiences</span>
+                        Reviews & <span className='text-primary'>Experiences</span>
                     </h2>
                     <p className='text-lg text-gray-600 dark:text-gray-300'>
                         See what our happy customers have to say about how their blog helps to provide flight information.

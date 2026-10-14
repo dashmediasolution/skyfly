@@ -4,7 +4,12 @@ import { PopularDestinations } from "@/components/home_components/Popular-Destin
 import { RecentArticles } from "@/components/home_components/Recent-Articles";
 import { Testimonials } from "@/components/home_components/Testimonials";
 import type { Metadata } from 'next';
-
+import HeroSection from "@/components/homePage/HeroSerction";
+import Benefits from "@/components/homePage/Benefits";
+import FlightSearch from "@/components/homePage/FlightSearch";
+import HandpickedDestinations from "@/components/handpicked-destinations";
+import TopTravelDeals from "@/components/top-travel-deals";
+import TravelInformation from "@/components/homePage/TravelInformation";
 export const metadata: Metadata = {
   title: 'Find Cheap Flights & Travel Guides', // This will override the default
   description: 'SkyFlyWithUs: Your main destination for booking cheap flights and discovering inspiring travel blogs and guides.',
@@ -14,10 +19,17 @@ export default function Home() {
   return (
 
     <main className="flex min-h-screen bg-white flex-col items-center justify-between ">
-      <BookingForm />
-      <PopularDestinations/>
-      <Testimonials/>
-      <RecentArticles/>
+      <HeroSection
+        image="/images/HeroBanner.png"
+        alt="Explore destinations around the world"
+      />
+      <FlightSearch />
+      <Benefits />
+      <HandpickedDestinations />
+      <TopTravelDeals />
+      <RecentArticles />
+      <TravelInformation />
+      <Testimonials />
     </main>
   );
 }
