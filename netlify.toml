@@ -1,4 +1,4 @@
 
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "NEXTAUTH_URL"
+  SECRETS_SCAN_OMIT_KEYS = "NEXTAUTH_URL,DATABASE_URL"
   SECRETS_SCAN_OMIT_PATHS = ".netlify/.next/cache/**"
