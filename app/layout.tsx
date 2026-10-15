@@ -32,19 +32,30 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 
-  authors: [{ name: "skyflywithus.com" }],
-  publisher: "skyflywithus.com",
+  // authors: [{ name: "skyflywithus.com" }],
+  // publisher: "skyflywithus.com",
 
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
+  // robots: {
+  //   index: true,
+  //   follow: true,
+  //   googleBot: {
+  //     index: true,
+  //     follow: true,
+  //   },
+  // },
+
+robots: {
+  index: false,
+  follow: false,
+  googleBot: {
+    index: false,
+    follow: false,
+    noimageindex: true,
+    "max-video-preview": -1,
+    "max-image-preview": "none",
+    "max-snippet": -1,
   },
-
- 
+},
 
   other: {
     pragma: "no-cache",
@@ -75,23 +86,23 @@ export const metadata: Metadata = {
     ],
   },
 
-  openGraph: {
-    title: "SkyFlyWithUs - Fly For Less",
-    description:
-      "Compare hundreds of airlines and explore affordable flight options with SkyFlyWithUs.",
-    url: "https://skyflywithus.com/",
-    siteName: "SkyFlyWithUs",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SkyFlyWithUs - Flight Booking Platform",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
+  // openGraph: {
+  //   title: "SkyFlyWithUs - Fly For Less",
+  //   description:
+  //     "Compare hundreds of airlines and explore affordable flight options with SkyFlyWithUs.",
+  //   url: "https://skyflywithus.com/",
+  //   siteName: "SkyFlyWithUs",
+  //   images: [
+  //     {
+  //       url: "/og-image.jpg",
+  //       width: 1200,
+  //       height: 630,
+  //       alt: "SkyFlyWithUs - Flight Booking Platform",
+  //     },
+  //   ],
+  //   locale: "en_US",
+  //   type: "website",
+  // },
 
   twitter: {
     card: "summary_large_image",
