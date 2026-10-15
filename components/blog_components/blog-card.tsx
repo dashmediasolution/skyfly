@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -12,13 +13,11 @@ export interface FaqItem {
   answer: string;
 }
 
-// Define the shape of a blog article
 export interface Article {
   id: string;
   slug: string;
-  // Support both single string (legacy) and array (new)
-  category: string; 
-  categories?: string[]; 
+  category: string;
+  categories?: string[];
   categorySlug: string;
   title: string;
   content: string;
@@ -37,75 +36,72 @@ interface ArticleCardProps {
 }
 
 export function BlogCard({ article, className }: ArticleCardProps) {
-  // Logic: Use the new 'categories' array if it exists and has items.
-  // Otherwise, fall back to the single 'category' string wrapped in an array.
-  const displayCategories = 
-    article.categories && article.categories.length > 0 
-      ? article.categories 
+  const displayCategories =
+    article.categories && article.categories.length > 0
+      ? article.categories
       : [article.category];
 
-  // We limit to 3 categories to keep the card clean
   const visibleCategories = displayCategories.slice(0, 3);
 
   return (
-    <Link 
-      href={`/blog/${article.slug}`} 
-      key={article.id} 
+    <Link
+      href={`/blog/${article.slug}`}
       className={cn("group block h-full", className)}
     >
-      <div className="relative flex flex-col h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-        
-        {/* Image Container with Zoom Effect */}
+      <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-primary/40 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
+        {/* Image */}
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image
             src={article.imageUrl}
             alt={article.title}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          {/* Floating badges removed from here */}
         </div>
 
         {/* Card Content */}
         <div className="flex flex-1 flex-col p-6">
-          
-          {/* UPDATED: Categories (Placed above title | Style: Cat 1 | Cat 2) */}
-          <div className="mb-3 flex flex-wrap items-center text-xs font-bold uppercase tracking-wider text-[#FF8C00]">
+          {/* Categories */}
+          <div className="mb-3 flex flex-wrap items-center text-xs font-bold uppercase tracking-wider text-primary">
             {visibleCategories.map((cat, index) => (
-              <div key={index} className="flex items-center">
+              <div key={`${cat}-${index}`} className="flex items-center">
                 <span>{cat}</span>
-                {/* Add pipe separator if it's not the last item in the list */}
+
                 {index < visibleCategories.length - 1 && (
-                   <span className="mx-2 text-gray-300 font-light text-[10px]">|</span>
+                  <span className="mx-2 text-primary/40 text-[10px] font-light">
+                    |
+                  </span>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Title & Arrow */}
-          <div className="flex justify-between items-start gap-4 mb-3">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight line-clamp-2 group-hover:text-[#FF8C00] transition-colors">
+          {/* Title and Arrow */}
+          <div className="mb-3 flex items-start justify-between gap-4">
+            <h3 className="line-clamp-2 text-xl font-bold leading-tight text-gray-900 transition-colors group-hover:text-primary dark:text-white">
               {article.title}
             </h3>
-            <ArrowUpRight className="h-5 w-5 text-gray-400 group-hover:text-[#FF8C00] transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300" />
+
+            <ArrowUpRight className="h-5 w-5 shrink-0 translate-y-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
           </div>
 
           {/* Description */}
-          <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-3 mb-6 flex-grow">
+          <p className="mb-6 flex-grow line-clamp-3 text-sm text-gray-500 dark:text-gray-400">
             {article.metaDesc}
           </p>
 
-          {/* Footer: Divider, Author, Date */}
-          <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+          {/* Footer */}
+          <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-4 dark:border-gray-800">
             <div className="flex items-center gap-2.5">
               <LetterAvatar name={article.authorName} size={32} />
+
               <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                 {article.authorName}
               </span>
             </div>
-            
-            <div className="flex items-center text-xs text-gray-400 font-medium">
+
+            <div className="flex items-center text-xs font-medium text-gray-400">
               <CalendarDays className="mr-1.5 h-3.5 w-3.5" />
               {article.publishDate}
             </div>
