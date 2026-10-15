@@ -1,5 +1,4 @@
-
-"use client";
+ "use client";
 
 import { useState } from "react";
 import {
@@ -33,18 +32,73 @@ type Props = {
 export default function InquiryDialog({
     open,
     onOpenChange,
+    from,
+    to,
+    departure,
+    returnDate,
+    travellers,
+    searchType,
 }: Props) {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(
+        event: React.FormEvent<HTMLFormElement>
+    ) {
         event.preventDefault();
-        setSubmitted(true);
+
+        if (loading) return;
+
+        setLoading(true);
+        setError("");
+
+        try {
+            const response = await fetch("/api/inquiry", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: name.trim(),
+                    email: email.trim(),
+                    phone: phone.trim(),
+                    from,
+                    to,
+                    departure,
+                    returnDate,
+                    travellers,
+                    searchType,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.message ||
+                        "Unable to send your inquiry. Please try again."
+                );
+            }
+
+            setSubmitted(true);
+        } catch (err) {
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Something went wrong. Please try again."
+            );
+        } finally {
+            setLoading(false);
+        }
     }
 
     function handleClose(nextOpen: boolean) {
+        if (loading && !nextOpen) return;
+
         onOpenChange(nextOpen);
 
         if (!nextOpen) {
@@ -53,18 +107,17 @@ export default function InquiryDialog({
                 setName("");
                 setPhone("");
                 setEmail("");
+                setError("");
+                setLoading(false);
             }, 200);
         }
     }
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent
-                className="max-h-[95dvh] w-[calc(100%-24px)] max-w-[560px] overflow-y-auto rounded-2xl border border-border bg-background p-0 text-foreground shadow-2xl"
-            >
+            <DialogContent className="max-h-[95dvh] w-[calc(100%-24px)] max-w-[560px] overflow-y-auto rounded-2xl border border-border bg-background p-0 text-foreground shadow-2xl">
                 {!submitted ? (
                     <div className="relative px-5 pb-5 pt-4 sm:px-7 sm:pb-5 sm:pt-5">
-                        {/* Header */}
                         <DialogHeader className="space-y-1 text-center">
                             <DialogTitle className="text-xl font-extrabold leading-tight text-foreground sm:text-2xl">
                                 We're Here to Help!
@@ -76,7 +129,6 @@ export default function InquiryDialog({
                             </DialogDescription>
                         </DialogHeader>
 
-                        {/* Phone Number */}
                         <a
                             href="tel:+18555093791"
                             className="mt-3 flex items-center justify-center gap-2 text-xl font-extrabold tracking-tight text-primary transition-opacity hover:opacity-80 sm:text-2xl"
@@ -85,7 +137,6 @@ export default function InquiryDialog({
                             <span>1-855-509-3791</span>
                         </a>
 
-                        {/* Discount Banner */}
                         <div className="mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-xl bg-primary/5 px-3 py-3 text-center">
                             <span className="text-xs font-medium text-foreground sm:text-sm">
                                 Save Up to
@@ -100,7 +151,6 @@ export default function InquiryDialog({
                             </span>
                         </div>
 
-                        {/* Form Heading */}
                         <div className="mb-4 mt-5">
                             <h3 className="text-lg font-extrabold leading-tight text-foreground sm:text-xl">
                                 Let's Get You in Touch
@@ -112,7 +162,6 @@ export default function InquiryDialog({
                             </p>
                         </div>
 
-                        {/* Contact Form */}
                         <form onSubmit={handleSubmit} className="space-y-3">
                             <div className="space-y-1.5">
                                 <Label
@@ -132,6 +181,7 @@ export default function InquiryDialog({
                                     autoComplete="name"
                                     required
                                     minLength={2}
+                                    maxLength={100}
                                     className="h-10 rounded-lg border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
                                 />
                             </div>
@@ -154,6 +204,7 @@ export default function InquiryDialog({
                                     placeholder="you@example.com"
                                     autoComplete="email"
                                     required
+                                    maxLength={254}
                                     className="h-10 rounded-lg border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
                                 />
                             </div>
@@ -182,12 +233,25 @@ export default function InquiryDialog({
                                 />
                             </div>
 
+                            {error && (
+                                <p
+                                    role="alert"
+                                    className="text-sm text-destructive"
+                                >
+                                    {error}
+                                </p>
+                            )}
+
                             <Button
                                 type="submit"
-                                className="h-10 w-full rounded-xl bg-primary text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:bg-primary/90"
+                                disabled={loading}
+                                className="h-10 w-full rounded-xl bg-primary text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                Send Message
-                                <ArrowRight className="ml-2 h-4 w-4" />
+                                {loading ? "Sending..." : "Send Message"}
+
+                                {!loading && (
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                )}
                             </Button>
 
                             <p className="text-center text-[11px] leading-4 text-muted-foreground">
@@ -197,7 +261,6 @@ export default function InquiryDialog({
                         </form>
                     </div>
                 ) : (
-                    /* Success State */
                     <div className="px-6 py-7 text-center sm:px-8 sm:py-8">
                         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                             <CheckCircle2 className="h-8 w-8" />
@@ -209,8 +272,8 @@ export default function InquiryDialog({
                             </DialogTitle>
 
                             <DialogDescription className="text-center text-sm leading-6 text-muted-foreground">
-                                Your details have been entered successfully.
-                                Contact our team if you need assistance with
+                                Your inquiry has been sent successfully.
+                                Our team will reach out to assist you with
                                 your travel plans.
                             </DialogDescription>
                         </DialogHeader>
@@ -225,6 +288,7 @@ export default function InquiryDialog({
                                 <p className="text-xs text-muted-foreground">
                                     Need immediate assistance?
                                 </p>
+
                                 <p className="mt-1 text-lg font-extrabold">
                                     1-855-509-3791
                                 </p>
@@ -244,3 +308,4 @@ export default function InquiryDialog({
         </Dialog>
     );
 }
+ 
