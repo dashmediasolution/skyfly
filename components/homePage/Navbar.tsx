@@ -27,7 +27,7 @@ export default function Navbar() {
 
                 <Link href="/" className="flex shrink-0 items-center">
                     <Image
-                        src="/images/skyflywithuslogo.png"
+                        src="/images/skyflywithuslogo.svg"
                         alt="SkyFlyWithUs"
                         width={185}
                         height={42}

@@ -6,6 +6,7 @@ import {
   Globe2,
   MapPin,
 } from "lucide-react";
+import Image from "next/image";
 import {
   FaFacebook,
   FaInstagram,
@@ -53,16 +54,16 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-[1.3fr_0.8fr_1.4fr_0.8fr] lg:gap-10 xl:gap-14">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link
-              href="/"
-              aria-label="SkyFlyWithUs home"
-              className="inline-flex items-center gap-2.5"
-            >
-              <span className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                SkyFly
-                <span className="text-white/75">WithUs</span>
-              </span>
-            </Link>
+            <Link href="/" className="flex shrink-0 items-center">
+                    <Image
+                        src="/images/skyflywithuslogo.svg"
+                        alt="SkyFlyWithUs"
+                        width={185}
+                        height={42}
+                        priority
+                        className="h-auto w-[150px] sm:w-[185px] object-contain"
+                    />
+                </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-7 text-white/90 sm:text-base">
               From local escapes to global adventures, find helpful travel
