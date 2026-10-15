@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import HeroSection from "@/components/homePage/HeroSerction";
 import FlightSearch from "@/components/homePage/FlightSearch";
+import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import {
     ShieldCheck,
@@ -15,6 +16,13 @@ import {
     MapPin,
 } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "Flights | SkyFlyWithUs",
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 const benefits = [
     {
         title: "Best Price Guarantee",
