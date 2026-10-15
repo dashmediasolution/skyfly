@@ -44,7 +44,7 @@ export const destinations = [
 ];
 export const travelDeals = [
   {
-    name: "Thailand Packages",
+    name: "Thailand",
     destination: "Thailand",
     tagline: "Beaches, culture & island getaways.",
     overlayTitle: "Tropical Bliss",
@@ -54,7 +54,7 @@ export const travelDeals = [
   },
   
   {
-    name: "Europe Packages",
+    name: "Europe",
     destination: "Europe",
     tagline: "Historic cities, breathtaking views.",
     overlayTitle: "Historic Wonders",
@@ -63,7 +63,7 @@ export const travelDeals = [
       "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b",
   },
   {
-    name: "Maldives Packages",
+    name: "Maldives",
     destination: "Maldives",
     tagline: "Luxury stays, crystal waters & peace.",
     overlayTitle: "Pure Paradise",
@@ -72,7 +72,7 @@ export const travelDeals = [
       "https://images.unsplash.com/photo-1514282401047-d79a71a590e8",
   },
   {
-    name: "Dubai Packages",
+    name: "Dubai",
     destination: "Dubai",
     tagline: "Modern marvels, shopping & thrills.",
     overlayTitle: "Modern Marvels",
@@ -81,7 +81,7 @@ export const travelDeals = [
       "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
   },
   {
-    name: "Switzerland Packages",
+    name: "Switzerland",
     destination: "Switzerland",
     tagline: "Alpine beauty, lakes & scenic railways.",
     overlayTitle: "Alpine Beauty",

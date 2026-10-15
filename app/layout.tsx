@@ -44,6 +44,8 @@ export const metadata: Metadata = {
     },
   },
 
+ 
+
   other: {
     pragma: "no-cache",
     Language: "English",
