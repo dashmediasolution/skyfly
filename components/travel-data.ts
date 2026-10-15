@@ -1,3 +1,9 @@
+import {
+  Gift,
+  Tag,
+  Heart,
+} from "lucide-react";
+
 export const destinations = [
   {
     name: "Paris",
@@ -42,52 +48,43 @@ export const destinations = [
     image: "/images/destinations/image003.png",
   },
 ];
-export const travelDeals = [
+
+export const deals = [
   {
-    name: "Thailand",
-    destination: "Thailand",
-    tagline: "Beaches, culture & island getaways.",
-    overlayTitle: "Tropical Bliss",
-    discount: "Up to 40% Off",
-    image:
-      "https://images.unsplash.com/photo-1528181304800-259b08848526",
-  },
-  
-  {
-    name: "Europe",
-    destination: "Europe",
-    tagline: "Historic cities, breathtaking views.",
-    overlayTitle: "Historic Wonders",
-    discount: "Up to 35% Off",
-    image:
-      "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b",
+    slug: "christmas-day-offer",
+    title: "Christmas Day Offer",
+    destination: "Christmas",
+    description:
+      "Celebrate Christmas with festive getaways and seasonal flight deals.",
+    category: "Christmas Special",
+    overlayTitle: "Christmas Special Offers",
+    discount: "Limited Time Offer",
+    image: "/images/christmasDeal.webp",
+    Icon: Gift,
   },
   {
-    name: "Maldives",
-    destination: "Maldives",
-    tagline: "Luxury stays, crystal waters & peace.",
-    overlayTitle: "Pure Paradise",
-    discount: "Up to 30% Off",
-    image:
-      "https://images.unsplash.com/photo-1514282401047-d79a71a590e8",
+    slug: "black-friday-offer",
+    title: "Black Friday Offer",
+    destination: "Black Friday",
+    description:
+      "Explore Black Friday flight deals and plan your next trip for less.",
+    category: "Black Friday Sale",
+    overlayTitle: "Cheap Black Friday Flight Deals",
+    discount: "Black Friday Sale",
+    image: "/images/BlackFridatDeal.webp",
+    Icon: Tag,
   },
   {
-    name: "Dubai",
-    destination: "Dubai",
-    tagline: "Modern marvels, shopping & thrills.",
-    overlayTitle: "Modern Marvels",
-    discount: "Up to 25% Off",
-    image:
-      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
-  },
-  {
-    name: "Switzerland",
-    destination: "Switzerland",
-    tagline: "Alpine beauty, lakes & scenic railways.",
-    overlayTitle: "Alpine Beauty",
-    discount: "Up to 20% Off",
-    image:
-      "https://images.unsplash.com/photo-1531366936337-7c912a4589a7",
+    slug: "valentines-day-offer",
+    title: "Valentine’s Day Offer",
+    destination: "Valentines Day",
+    description:
+      "Plan a romantic getaway with flight deals for your special someone.",
+    category: "Valentine’s Sale",
+    overlayTitle: "Cheap Valentine’s Day Flights",
+    discount: "Valentine’s Sale",
+    image: "/images/valentineDeal.webp",
+    Icon: Heart,
   },
 ];
 

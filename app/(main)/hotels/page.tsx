@@ -14,6 +14,13 @@ import {
   Plane,
   CheckCircle2,
 } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 
 const hotels = [
   {
@@ -100,6 +107,21 @@ const hotels = [
 ];
 
 const destinations = [
+  {
+  name: "Paris",
+  image:
+    "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=700&q=85",
+},
+{
+  name: "Tokyo",
+  image:
+    "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=700&q=85",
+},
+{
+  name: "Bali",
+  image:
+    "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=700&q=85",
+},
   {
     name: "Dubai",
     image:
@@ -310,12 +332,12 @@ export default function HotelsBookingPage() {
                   </div>
 
                   <div className="p-3">
-                    <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-[#202D3C] group-hover:text-[#538440]">
+                    <h3 className="line-clamp-2 min-h-10 text-lg font-bold leading-5 text-[#202D3C] group-hover:text-[#538440]">
                       {hotel.name}
                     </h3>
 
                     <div className="mt-2 flex items-center justify-between gap-2">
-                      <span className="flex min-w-0 items-center gap-1.5 text-[11px] text-gray-500">
+                      <span className="flex min-w-0 items-center gap-1.5 text-lg text-gray-500">
                         <MapPin
                           size={14}
                           className="shrink-0 text-[#538440]"
@@ -323,7 +345,7 @@ export default function HotelsBookingPage() {
                         <span className="truncate">{hotel.location}</span>
                       </span>
 
-                      <span className="shrink-0 text-sm font-extrabold text-[#55A52D] sm:text-base">
+                      <span className="shrink-0 text-sm font-extrabold text-[#55A52D] sm:text-base, md:text-lg">
                         {hotel.discount}
                       </span>
                     </div>
@@ -371,42 +393,59 @@ export default function HotelsBookingPage() {
       </section>
 
       {/* Popular destinations */}
-      <section className="mx-auto max-w-[1440px] px-5 py-9 sm:px-8 lg:px-12">
-        <div className="mb-4">
-          <p className="text-[10px] font-extrabold tracking-wider text-[#538440] sm:text-xs">
-            POPULAR DESTINATIONS
-          </p>
-          <h2 className="mt-1 text-xl font-extrabold text-[#202D3C] sm:text-2xl lg:text-3xl">
-            Explore Hotels in Top Destinations
-          </h2>
-        </div>
+      
+<section className="mx-auto max-w-[1440px] px-5 py-9 sm:px-8 lg:px-12">
+  <div className="mb-5">
+    <p className="text-[10px] font-extrabold tracking-wider text-[#538440] sm:text-xs">
+      POPULAR DESTINATIONS
+    </p>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
-          {destinations.map((destination) => (
-            <div
-              key={destination.name}
-   
-              className="group"
-            >
-              <div className="relative h-28 overflow-hidden rounded-lg shadow-sm sm:h-32 lg:h-28">
-                <Image
-                  src={destination.image}
-                  alt={`Hotels in ${destination.name}`}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                  className="object-cover transition duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-80" />
-                <div className="absolute inset-x-0 bottom-0 p-2 text-center">
-                  <span className="text-xs font-bold text-white">
-                    {destination.name}
-                  </span>
-                </div>
+    <h2 className="mt-1 text-xl font-extrabold text-[#202D3C] sm:text-2xl lg:text-3xl">
+      Explore Hotels in Top Destinations
+    </h2>
+  </div>
+
+  <Carousel
+    opts={{
+      align: "start",
+      loop: false,
+    }}
+    className="relative w-full"
+  >
+    <CarouselContent className="-ml-3">
+      {destinations.map((destination) => (
+        <CarouselItem
+          key={destination.name}
+          className="basis-1/2 pl-3 sm:basis-1/3 lg:basis-1/6"
+        >
+          <div className="group">
+            <div className="relative h-28 overflow-hidden rounded-lg shadow-sm sm:h-32 lg:h-28">
+              <Image
+                src={destination.image}
+                alt={`Hotels in ${destination.name}`}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+              <div className="absolute inset-x-0 bottom-0 p-2 text-center">
+                <span className="text-xs font-bold text-white sm:text-sm">
+                  {destination.name}
+                </span>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </CarouselItem>
+      ))}
+    </CarouselContent>
+
+    <CarouselPrevious className="-left-3 size-8 border-gray-200 bg-white text-gray-700 shadow-md hover:bg-[#538440] hover:text-white sm:-left-4 sm:size-9" />
+
+    <CarouselNext className="-right-3 size-8 border-gray-200 bg-white text-gray-700 shadow-md hover:bg-[#538440] hover:text-white sm:-right-4 sm:size-9" />
+  </Carousel>
+</section>
 
       {/* Booking benefits */}
       <section className="mx-auto max-w-[1440px] px-5 pb-12 sm:px-8 lg:px-12 lg:pb-16">

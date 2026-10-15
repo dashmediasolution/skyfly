@@ -12,7 +12,7 @@ const navigation = [
     { label: "Car Rental", href: "/car-rental" },
     { label: "Deals", href: "/deals" },
     { label: "Group Travel", href: "/group-travel" },
-    { label: "Blogs", href: "/blogs" },
+    // { label: "Blogs", href: "/blogs" },
 ];
 
 export default function Navbar() {

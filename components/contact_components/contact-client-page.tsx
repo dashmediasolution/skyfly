@@ -22,11 +22,11 @@ export default function ContactPageClient() {
     },
     {
       icon: <HiOutlinePhone className="w-6 h-6 " />,
-      contact: "+1 (555) 123-4567",
+      contact:  "1-855-509-3791",
     },
     {
       icon: <HiOutlineLocationMarker className="w-6 h-6 " />,
-      contact: "123 Aviation Ave, New York, NY",
+      contact: "1803 Hickory Avenue, Panama City, Florida 32405, United States",
     },
   ];
 

@@ -15,6 +15,7 @@ import {
     Hotel,
     CarFront,
     CalendarCheck,
+    Heart,
     Clock,
     Percent,
     Sparkles,
@@ -44,114 +45,42 @@ const benefits = [
     },
 ];
 
-const deals = [
+export const deals = [
     {
-        title: "Save on Your Next Flight",
-        category: "FLIGHT DEALS",
-        description: "Explore flight options to popular destinations and discover fares that suit your travel plans.",
-        image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=85",
-        label: "Flight Offers",
-        Icon: Plane,
-        href: "/flights",
-    },
-    {
-        title: "Find Your Perfect Hotel Stay",
-        category: "HOTEL DEALS",
-        description: "Discover hotel options for city breaks, family holidays, and relaxing getaways.",
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=85",
-        label: "Hotel Offers",
-        Icon: Hotel,
-        href: "/hotels-booking",
-    },
-    {
-        title: "Explore More for Less",
-        category: "CAR RENTAL DEALS",
-        description: "Find rental car options for airport transfers, road trips, and everyday travel.",
-        image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
-        label: "Car Rental Offers",
-        Icon: CarFront,
-        href: "/car-booking",
-    },
-    {
-        title: "Discover the Magic of Paris",
-        category: "DESTINATION DEALS",
-        description: "Explore flight and accommodation options for your next visit to Paris.",
-        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=85",
-        label: "Paris Offers",
-        Icon: MapPin,
-        href: "/flights/paris",
-    },
-    {
-        title: "Plan Your Dubai Getaway",
-        category: "DESTINATION DEALS",
-        description: "Discover travel options for an unforgettable city escape in Dubai.",
-        image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=85",
-        label: "Dubai Offers",
-        Icon: MapPin,
-        href: "/flights/dubai",
-    },
-    {
-        title: "Experience New York",
-        category: "DESTINATION DEALS",
-        description: "Explore travel options for an exciting getaway to New York City.",
-        image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=900&q=85",
-        label: "New York Offers",
-        Icon: MapPin,
-        href: "/flights/new-york",
-    },
-    {
-        title: "Make Your Summer Special",
-        category: "SEASONAL DEALS",
-        description: "Get inspired by sunny destinations and start planning your next seasonal escape.",
-        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85",
-        label: "Summer Offers",
-        Icon: Sparkles,
-        href: "/flights",
-    },
-    {
-        title: "Plan a Weekend Escape",
-        category: "SHORT GETAWAYS",
-        description: "Discover ideas for short breaks, city adventures, and spontaneous trips.",
-        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85",
-        label: "Weekend Offers",
-        Icon: CalendarCheck,
-        href: "/flights",
-    },
-    {
-        title: "Travel Together, Make Memories",
-        category: "FAMILY TRAVEL",
-        description: "Explore destinations and travel options for your next family holiday.",
-        image: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
-        label: "Family Offers",
+        slug: "christmas-day-offer",
+        title: "Christmas Day Offer",
+        destination: "Christmas",
+        description:
+            "Celebrate Christmas with festive getaways and seasonal flight deals.",
+        category: "Christmas Special",
+        overlayTitle: "Christmas Special Offers",
+        discount: "Limited Time Offer",
+        image: "/images/christmasDeal.webp",
         Icon: Gift,
-        href: "/flights",
     },
     {
-        title: "Find a Last-Minute Escape",
-        category: "LAST-MINUTE TRAVEL",
-        description: "Explore available travel options for your next adventure.",
-        image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=900&q=85",
-        label: "Last-Minute Offers",
-        Icon: Clock,
-        href: "/flights",
+        slug: "black-friday-offer",
+        title: "Black Friday Offer",
+        destination: "Black Friday",
+        description:
+            "Explore Black Friday flight deals and plan your next trip for less.",
+        category: "Black Friday Sale",
+        overlayTitle: "Cheap Black Friday Flight Deals",
+        discount: "Black Friday Sale",
+        image: "/images/BlackFridatDeal.webp",
+        Icon: Tag,
     },
     {
-        title: "Upgrade Your Travel Experience",
-        category: "PREMIUM TRAVEL",
-        description: "Explore premium destinations and comfortable stays for special occasions.",
-        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=85",
-        label: "Premium Offers",
-        Icon: Sparkles,
-        href: "/hotels-booking",
-    },
-    {
-        title: "Your Next Adventure Starts Here",
-        category: "TRAVEL INSPIRATION",
-        description: "Browse destinations and discover inspiration for your next trip.",
-        image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=85",
-        label: "Explore Deals",
-        Icon: ArrowRight,
-        href: "/flights",
+        slug: "valentines-day-offer",
+        title: "Valentine’s Day Offer",
+        destination: "Valentines Day",
+        description:
+            "Plan a romantic getaway with flight deals for your special someone.",
+        category: "Valentine’s Sale",
+        overlayTitle: "Cheap Valentine’s Day Flights",
+        discount: "Valentine’s Sale",
+        image: "/images/valentineDeal.webp",
+        Icon: Heart,
     },
 ];
 export default function DealsBookingPage() {
@@ -208,7 +137,7 @@ export default function DealsBookingPage() {
                     <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2 md:gap-7 lg:gap-10">
                         <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-[#538440]/20">
                             <Image
-                                 src="/images/flight-deals.png"
+                                src="/images/flight-deals.png"
                                 alt="Travelers planning their next trip"
                                 fill
                                 sizes="(max-width: 767px) 100vw, 50vw"
@@ -280,9 +209,10 @@ export default function DealsBookingPage() {
                                 const Icon = deal.Icon;
 
                                 return (
-                                    <div
+                                    <Link
                                         key={deal.title}
-                                         className="group overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#538440]/50 hover:shadow-lg"
+                                        href={`/deals/${deal.slug}`}
+                                        className="group block overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#538440]/50 hover:shadow-lg"
                                     >
                                         <div className="relative aspect-[16/9] overflow-hidden">
                                             <Image
@@ -299,20 +229,21 @@ export default function DealsBookingPage() {
                                             </span>
                                         </div>
 
-                                        <div className="flex w-full items-center justify-between gap-3 border-l-4 border-[#538440] px-4 py-4">
-                                            <div className="flex w-full flex-col gap-3">
-                                                <h3 className="text-base font-bold text-gray-800 transition-colors group-hover:text-[#538440] sm:text-lg">
-                                                    {deal.title}
-                                                </h3>
+                                        <div className="border-l-4 border-[#538440] px-4 py-4">
+                                            <h3 className="text-base font-bold text-gray-800 transition-colors group-hover:text-[#538440] sm:text-lg">
+                                                {deal.title}
+                                            </h3>
 
-                                                <p className="text-sm leading-6 text-gray-600">
-                                                    {deal.description}
-                                                </p>
+                                            <p className="mt-2 text-sm leading-6 text-gray-600">
+                                                {deal.description}
+                                            </p>
 
-                                             
-                                            </div>
+                                            <span className="mt-4 inline-flex items-center text-sm font-bold text-[#538440]">
+                                                Explore Offer
+                                                <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+                                            </span>
                                         </div>
-                                    </div>
+                                    </Link>
                                 );
                             })}
                         </div>

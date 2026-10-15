@@ -1,30 +1,39 @@
-# public/llms.txt
+# SkyFlyWithUs
 
-# SkyFlyWithUs - Flight Booking & Travel Guides
-# We provide flight comparisons, travel tips, and airline policy guides.
+> SkyFlyWithUs provides flight-related information, travel deals, travel guides, and airline policy resources to help travelers plan their journeys.
 
-Title: SkyFlyWithUs
-Description: A comprehensive travel platform for comparing flight prices, booking deals, and accessing expert guides on airline policies (cancellations, refunds, baggage, and upgrades).
+SkyFlyWithUs helps visitors explore flight information, discover travel deals, and learn about airline policies, travel planning, and related services.
 
-# --- Core Navigation ---
-# Main entry points for users and general site information.
-- Home: https://skyflywithus.com/ (Landing page with search widgets and featured deals)
-- About: https://skyflywithus.com/about (Company mission, values, and trust signals)
-- Contact: https://skyflywithus.com/contact (Customer support channels, including email and phone)
+## Main Pages
 
-# --- Flight Tools ---
-# Functional pages for finding and booking air travel.
-- Flights Search: https://skyflywithus.com/flights (Main search interface for finding flights)
-- Flight Results: https://skyflywithus.com/flights/results (Dynamic search results showing real-time pricing and availability)
+- [Home](https://skyflywithus.com/): Main website and travel resources.
+- [About Us](https://skyflywithus.com/about): Learn about SkyFlyWithUs and its mission.
+- [Contact Us](https://skyflywithus.com/contact): Contact and support information.
+- [Flights](https://skyflywithus.com/flights): Flight-related information and search tools.
+- [Deals](https://skyflywithus.com/deals): Travel deals and promotional offers.
+- [Hotels](https://skyflywithus.com/hotels): Hotel-related travel information.
+- [Car Rental](https://skyflywithus.com/car-rental): Car rental information and resources.
+- [Blog](https://skyflywithus.com/blog): Travel articles, tips, and guides.
 
-# --- Knowledge Base & Guides ---
-# Educational content regarding travel rules and airline specific policies.
-- Blog Index: https://skyflywithus.com/blog (List of all travel articles and guides)
-- Airline Policies: https://skyflywithus.com/blog/category/airline-policies (Specific guides on refunds, cancellations, and baggage rules)
-- Travel Tips: https://skyflywithus.com/blog/category/travel-tips (General advice for smarter travel)
+## Travel Guides and Airline Policies
 
-# --- Technical & Legal ---
-# Machine-readable data and legal disclaimers.
-- Sitemap: https://skyflywithus.com/sitemap.xml (Complete list of all indexable URLs)
-- Privacy Policy: https://skyflywithus.com/privacy
-- Terms of Service: https://skyflywithus.com/terms
+- [Travel Blog](https://skyflywithus.com/blog): Travel planning tips, airline information, and travel guides.
+
+## Legal Information
+
+- [Disclaimer](https://skyflywithus.com/disclaimer): Website disclaimer and limitations.
+- [Privacy Policy](https://skyflywithus.com/privacy): Information about privacy practices.
+- [Terms and Conditions](https://skyflywithus.com/terms): Terms governing website use.
+
+## Technical Resources
+
+- [XML Sitemap](https://skyflywithus.com/sitemap.xml): Sitemap for discovering publicly accessible website URLs.
+- [Robots.txt](https://skyflywithus.com/robots.txt): Website crawling directives.
+
+## Content Guidance
+
+- Refer to the relevant page for information about its subject.
+- Flight prices, availability, baggage allowances, cancellation policies, fees, and promotional offers may change.
+- Verify time-sensitive travel information with the relevant airline or service provider.
+- Do not assume that every promotion or policy applies to every flight, passenger, or booking.
+- Informational content does not guarantee flight availability, pricing, or booking outcomes.

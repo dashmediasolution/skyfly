@@ -1,215 +1,202 @@
- "use client";
+"use client";
 
 import Link from "next/link";
-import {
-  ArrowRight,
-  Globe2,
-  MapPin,
-} from "lucide-react";
 import Image from "next/image";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
-} from "react-icons/fa";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { FaXTwitter, FaPinterestP, FaInstagram } from "react-icons/fa6";
 
-const PRIMARY = "#538440";
-const PRIMARY_DARK = "#3F6632";
+ 
 
-const categories = [
-  { name: "Cancellation & Refund", slug: "cancellation-and-refund" },
-  { name: "Change Flight", slug: "change-flight" },
-  { name: "Compensation", slug: "compensation" },
-  { name: "Seat Upgrade", slug: "seat-upgrade" },
-  { name: "Voucher", slug: "voucher" },
-  { name: "Lost & Found", slug: "lost-and-found" },
-  { name: "Check In", slug: "check-in" },
-  { name: "Airport", slug: "airport" },
-];
-
-const companyLinks = [
-  { name: "Home", href: "/" },
+const quickLinks = [
   { name: "About Us", href: "/about" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "Flights", href: "/flights" },
+  { name: "Blog", href: "/blog" },
+  { name: "Car Rental", href: "/car-rental" },
+  { name: "Hotel", href: "/hotels" },
+  { name: "Deals", href: "/deals" },
 ];
 
-const legalLinks = [
-  { name: "Terms & Conditions", href: "/terms" },
+const usefulLinks = [
+  { name: "Disclaimer", href: "/disclaimer" },
   { name: "Privacy Policy", href: "/privacy" },
+  { name: "Terms & Conditions", href: "/terms" },
+  { name: "Contact Us", href: "/contact" },
   { name: "Sitemap", href: "/public-sitemap" },
 ];
 
- 
 export function Footer() {
   return (
     <footer
-      className="w-full overflow-hidden font-sans text-white"
-      style={{ backgroundColor: PRIMARY }}
+      className="w-full overflow-hidden font-sans text-white bg-primary"
+      
     >
-
-
       {/* Main Footer */}
-      <div className="mx-auto max-w-[1440px] px-5 pb-9 pt-10 sm:px-8 sm:pt-12 lg:px-12 lg:pb-12 lg:pt-14">
-        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-[1.3fr_0.8fr_1.4fr_0.8fr] lg:gap-10 xl:gap-14">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link href="/" className="flex shrink-0 items-center">
-                    <Image
-                        src="/images/skyflywithuslogo.svg"
-                        alt="SkyFlyWithUs"
-                        width={185}
-                        height={42}
-                        priority
-                        className="h-auto w-[150px] sm:w-[185px] object-contain"
-                    />
-                </Link>
+      <div className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 sm:py-12 lg:px-12">
+        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-[1.5fr_0.8fr_1.1fr_1.2fr] lg:gap-10 xl:gap-16">
 
-            <p className="mt-5 max-w-sm text-sm leading-7 text-white/90 sm:text-base">
-              From local escapes to global adventures, find helpful travel
-              information and inspiration to make every journey smoother.
-            </p>
-
-            <div className="mt-5 flex items-start gap-3 text-sm leading-6 text-white/90">
-              <Globe2 className="mt-1 size-5 shrink-0 text-white" />
-              <span>
-                Explore more. Travel smarter.
-                <br />
-                Make every journey count.
-              </span>
-            </div>
-
-         
-          </div>
-
-          {/* Company and Legal */}
-          <div>
-            <h3 className="mb-5 text-base font-extrabold text-white sm:text-lg">
-              Company
-            </h3>
-
-            <ul className="space-y-3.5">
-              {companyLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/85 transition-colors hover:text-white hover:underline sm:text-base"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <h3 className="mb-4 mt-8 text-base font-extrabold text-white sm:text-lg">
-              Legal
-            </h3>
-
-            <ul className="space-y-3.5">
-              {legalLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/85 transition-colors hover:text-white hover:underline sm:text-base"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Travel Guides */}
-          <div>
-            <h3 className="mb-5 text-base font-extrabold text-white sm:text-lg">
-              Explore Travel Guides
-            </h3>
-
-            <p className="mb-5 max-w-sm text-sm leading-6 text-white/85">
-              Find practical information to help you plan and manage your
-              flight journey.
-            </p>
-
-            <ul className="grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-              {categories.map((category) => (
-                <li key={category.slug}>
-                  <Link
-                    href={`/blog/category/${category.slug}`}
-                    className="group inline-flex items-start gap-2 text-sm text-white/85 transition-colors hover:text-white sm:text-[15px]"
-                  >
-                    <ArrowRight className="mt-0.5 size-4 shrink-0 text-white/75 transition-transform group-hover:translate-x-0.5 group-hover:text-white" />
-                    <span>{category.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Travel Support */}
-          <div>
-            <h3 className="mb-5 text-base font-extrabold text-white sm:text-lg">
-              Travel Support
-            </h3>
-
-            <p className="text-sm leading-7 text-white/90 sm:text-base">
-              Looking for flight-related information? Explore our guides
-              covering cancellations, changes, airport procedures, and more.
-            </p>
-
+          {/* Logo and Description */}
+          <div className="min-w-0">
             <Link
-              href="/contact"
-              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-white/35 bg-white px-4 py-3 text-sm font-bold text-[#3F6632] transition-all hover:bg-white/90"
+              href="/"
+              aria-label="SkyFlyWithUs homepage"
+              className="inline-flex items-center"
             >
-              Contact Us
-              <ArrowRight className="size-4" />
+              <Image
+                src="/images/footerLogo.svg"
+                alt="SkyFlyWithUs"
+                width={210}
+                height={60}
+                priority
+                className="h-auto w-[185px] object-contain"
+              />
             </Link>
 
-            <div className="mt-6 rounded-2xl border border-white/20 bg-white/10 p-4">
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
-                  <MapPin className="size-5" />
-                </span>
+            <p className="mt-5 max-w-sm text-sm leading-[1.5rem] text-white/90">
+              SkyFlyWithUs is your travel information resource for
+              discovering destinations, exploring flight deals, and
+              planning smoother journeys. Find helpful travel guides
+              and tips for your next adventure.
+            </p>
 
-                <div>
-                  <p className="text-sm font-bold text-white">
-                    Travel with confidence
-                  </p>
-                  <p className="mt-1 text-xs leading-5 text-white/80">
-                    Helpful information for your journey.
-                  </p>
-                </div>
+            {/* Social Media */}
+            <div className="mt-5 flex items-center gap-2">
+              <a
+                href="https://x.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
+              >
+                <FaXTwitter className="size-4" />
+              </a>
+
+              <a
+                href="https://pinterest.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Pinterest"
+                className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
+              >
+                <FaPinterestP className="size-4" />
+              </a>
+
+              <a
+                href="https://instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
+              >
+                <FaInstagram className="size-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="min-w-0">
+            <h3 className="text-lg font-bold text-white">
+              Quick Links
+            </h3>
+
+            <div className="relative mb-5 mt-2 h-px w-28 bg-white/70">
+              <span className="absolute -left-0.5 -top-[3px] size-2 rounded-full bg-white" />
+            </div>
+
+            <ul className="space-y-2.5">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-white/90 transition hover:text-white hover:underline"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Useful Links */}
+          <div className="min-w-0">
+            <h3 className="text-lg font-bold text-white">
+              Useful Links
+            </h3>
+
+            <div className="relative mb-5 mt-2 h-px w-28 bg-white/70">
+              <span className="absolute -left-0.5 -top-[3px] size-2 rounded-full bg-white" />
+            </div>
+
+            <ul className="space-y-2.5">
+              {usefulLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-white/90 transition hover:text-white hover:underline"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Us */}
+          <div className="min-w-0">
+            <h3 className="text-lg font-bold text-white">
+              Contact Us
+            </h3>
+
+            <div className="relative mb-5 mt-2 h-px w-28 bg-white/70">
+              <span className="absolute -left-0.5 -top-[3px] size-2 rounded-full bg-white" />
+            </div>
+
+            <div className="space-y-5">
+              <Link
+                href="/contact"
+                className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
+              >
+                <Phone className="mt-0.5 size-4 shrink-0 fill-white" />
+                 <span>1-855-509-3791</span>
+              </Link>
+
+              <Link
+                href="/contact"
+                className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
+              >
+                <Mail className="mt-0.5 size-4 shrink-0  " />
+                <span>support@skyflywithus.com</span>
+              </Link>
+
+              <div className="flex items-start gap-3 text-sm leading-6 text-white/90">
+                <MapPin className="mt-0.5 size-4 shrink-0" />
+                <span>
+                1803 Hickory Avenue, Panama City, Florida 32405, United States
+                </span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Disclaimer */}
+        <div className="mt-8 border-t border-white/60 pt-3">
+          <p className="text-xs leading-5 text-white/90 sm:text-sm sm:leading-6">
+            Disclaimer: The information provided on this website is for
+            general informational purposes only. Flight policies,
+            cancellation fees, change fees, and other airline rules may
+            vary by airline and ticket type. Please confirm the applicable
+            terms directly with your airline before making travel decisions.
+          </p>
+        </div>
       </div>
 
-            {/* Disclaimer - TOP */}
-  <div className="border-b border-white/20 bg-green-900 bg px-4 py-5 sm:px-8 lg:px-12">
-    <div className="mx-auto max-w-[1440px]">
-      <h3 className="mb-2 text-lg text-center font-bold text-white sm:text-lg">
-        Disclaimer
-      </h3>
-      <p className="text-sm leading-6 text-white/85 text-center">
-        The information provided on this website is for general informational
-        purposes only. Flight policies, cancellation fees, change fees, and
-        other airline rules may vary by airline and ticket type. Please confirm
-        the applicable terms directly with your airline before making travel
-        decisions.
-      </p>
-    </div>
-  </div>
       {/* Copyright */}
-      <div
-        className="text-white"
-        style={{ backgroundColor: PRIMARY_DARK }}
-      >
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-5 py-5 text-center sm:px-8 md:flex-row md:text-left lg:px-12">
+      <div className="border-t border-white/10 bg-primary">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-2 px-5 py-4 text-center sm:px-8 md:flex-row md:text-left lg:px-12">
           <p className="text-xs leading-5 text-white/85 sm:text-sm">
             © {new Date().getFullYear()} SkyFlyWithUs. All rights reserved.
           </p>
 
-          <p className="text-xs font-medium text-white/85 sm:text-sm">
+          <p className="text-xs font-medium leading-5 text-white/85 sm:text-sm">
             Made for travelers, by travelers.
           </p>
         </div>
@@ -217,4 +204,3 @@ export function Footer() {
     </footer>
   );
 }
- 

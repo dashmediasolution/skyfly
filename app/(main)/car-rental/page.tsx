@@ -344,15 +344,15 @@ export default function CarBookingPage() {
                                     </div>
 
                                     <div className="p-4">
-                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-[#538440]">
+                                        <p className="text-[13px] font-semibold uppercase tracking-wide text-[#538440]">
                                             {car.type}
                                         </p>
 
-                                        <h3 className="mt-1 line-clamp-2 min-h-10 text-sm font-bold leading-5 text-[#202D3C] transition-colors group-hover:text-[#538440]">
+                                        <h3 className="mt-1 line-clamp-2 min-h-10 text-xl font-bold leading-5 text-[#202D3C] transition-colors group-hover:text-[#538440]">
                                             {car.name}
                                         </h3>
 
-                                        <div className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-500">
+                                        <div className="mt-2 flex items-center gap-1.5 text-lg text-gray-500">
                                             <MapPin
                                                 size={14}
                                                 className="shrink-0 text-[#538440]"
@@ -363,11 +363,11 @@ export default function CarBookingPage() {
                                         
 
                                         <div className="flex items-center justify-between gap-2">
-                                            <span className="text-xs text-gray-500">
+                                            <span className="text-base text-gray-500">
                                                 Rental deal
                                             </span>
 
-                                            <span className="text-sm font-extrabold text-[#55A52D] sm:text-base">
+                                            <span className="text-sm font-extrabold text-[#55A52D] sm:text-base md:text-lg">
                                                 {car.discount}
                                             </span>
                                         </div>

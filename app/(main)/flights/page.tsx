@@ -41,78 +41,78 @@ const benefits = [
 // Keep all 12 destination cards in this array.
 
 const popularRoutes = [
-  {
-    destination: "Amsterdam",
-    image: "/images/routes/amsterdam.png",
-    description: "Book Now",
-    href: "/flights/amsterdam",
-  },
-  {
-    destination: "Bali",
-    image: "/images/routes/bali.png",
-    description: "Book Now",
-    href: "/flights/bali",
-  },
-  {
-    destination: "Barcelona",
-    image: "/images/routes/barcelona.png",
-    description: "Book Now",
-    href: "/flights/barcelona",
-  },
-  {
-    destination: "London",
-    image: "/images/routes/london.png",
-    description: "Book Now",
-    href: "/flights/london",
-  },
-  {
-    destination: "Paris",
-    image: "/images/routes/paris.png",
-    description: "Book Now",
-    href: "/flights/paris",
-  },
-  {
-    destination: "Dubai",
-    image: "/images/routes/dubai.png",
-    description: "Book Now",
-    href: "/flights/dubai",
-  },
-  {
-    destination: "Singapore",
-    image: "/images/routes/singapore.png",
-    description: "Book Now",
-    href: "/flights/singapore",
-  },
-  {
-    destination: "New York",
-    image: "/images/routes/new-york.png",
-    description: "Book Now",
-    href: "/flights/new-york",
-  },
-  {
-    destination: "Rome",
-    image: "/images/routes/rome.png",
-    description: "Book Now",
-    href: "/flights/rome",
-  },
-  {
-    destination: "Tokyo",
-    image: "/images/routes/tokyo.png",
-    description: "Book Now",
-    href: "/flights/tokyo",
-  },
-  {
-    destination: "Istanbul",
-    image: "/images/routes/istanbul.png",
-    description: "Book Now",
-    href: "/flights/istanbul",
-  },
-  {
-    destination: "Bangkok",
-    image: "/images/routes/bangkok.png",
-    description: "Book Now",
-    href: "/flights/bangkok",
-  },
+    {
+        destination: "Amsterdam",
+        image: "/images/routes/amsterdam.png",
+        description: "Book Now",
+        href: "/flights/amsterdam",
+    },
+    {
+        destination: "Bali",
+        image: "/images/routes/bali.png",
+        description: "Book Now",
+        href: "/flights/bali",
+    },
+    {
+        destination: "Barcelona",
+        image: "/images/routes/barcelona.png",
+        description: "Book Now",
+        href: "/flights/barcelona",
+    },
+    {
+        destination: "London",
+        image: "/images/routes/london.png",
+        description: "Book Now",
+        href: "/flights/london",
+    },
+    {
+        destination: "Paris",
+        image: "/images/routes/paris.png",
+        description: "Book Now",
+        href: "/flights/paris",
+    },
+    {
+        destination: "Dubai",
+        image: "/images/routes/dubai.png",
+        description: "Book Now",
+        href: "/flights/dubai",
+    },
+    {
+        destination: "Singapore",
+        image: "/images/routes/singapore.png",
+        description: "Book Now",
+        href: "/flights/singapore",
+    },
+    {
+        destination: "New York",
+        image: "/images/routes/new-york.png",
+        description: "Book Now",
+        href: "/flights/new-york",
+    },
+    {
+        destination: "Rome",
+        image: "/images/routes/rome.png",
+        description: "Book Now",
+        href: "/flights/rome",
+    },
+    {
+        destination: "Tokyo",
+        image: "/images/routes/tokyo.png",
+        description: "Book Now",
+        href: "/flights/tokyo",
+    },
+    {
+        destination: "Istanbul",
+        image: "/images/routes/istanbul.png",
+        description: "Book Now",
+        href: "/flights/istanbul",
+    },
+    {
+        destination: "Bangkok",
+        image: "/images/routes/bangkok.png",
+        description: "Book Now",
+        href: "/flights/bangkok",
+    },
 ];
 
 export default function FlightBookingPage() {
@@ -123,15 +123,15 @@ export default function FlightBookingPage() {
                 alt="Explore destinations around the world"
             />
 
- 
+
             {/* Flight Benefits */}
             <section className="w-[95%] py-3 sm:px-8 md:py-2 lg:pt-20">
                 <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
                     Find the Best Flights for Your Next Adventure
                 </h2>
                 <p className="text-base md:text-xl lg:text-lg">
-                     Compare flight fares, explore popular destinations, and discover affordable ways to reach your favourite places.
-Plan your journey with  skyflywithus and find flight options that suit your travel dates and budget.
+                    Compare flight fares, explore popular destinations, and discover affordable ways to reach your favourite places.
+                    Plan your journey with  skyflywithus and find flight options that suit your travel dates and budget.
                 </p>
             </section>
 
@@ -179,26 +179,28 @@ Plan your journey with  skyflywithus and find flight options that suit your trav
 
                     {/* Popular Flight Routes */}
                     <div className="mt-12 sm:mt-16 lg:mt-20">
-                        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-                            <div className="max-w-xl">
-                                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#EAF2E6] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#538440]">
+                        <div className="flex flex-col justify-center gap-5 sm:flex-row sm:items-end">
+                            <div className="max-w-5xl">
+                                <div className="mb-3 inline-flex justify-center w-full items-center  gap-2 rounded-full  px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#538440]">
+                                   <div className=" bg-[#EAF2E6] inline-flex px-3 py-1.5 text-xs rounded-full gap-3">
+
                                     <MapPin size={14} />
                                     Travel More
+                                   </div>
                                 </div>
 
-                                <h2 className="text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
-                                    Explore Popular
-                                    <br className="hidden sm:block" /> Flight Routes
+                                <h2 className="text-3xl font-extrabold text-center leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                                    Explore Popular Flight Routes
                                 </h2>
 
-                                <p className="mt-3 max-w-md text-sm leading-6 text-gray-600 sm:text-base">
+                                <p className="mt-3 max-w-full text-center text-sm leading-6 text-gray-600 sm:text-base">
                                     From bustling cities to serene getaways, discover
                                     destinations around the world. Find your next flight
                                     and start planning your adventure.
                                 </p>
                             </div>
 
-                      
+
                         </div>
 
                         {/* All 12 Destination Cards */}
@@ -221,7 +223,7 @@ Plan your journey with  skyflywithus and find flight options that suit your trav
 
                                     <div className="flex w-full items-center  justify-between gap-3 mr-2 border-l-4 border-[#538440] px-4 py-3">
                                         <div className="flex w-full flex-col gap-3">
-                                            <p className="text-sm font-semibold  text-gray-800 sm:text-base">
+                                            <p className="text-sm font-semibold text-center text-gray-800 sm:text-base md:text-xl">
                                                 Flight to {route.destination}
                                             </p>
                                             <div className="w-full      flex justify-center items-center">
