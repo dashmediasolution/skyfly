@@ -25,7 +25,7 @@ export default function TravelDealCard({
       aria-label={`Explore ${name}`}
       className="group block min-w-0 overflow-hidden border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div className="relative h-[150px] overflow-hidden sm:h-[145px] lg:h-[112px] xl:h-[125px]">
+      <div className="relative h-[170px] overflow-hidden sm:h-[145px] lg:h-[152px] xl:h-[200px]">
         <Image
           src={image}
           alt={overlayTitle}
@@ -46,17 +46,17 @@ export default function TravelDealCard({
               fill="#538440"
             />
 
-            <p className="truncate text-[13px] font-medium leading-5 text-gray-800 sm:text-sm">
+            <p className="truncate text-[13px] font-medium leading-5 text-gray-800 sm:text-sm md:text-lg">
               {name}
             </p>
           </div>
 
-          <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-[#d9e7d5] text-[#538440] transition-colors group-hover:bg-[#538440] group-hover:text-white">
-            <ArrowRight className="size-3" />
+          <span className="flex size-7 p-1 shrink-0 m-2 items-center justify-center rounded-full border border-[#d9e7d5] text-[#538440] transition-colors group-hover:bg-[#538440] group-hover:text-white">
+            <ArrowRight className="size-10" />
           </span>
         </div>
 
-        <p className="mt-0.5 truncate text-[10px] leading-4 text-gray-500 sm:text-[11px]">
+        <p className="mt-0.5 truncate text-[10px] leading-4 text-gray-500 sm:text-[11px] md:text-base">
           {tagline}
         </p>
       </div>

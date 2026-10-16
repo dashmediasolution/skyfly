@@ -462,3 +462,12 @@ body {
     background: transparent !important;
     box-shadow: none !important;
 }
+
+.language-select-flag {
+  display: block;
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}

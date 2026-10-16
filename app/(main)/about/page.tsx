@@ -1,10 +1,8 @@
 import { AboutUsSection } from "@/components/about_components/About-Us-section";
  import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'About Us',
-  description: 'Learn about the team and mission behind SkyFlyWithUs.',
-};
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("about");
 
 export default function AboutPage() {
     return (

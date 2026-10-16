@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { FaXTwitter, FaPinterestP, FaInstagram } from "react-icons/fa6";
+import { FaXTwitter, FaPinterestP, FaInstagram , FaFacebook } from "react-icons/fa6";
 
  
 
@@ -42,8 +42,8 @@ export function Footer() {
               className="inline-flex items-center"
             >
               <Image
-                src="/images/footerLogo.svg"
-                alt="SkyFlyWithUs"
+                src="/images/footer-logo.svg"
+                alt="SkyFlyWithUs-logo"
                 width={210}
                 height={60}
                 priority
@@ -88,6 +88,15 @@ export function Footer() {
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaInstagram className="size-4" />
+              </a>
+                <a
+                href="https://facebook.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
+              >
+                <FaFacebook className="size-4" />
               </a>
             </div>
           </div>
@@ -151,21 +160,19 @@ export function Footer() {
             </div>
 
             <div className="space-y-5">
-              <Link
-                href="/contact"
-                className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
+              <div
+                 className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
               >
                 <Phone className="mt-0.5 size-4 shrink-0 fill-white" />
                  <span>1-855-509-3791</span>
-              </Link>
+              </div>
 
-              <Link
-                href="/contact"
-                className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
+              <div
+                 className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
               >
                 <Mail className="mt-0.5 size-4 shrink-0  " />
                 <span>support@skyflywithus.com</span>
-              </Link>
+              </div>
 
               <div className="flex items-start gap-3 text-sm leading-6 text-white/90">
                 <MapPin className="mt-0.5 size-4 shrink-0" />
@@ -190,17 +197,13 @@ export function Footer() {
       </div>
 
       {/* Copyright */}
-      <div className="border-t border-white/10 bg-primary">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-2 px-5 py-4 text-center sm:px-8 md:flex-row md:text-left lg:px-12">
-          <p className="text-xs leading-5 text-white/85 sm:text-sm">
+      <div className="border-t border-white/10 bg-primary flex justify-center items-center">
+           <p className="text-xs leading-5 text-white/85 sm:text-sm w-fit my-4">
             © {new Date().getFullYear()} SkyFlyWithUs. All rights reserved.
           </p>
 
-          <p className="text-xs font-medium leading-5 text-white/85 sm:text-sm">
-            Made for travelers, by travelers.
-          </p>
-        </div>
-      </div>
+          
+       </div>
     </footer>
   );
 }

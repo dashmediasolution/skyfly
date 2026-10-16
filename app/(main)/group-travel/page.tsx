@@ -17,7 +17,8 @@ import {
     CheckCircle2,
     Globe,
 } from "lucide-react";
-
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("groupTravel");
 const groupPackages = [
     {
         category: "FAMILY GROUP TRAVEL",
@@ -29,7 +30,7 @@ const groupPackages = [
         description:
             "Plan a memorable family vacation with travel options designed to bring everyone together.",
         Icon: Heart,
-        href: "/flights",
+    href: "/group-travel/family-travel",
     },
     {
         category: "CORPORATE GROUP TRAVEL",
@@ -41,7 +42,7 @@ const groupPackages = [
         description:
             "Coordinate team travel for conferences, business meetings, and corporate events.",
         Icon: BriefcaseBusiness,
-        href: "/flights",
+href: "/group-travel/corporate-travel",
     },
     {
         category: "FRIENDS & GROUP GETAWAYS",
@@ -53,7 +54,7 @@ const groupPackages = [
         description:
             "Discover exciting destinations for reunions, celebrations, and trips with friends.",
         Icon: Users,
-        href: "/flights",
+href: "/group-travel/friends-getaways",
     },
     {
         category: "STUDENT GROUP TRAVEL",
@@ -65,7 +66,7 @@ const groupPackages = [
         description:
             "Explore travel ideas for educational visits, student groups, and learning adventures.",
         Icon: GraduationCap,
-        href: "/flights",
+href: "/group-travel/student-travel",
     },
     {
         category: "CELEBRATION GROUP TRAVEL",
@@ -77,7 +78,7 @@ const groupPackages = [
         description:
             "Bring your favorite people together for birthdays, anniversaries, and special occasions.",
         Icon: PartyPopper,
-        href: "/flights",
+href: "/group-travel/celebration-travel",
     },
     {
         category: "INTERNATIONAL GROUP TRAVEL",
@@ -89,8 +90,7 @@ const groupPackages = [
         description:
             "Explore international destinations and coordinate travel plans for your group.",
         Icon: Globe,
-        href: "/flights",
-    },
+href: "/group-travel/international-travel",    },
 ];
 
 const destinations = [
@@ -318,73 +318,84 @@ export default function GroupTravelPage() {
             </section>
 
             {/* Group travel package cards */}
-            <section className="mx-auto max-w-[1440px] px-5 pb-10 sm:px-8 lg:px-12">
-                <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-                    <div className="max-w-2xl">
-                        <p className="text-[10px] font-extrabold tracking-wider text-[#538440] sm:text-xs">
-                            FIND YOUR TRAVEL STYLE
-                        </p>
-                        <h2 className="mt-1 text-2xl font-extrabold leading-tight text-[#202D3C] sm:text-3xl lg:text-4xl">
-                            Group Trips for Every Occasion
-                        </h2>
-                        <p className="mt-2 max-w-xl text-sm leading-6 text-gray-600 sm:text-base">
-                            Discover travel inspiration for the people you
-                            want to travel with, wherever your next journey
-                            takes you.
-                        </p>
+ {/* Group travel package cards */}
+<section className="mx-auto max-w-[1440px] px-5 pb-10 sm:px-8 lg:px-12">
+    <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <div className="max-w-2xl">
+            <p className="text-[10px] font-extrabold tracking-wider text-[#538440] sm:text-xs">
+                FIND YOUR TRAVEL STYLE
+            </p>
+
+            <h2 className="mt-1 text-2xl font-extrabold leading-tight text-[#202D3C] sm:text-3xl lg:text-4xl">
+                Group Trips for Every Occasion
+            </h2>
+
+            <p className="mt-2 max-w-xl text-sm leading-6 text-gray-600 sm:text-base">
+                Discover travel inspiration for the people you
+                want to travel with, wherever your next journey
+                takes you.
+            </p>
+        </div>
+    </div>
+
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+        {groupPackages.map((item) => (
+            <Link
+                key={item.name}
+                href={item.href}
+                className="group block overflow-hidden rounded-lg border border-gray-200/80 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#538440] focus-visible:ring-offset-2"
+            >
+                <div className="relative h-52 overflow-hidden sm:h-48 lg:h-44">
+                    <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    <span className="absolute left-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-bold text-[#538440] shadow-sm">
+                        {item.label}
+                    </span>
+                </div>
+
+                <div className="p-4">
+                    <p className="text-[10px] font-extrabold tracking-wider text-[#538440]">
+                        {item.category}
+                    </p>
+
+                    <h3 className="mt-1 text-lg font-bold leading-6 text-[#202D3C] transition-colors group-hover:text-[#538440]">
+                        {item.name}
+                    </h3>
+
+                    <p className="mt-2 min-h-[60px] text-sm leading-5 text-gray-600">
+                        {item.description}
+                    </p>
+
+                    <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
+                        <MapPin
+                            size={15}
+                            className="shrink-0 text-[#538440]"
+                        />
+                        <span>{item.location}</span>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 text-sm font-semibold text-[#538440]">
+                        <span>Explore travel options</span>
+                        <ArrowRight
+                            size={16}
+                            className="transition-transform group-hover:translate-x-1"
+                        />
                     </div>
                 </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-                    {groupPackages.map((item) => (
-                        <article
-                            key={item.name}
-                            className="group overflow-hidden rounded-lg border border-gray-200/80 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-                        >
-                            <div className="relative h-52 overflow-hidden sm:h-48 lg:h-44">
-                                <Image
-                                    src={item.image}
-                                    alt={item.name}
-                                    fill
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                />
-
-                                <span className="absolute left-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-bold text-[#538440] shadow-sm">
-                                    {item.label}
-                                </span>
-                            </div>
-
-                            <div className="p-4">
-                                <p className="text-[10px] font-extrabold tracking-wider text-[#538440]">
-                                    {item.category}
-                                </p>
-
-                                <h3 className="mt-1 text-lg font-bold leading-6 text-[#202D3C] transition-colors group-hover:text-[#538440]">
-                                    {item.name}
-                                </h3>
-
-                                <p className="mt-2 min-h-[60px] text-sm leading-5 text-gray-600">
-                                    {item.description}
-                                </p>
-
-                                <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
-                                    <MapPin
-                                        size={15}
-                                        className="shrink-0 text-[#538440]"
-                                    />
-                                    <span>{item.location}</span>
-                                </div>
+            </Link>
+        ))}
+    </div>
+</section>
  
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            </section>
-
             {/* Promotional banner */}
-            <section className="relative overflow-hidden border-y border-[#DDEAD7] bg-[#EAF4E5]">
-                <div className="grid min-h-[250px] grid-cols-1 lg:grid-cols-2">
+       <section className="relative overflow-hidden w-full flex justify-center items-center">
+        <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2 w-[93%]  border-y border-[#DDEAD7] bg-[#EAF4E5]">
                     <div className="relative min-h-[220px] lg:min-h-[300px]">
                         <Image
                             src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=85"

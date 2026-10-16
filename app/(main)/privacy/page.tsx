@@ -1,11 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'privacy-policy-page',
-  description: 'Learn about the team and mission behind SkyFlyWithUs.',
-};
-
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("privacy");
 /**
  * Privacy Policy Page Component for skyflywithus.com
  * Renders the privacy policy detailing data collection and usage.

@@ -1,10 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'terms-and-conditions',
-  description: 'Learn about the team and mission behind SkyFlyWithUs.',
-};
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("terms");
 
 /**
  * Terms and Conditions Page Component for skyflywithus.com

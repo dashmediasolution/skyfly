@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import HeroSection from "@/components/homePage/HeroSerction";
 import {
   ArrowRight,
   CheckCircle2,
@@ -32,18 +33,10 @@ export default async function DealDetailPage({
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section - Image Only */}
-      <section className="relative min-h-[400px] overflow-hidden sm:min-h-[480px] lg:min-h-[540px]">
-  <Image
-    src={deal.image}
-    alt={deal.title}
-    fill
-    priority
-    sizes="100vw"
-    className="object-cover"
-  />
-
-  <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
-</section>
+      <HeroSection
+        image="/images/dealsBanner.png"
+        alt="Beautiful mountain destination for your next travel adventure"
+      />
 
       {/* Deal Details - Full Width Layout */}
       <section className="mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">

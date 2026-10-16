@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("disclaimer");
 export default function DisclaimerPage() {
   return (
     <main className="min-h-screen bg-white text-gray-700">

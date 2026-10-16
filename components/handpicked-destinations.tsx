@@ -23,15 +23,15 @@ export default function HandpickedDestinations() {
             <span className="h-px w-7 bg-emerald-500 sm:w-10" />
           </div>
 
-          <h2 className="text-[25px] font-extrabold leading-tight tracking-tight text-slate-900
+          <h1 className="text-[25px] font-extrabold leading-tight tracking-tight text-slate-900
                          sm:text-3xl
                          md:text-4xl
                          lg:text-[42px]">
-            Handpicked{" "}
+            Explore Our Top{" "}
             <span className="text-emerald-600">
               Destinations
             </span>
-          </h2>
+          </h1>
 
           <p className="mx-auto mt-2 max-w-xl px-2 text-xs leading-5 text-slate-500
                         sm:mt-3 sm:px-0 sm:text-sm sm:leading-6

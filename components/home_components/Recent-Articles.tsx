@@ -40,36 +40,38 @@ export async function RecentArticles() {
   return (
     <section className="w-full bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
       <div className="mx-auto max-w-7xl">
-        {/* Section Heading */}
-        <div className="mb-8 flex flex-col gap-6 sm:mb-10 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#EAF2E6] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#538440] sm:text-sm">
-              <Tag size={16} />
-              Traveling Stories
-            </div>
+      
+{/* Section Heading */}
+<div className="relative mb-8 sm:mb-10">
+  <div className="text-center">
+    <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#EAF2E6] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#538440] sm:text-sm">
+      <Tag size={16} />
+      Traveling Stories
+    </div>
 
-            <h2 className="text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
-              Level up your knowledge
-              <br className="hidden sm:block" /> with our fresh blogs
-            </h2>
+    <h2 className="text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
+      Level up your knowledge
+      <br className="hidden sm:block" /> with our fresh blogs
+    </h2>
 
-            <p className="mt-4 max-w-xl text-base leading-7 text-gray-600 sm:text-lg">
-              Stay ahead with our latest travel updates, expert insights, and
-              helpful airline guides. Explore our newest articles for practical
-              advice and inspiration for your next journey.
-            </p>
-          </div>
+    <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-gray-600 sm:text-lg">
+      Stay ahead with our latest travel updates, expert insights, and
+      helpful airline guides. Explore our newest articles for practical
+      advice and inspiration for your next journey.
+    </p>
+  </div>
 
-          <div className="shrink-0 md:self-center">
-            <Link
-              href="/blog"
-              className="inline-flex items-center justify-center gap-3 rounded-lg bg-[#538440] px-5 py-3 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#426D33] hover:shadow-md sm:px-6"
-            >
-              All Blogs
-              <ArrowRight size={21} />
-            </Link>
-          </div>
-        </div>
+  <div className="mt-5 flex justify-center md:absolute md:right-0 md:top-1/2 md:mt-0 md:-translate-y-1/2">
+    <Link
+      href="/blog"
+      className="inline-flex items-center justify-center gap-3 rounded-lg bg-[#538440] px-5 py-3 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#426D33] hover:shadow-md sm:px-6"
+    >
+      All Blogs
+      <ArrowRight size={21} />
+    </Link>
+  </div>
+</div>
+
 
         {/* Recent Blog Articles */}
         {recentArticles.length > 0 ? (

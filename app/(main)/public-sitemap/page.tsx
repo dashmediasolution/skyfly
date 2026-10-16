@@ -1,90 +1,177 @@
-import Link from "next/link";
-import prisma from "@/lib/prisma";
-import { Metadata } from "next";
+ import Link from "next/link";
+import type { Metadata } from "next";
+import { ArrowUpRight, Link2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sitemap",
-  description: "Overview of all pages and articles on SkyFlyWithUs.",
+  title: "Sitemap | SkyFlyWithUs",
+  description:
+    "Explore SkyFlyWithUs pages, flight destinations, and travel deals.",
 };
 
-// Reusing your category list
-const categories = [
-  { name: "Cancellation and Refund", slug: "cancellation-and-refund" },
-  { name: "Change Flight", slug: "change-flight" },
-  { name: "Compensation", slug: "compensation" },
-  { name: "Seat Upgrade", slug: "seat-upgrade" },
-  { name: "Voucher", slug: "voucher" },
-  { name: "Lost and Found", slug: "lost-and-found" },
-  { name: "Check In", slug: "check-in" },
-  { name: "Airport", slug: "airport" },
+const quickLinks = [
+  { label: "Home", href: "/" },
+  { label: "Flights", href: "/flights" },
+  { label: "Hotels", href: "/hotels" },
+  { label: "Car Rental", href: "/car-rental" },
+  { label: "Deals", href: "/deals" },
+  { label: "Group Travel", href: "/group-travel" },
+  { label: "Blogs", href: "/blog" },
+  { label: "Disclaimer", href: "/disclaimer" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms & Condition", href: "/terms" },
+  { label: "Site Map", href: "/sitemap" },
 ];
 
-// Server Component to fetch data
-export default async function SitemapPage() {
-  // Fetch recent blogs (limit to 50 or 100 to avoid a huge list)
-  const blogs = await prisma.blog.findMany({
-    select: { title: true, slug: true },
-    orderBy: { createdAt: "desc" },
-    take: 10, 
-  });
+const travelDestinations = [
+  { label: "Flights to Amsterdam", href: "/flights/amsterdam" },
+  { label: "Flights to Bali", href: "/flights/bali" },
+  { label: "Flights to Barcelona", href: "/flights/barcelona" },
+  { label: "Flights to London", href: "/flights/london" },
+  { label: "Flights to Paris", href: "/flights/paris" },
+  { label: "Flights to Dubai", href: "/flights/dubai" },
+  { label: "Flights to Singapore", href: "/flights/singapore" },
+  { label: "Flights to New York", href: "/flights/new-york" },
+  { label: "Flights to Rome", href: "/flights/rome" },
+  { label: "Flights to Tokyo", href: "/flights/tokyo" },
+  { label: "Flights to Istanbul", href: "/flights/istanbul" },
+  { label: "Flights to Bangkok", href: "/flights/bangkok" },
+];
 
+const travelDeals = [
+  {
+    label: "Christmas Day Offer",
+    href: "/deals/package/christmas-day-offer",
+  },
+  {
+    label: "Black Friday Offer",
+    href: "/deals/package/black-friday-offer",
+  },
+  {
+    label: "Valentine’s Day Offer",
+    href: "/deals/package/valentines-day-offer",
+  },
+];
+
+const linkClass =
+  "group flex min-w-0 items-center justify-between gap-2 rounded-md bg-[#F0F5ED] px-2 py-1.5 text-gray-600 transition-colors hover:bg-[#E1ECD9] hover:text-[#355F32] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#568747] sm:px-2.5";
+
+function SitemapSection({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <main className="container mx-auto py-16 px-4 mt-25">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Sitemap</h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
-          Navigate through our website content.
-        </p>
+    <section className="mt-5 overflow-hidden rounded-lg border border-[#C9DCC1]">
+      <div className="flex items-center gap-2 bg-[#F0F5ED] px-3 py-2">
+        <Link2
+          size={17}
+          className="shrink-0 text-[#568747]"
+          aria-hidden="true"
+        />
+
+        <h2 className="text-sm font-bold text-[#193A35] sm:text-base">
+          {title}
+        </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-        
-        {/* Column 1: Main Pages */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-[#FF8C00] border-b pb-2">General</h2>
-          <ul className="space-y-3">
-            <li><Link href="/" className="hover:text-[#FFB667] hover:underline">Home</Link></li>
-            <li><Link href="/about" className="hover:text-[#FFB667]  hover:underline">About Us</Link></li>
-            <li><Link href="/blog" className="hover:text-[#FFB667]  hover:underline">Blog Index</Link></li>
-            <li><Link href="/contact" className="hover:text-[#FFB667]  hover:underline">Contact Us</Link></li>
-          </ul>
+      {children}
+    </section>
+  );
+}
 
-          <h2 className="text-2xl font-semibold text-[#FF8C00] border-b pb-2 pt-4">Legal</h2>
-          <ul className="space-y-3">
-            <li><Link href="/privacy" className="hover:text-[#FFB667]  hover:underline">Privacy Policy</Link></li>
-            <li><Link href="/terms" className="hover:text-[#FFB667]  hover:underline">Terms and Conditions</Link></li>
-          </ul>
+function SitemapLinkGrid({
+  items,
+  label,
+}: {
+  items: { label: string; href: string }[];
+  label: string;
+}) {
+  return (
+    <nav
+      aria-label={label}
+      className="grid grid-cols-2 gap-x-3 gap-y-2 p-2 sm:grid-cols-3 sm:gap-x-5 sm:p-2.5 lg:grid-cols-4"
+    >
+      {items.map((item) => (
+        <Link key={item.href} href={item.href} className={linkClass}>
+          <span className="truncate text-xs sm:text-sm">{item.label}</span>
+
+          <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#568747] text-white transition-transform group-hover:translate-x-0.5">
+            <ArrowUpRight size={10} strokeWidth={2.5} />
+          </span>
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+export default function SitemapPage() {
+  return (
+    <main className="min-h-screen bg-white pb-12">
+      {/* Sitemap Hero */}
+      <section className="relative isolate overflow-hidden">
+        <div
+          className="relative flex min-h-[280px] items-center bg-cover bg-center bg-no-repeat sm:min-h-[320px] lg:min-h-[400px]"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1569629743817-70d8db6c323b?q=80&w=1600&auto=format&fit=crop')",
+          }}
+        >
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-white/80 via-white/45 to-transparent" />
+
+          <div className="mx-auto w-full max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              Explore Our Sitemap
+            </h1>
+
+            <nav
+              aria-label="Breadcrumb"
+              className="mt-3 flex items-center gap-3 text-sm text-white"
+            >
+              <Link
+                href="/"
+                className="transition-colors text-white"
+              >
+                Home
+              </Link>
+
+              <span aria-hidden="true">/</span>
+
+              <span aria-current="page" className="text-white">
+                Sitemap
+              </span>
+            </nav>
+          </div>
         </div>
+      </section>
 
-        {/* Column 2: Categories */}
-        <div>
-          <h2 className="text-2xl font-semibold text-[#FF8C00] border-b pb-2 mb-6">Blog Categories</h2>
-          <ul className="space-y-3">
-            {categories.map((cat) => (
-              <li key={cat.slug}>
-                <Link href={`/blog/category/${cat.slug}`} className="hover:text-[#FFB667]  hover:underline">
-                  {cat.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* Sitemap Links */}
+      <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
+        <SitemapSection title="Quick Links">
+          <SitemapLinkGrid
+            items={quickLinks}
+            label="Sitemap quick links"
+          />
+        </SitemapSection>
 
-        {/* Column 3: Recent Articles */}
-        <div>
-          <h2 className="text-2xl font-semibold text-[#FF8C00] border-b pb-2 mb-6">Recent Articles</h2>
-          <ul className="space-y-3 text-sm">
-            {blogs.map((blog) => (
-              <li key={blog.slug}>
-                <Link href={`/blog/${blog.slug}`} className="hover:text-[#FFB667] hover:underline">
-                  {blog.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <SitemapSection title="Handpicked Travel Destinations">
+          <SitemapLinkGrid
+            items={travelDestinations}
+            label="Handpicked travel destinations"
+          />
+        </SitemapSection>
 
+        <SitemapSection title="Top Travel Deals">
+          <SitemapLinkGrid
+            items={travelDeals}
+            label="Top travel deals"
+          />
+        </SitemapSection>
       </div>
     </main>
   );
 }
+ 

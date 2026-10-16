@@ -317,26 +317,24 @@ export default async function DestinationPage({
               Our travel team can help you review your options and plan your trip.
             </p>
 
-            <a
-              href="tel:+18555093791"
+            <div
+          
               className="mt-4 flex items-center justify-center gap-2 text-sm font-semibold text-gray-700 hover:text-[#538440]"
-            >
-              <Phone size={14} />
-             <span>1-855-509-3791</span>
+             >
+               <Phone size={16} />
+             <span className="text-xl">1-855-509-3791</span>
 
-            </a>
+            </div>
 
-            <p className="mt-1 text-xs text-gray-500">
-              Mon - Sat, 9 AM - 9 PM
-            </p>
+            
 
-            <Link
-              href="/contact"
+            <a
+                href="tel:+18555093791"
               className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-[#538440] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#3F6632]"
             >
               <Phone size={14} />
               Request a Call
-            </Link>
+            </a>
           </div>
 
           {/* Popular Routes */}

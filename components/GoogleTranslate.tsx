@@ -143,53 +143,57 @@ export default function GoogleTranslate() {
     }
   };
 
-  return (
-    <>
-      <div className="language-select-wrapper">
-        <span className="language-select-flag" aria-hidden="true">
-          {language === "en" ? "🇺🇸" : "🇪🇸"}
-        </span>
-
-        <select
-          aria-label="Select language"
-          value={language}
-          onChange={(event) =>
-            changeLanguage(event.target.value as Language)
-          }
-          className="language-select"
-        >
-          <option value="en">EN</option>
-          <option value="es">ES</option>
-        </select>
-
-        <svg
-          className="language-select-arrow"
-          viewBox="0 0 20 20"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m5 7.5 5 5 5-5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-
-      <div
-        id="google_translate_element"
-        className="google-translate-hidden"
-        aria-hidden="true"
+ return (
+  <>
+    <div className="language-select-wrapper">
+      <img
+        src={
+          language === "en"
+            ? "https://flagcdn.com/w40/us.png"
+            : "https://flagcdn.com/w40/es.png"
+        }
+        alt={language === "en" ? "United States flag" : "Spain flag"}
+        className="language-select-flag"
+        width={24}
+        height={16}
       />
-      <div
-        id="google_translate_element"
-        className="google-translate-hidden"
+
+      <select
+        aria-label="Select language"
+        value={language}
+        onChange={(event) =>
+          changeLanguage(event.target.value as Language)
+        }
+        className="language-select"
+      >
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+      </select>
+
+      <svg
+        className="language-select-arrow"
+        viewBox="0 0 20 20"
+        fill="none"
         aria-hidden="true"
-      />
-    </>
-  );
+      >
+        <path
+          d="m5 7.5 5 5 5-5"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+
+    <div
+      id="google_translate_element"
+      className="google-translate-hidden"
+      aria-hidden="true"
+    />
+  </>
+);
+ 
 }
 
 

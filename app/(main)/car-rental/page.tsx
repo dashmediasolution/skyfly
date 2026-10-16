@@ -16,7 +16,8 @@ import {
     Clock,
     KeyRound,
 } from "lucide-react";
-
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("carRental");
 const cars = [
     {
         category: "ECONOMY CARS",
@@ -380,8 +381,8 @@ export default function CarBookingPage() {
             </section>
 
             {/* Promotional banner */}
-            <section className="relative overflow-hidden border-y border-[#DDEAD7] bg-[#EAF4E5]">
-                <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2">
+          <section className="relative overflow-hidden w-full flex justify-center items-center">
+        <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2 w-[93%]  border-y border-[#DDEAD7] bg-[#EAF4E5]">
                     <div className="relative min-h-[210px] lg:min-h-[260px]">
                         <Image
                             src="/images/CarPromotion.png"

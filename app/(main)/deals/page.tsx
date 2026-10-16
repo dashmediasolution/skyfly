@@ -1,4 +1,4 @@
-"use client";
+ 
 
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +21,8 @@ import {
     Sparkles,
     CheckCircle2,
 } from "lucide-react";
-
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("deals");
 const benefits = [
     {
         title: "Exclusive Travel Deals",

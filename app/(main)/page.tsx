@@ -10,10 +10,9 @@ import FlightSearch from "@/components/homePage/FlightSearch";
 import HandpickedDestinations from "@/components/handpicked-destinations";
 import TopTravelDeals from "@/components/top-travel-deals";
 import TravelInformation from "@/components/homePage/TravelInformation";
-export const metadata: Metadata = {
-  title: 'Find Cheap Flights & Travel Guides', // This will override the default
-  description: 'SkyFlyWithUs: Your main destination for booking cheap flights and discovering inspiring travel blogs and guides.',
-};
+import { createPageMetadata } from "@/lib/seo";
+export const metadata = createPageMetadata("home");
+ 
 
 export default function Home() {
   return (
