@@ -25,7 +25,7 @@ const cars = [
         name: "Toyota Corolla",
         type: "Compact Sedan",
         location: "Dallas, Texas",
-        image: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Toyota Corolla.webp",
         discount: "20% Off",
         passengers: "5 Seats",
         luggage: "2 Bags",
@@ -38,7 +38,7 @@ const cars = [
         name: "Honda Civic",
         type: "Compact Sedan",
         location: "Dallas, Texas",
-        image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Honda Civic.webp",
         discount: "15% Off",
         passengers: "5 Seats",
         luggage: "2 Bags",
@@ -51,7 +51,7 @@ const cars = [
         name: "Hyundai Elantra",
         type: "Standard Sedan",
         location: "Dallas, Texas",
-        image: "https://images.unsplash.com/photo-1617469767053-d3b523a0b982?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Hyundai Elantra.webp",
         discount: "20% Off",
         passengers: "5 Seats",
         luggage: "3 Bags",
@@ -64,7 +64,7 @@ const cars = [
         name: "Toyota RAV4",
         type: "Compact SUV",
         location: "New York, USA",
-        image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Toyota RAV4.webp",
         discount: "20% Off",
         passengers: "5 Seats",
         luggage: "3 Bags",
@@ -77,7 +77,7 @@ const cars = [
         name: "Ford Explorer",
         type: "Full-Size SUV",
         location: "Boston, USA",
-        image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Ford Explorer.webp",
         discount: "15% Off",
         passengers: "7 Seats",
         luggage: "4 Bags",
@@ -90,7 +90,7 @@ const cars = [
         name: "Jeep Grand Cherokee",
         type: "Premium SUV",
         location: "Philadelphia, USA",
-        image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Jeep Grand Cherokee.webp",
         discount: "20% Off",
         passengers: "5 Seats",
         luggage: "4 Bags",
@@ -103,7 +103,7 @@ const cars = [
         name: "Mercedes-Benz C-Class",
         type: "Luxury Sedan",
         location: "San Francisco, USA",
-        image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Mercedes-Benz C-Class.webp",
         discount: "15% Off",
         passengers: "5 Seats",
         luggage: "3 Bags",
@@ -116,7 +116,7 @@ const cars = [
         name: "BMW 5 Series",
         type: "Executive Sedan",
         location: "San Francisco, USA",
-        image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/BMW 5 Seriesr.webp",
         discount: "20% Off",
         passengers: "5 Seats",
         luggage: "3 Bags",
@@ -129,7 +129,7 @@ const cars = [
         name: "Porsche 911",
         type: "Luxury Sports Car",
         location: "Los Angeles, USA",
-        image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85",
+        image: "/images/cars/Porsche 911.webp",
         discount: "10% Off",
         passengers: "2 Seats",
         luggage: "1 Bag",
@@ -281,17 +281,14 @@ export default function CarBookingPage() {
                     ].map(({ title, subtitle, Icon }, index) => (
                         <div
                             key={title}
-                            className={`flex items-center gap-3 px-2 py-3 sm:px-4 lg:px-6 ${
-                                index % 2 === 0
+                            className={`flex items-center gap-3 px-2 py-3 sm:px-4 lg:px-6 ${index % 2 === 0
                                     ? "border-r border-[#DDEAD7]"
                                     : ""
-                            } ${
-                                index < 2
+                                } ${index < 2
                                     ? "border-b border-[#DDEAD7] lg:border-b-0"
                                     : ""
-                            } ${
-                                index === 3 ? "lg:border-r-0" : ""
-                            }`}
+                                } ${index === 3 ? "lg:border-r-0" : ""
+                                }`}
                         >
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#DCEFD2] text-[#538440] sm:size-12">
                                 <Icon size={23} />
@@ -361,7 +358,7 @@ export default function CarBookingPage() {
                                             <span>{car.location}</span>
                                         </div>
 
-                                        
+
 
                                         <div className="flex items-center justify-between gap-2">
                                             <span className="text-base text-gray-500">
@@ -381,8 +378,8 @@ export default function CarBookingPage() {
             </section>
 
             {/* Promotional banner */}
-          <section className="relative overflow-hidden w-full flex justify-center items-center">
-        <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2 w-[93%]  border-y border-[#DDEAD7] bg-[#EAF4E5]">
+            <section className="relative overflow-hidden w-full flex justify-center items-center">
+                <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2 w-[93%]  border-y border-[#DDEAD7] bg-[#EAF4E5]">
                     <div className="relative min-h-[210px] lg:min-h-[260px]">
                         <Image
                             src="/images/CarPromotion.webp"

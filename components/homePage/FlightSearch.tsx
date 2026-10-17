@@ -128,66 +128,61 @@ const [to, setTo] = useState("Los Angeles LAX");
                 />
             </div>
 
-            {/* Departure */}
-            <div className="min-w-0">
-                <label
-                    htmlFor="departure-date"
-                    className="mb-2 block text-sm font-semibold text-gray-600"
-                >
-                    {searchType === "flights" ? "Departure" : "Check-in"}
-                </label>
+    
+{/* Departure */}
+<div className="min-w-0">
+    <label
+        htmlFor="departure-date"
+        className="mb-2 block text-sm font-semibold text-gray-600"
+    >
+        {searchType === "flights" ? "Departure" : "Check-in"}
+    </label>
 
-                <div className="flex h-[58px] items-center gap-2 rounded-xl border border-gray-200 px-3 focus-within:border-[#548746]">
-                    <CalendarDays
-                        size={20}
-                        className="shrink-0 text-[#548746]"
-                    />
+    <div className="flex h-[58px] items-center gap-2 rounded-xl border border-gray-200 px-3 focus-within:border-[#548746]">
+        <CalendarDays
+            size={20}
+            className="shrink-0 text-[#548746]"
+        />
 
-                    <input
-                        id="departure-date"
-                        type="date"
-                        value={departure}
-                        min={new Date().toLocaleDateString("en-CA")}
-                        onChange={(event) => {
-                            const nextDate = event.target.value;
-                            setDeparture(nextDate);
+        <input
+            id="departure-date"
+            type="date"
+            value={departure}
+            min={new Date().toLocaleDateString("en-CA")}
+            onChange={(event) => setDeparture(event.target.value)}
+            required
+            className="w-full min-w-0 bg-transparent text-sm font-semibold text-gray-700 outline-none"
+        />
+    </div>
+</div>
 
-                            if (nextDate > returnDate) {
-                                setReturnDate(nextDate);
-                            }
-                        }}
-                        required
-                        className="w-full min-w-0 bg-transparent text-sm font-semibold text-gray-700 outline-none"
-                    />
-                </div>
-            </div>
+{/* Return */}
+<div className="min-w-0">
+    <label
+        htmlFor="return-date"
+        className="mb-2 block text-sm font-semibold text-gray-600"
+    >
+        {searchType === "flights" ? "Return" : "Check-out"}
+    </label>
 
-            {/* Return */}
-            <div className="min-w-0">
-                <label
-                    htmlFor="return-date"
-                    className="mb-2 block text-sm font-semibold text-gray-600"
-                >
-                    {searchType === "flights" ? "Return" : "Check-out"}
-                </label>
+    <div className="flex h-[58px] items-center gap-2 rounded-xl border border-gray-200 px-3 focus-within:border-[#548746]">
+        <CalendarDays
+            size={20}
+            className="shrink-0 text-[#548746]"
+        />
 
-                <div className="flex h-[58px] items-center gap-2 rounded-xl border border-gray-200 px-3 focus-within:border-[#548746]">
-                    <CalendarDays
-                        size={20}
-                        className="shrink-0 text-[#548746]"
-                    />
+        <input
+            id="return-date"
+            type="date"
+            value={returnDate}
+            min={departure || new Date().toLocaleDateString("en-CA")}
+            onChange={(event) => setReturnDate(event.target.value)}
+            required
+            className="w-full min-w-0 bg-transparent text-sm font-semibold text-gray-700 outline-none"
+        />
+    </div>
+</div>
 
-                    <input
-                        id="return-date"
-                        type="date"
-                        value={returnDate}
-                        min={departure}
-                        onChange={(event) => setReturnDate(event.target.value)}
-                        required
-                        className="w-full min-w-0 bg-transparent text-sm font-semibold text-gray-700 outline-none"
-                    />
-                </div>
-            </div>
 
             {/* Travellers */}
             <div className="min-w-0">

@@ -11,11 +11,11 @@ const staticRoutes = [
   { path: "/deals", priority: 0.8, changeFrequency: "weekly" as const },
   { path: "/group-travel", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const },
-  { path: "/about", priority: 0.6, changeFrequency: "monthly" as const },
-  { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/about-us", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/contact-us", priority: 0.6, changeFrequency: "monthly" as const },
   { path: "/disclaimer", priority: 0.3, changeFrequency: "yearly" as const },
-  { path: "/privacy", priority: 0.3, changeFrequency: "yearly" as const },
-  { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const },
+  { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const },
+  { path: "/terms-and-conditions", priority: 0.3, changeFrequency: "yearly" as const },
   { path: "/sitemap", priority: 0.3, changeFrequency: "monthly" as const },
 ];
 

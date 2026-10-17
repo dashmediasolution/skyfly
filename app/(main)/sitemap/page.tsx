@@ -17,10 +17,10 @@ const quickLinks = [
   { label: "Group Travel", href: "/group-travel" },
   { label: "Blogs", href: "/blog" },
   { label: "Disclaimer", href: "/disclaimer" },
-  { label: "About Us", href: "/about" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms & Condition", href: "/terms" },
+  { label: "About Us", href: "/about-us" },
+  { label: "Contact Us", href: "/contact-us" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Condition", href: "/terms-and-conditions" },
   { label: "Site Map", href: "/sitemap" },
 ];
 
@@ -42,15 +42,15 @@ const travelDestinations = [
 const travelDeals = [
   {
     label: "Christmas Day Offer",
-    href: "/deals/package/christmas-day-offer",
+    href: "/deals/christmas-day-offer",
   },
   {
     label: "Black Friday Offer",
-    href: "/deals/package/black-friday-offer",
+    href: "/deals/black-friday-offer",
   },
   {
     label: "Valentine’s Day Offer",
-    href: "/deals/package/valentines-day-offer",
+    href: "/deals/valentines-day-offer",
   },
 ];
 

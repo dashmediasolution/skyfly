@@ -164,7 +164,7 @@ export default async function IndividualBlogPage({ params }: { params: Promise<{
             {/* Main Image */}
             <div className="relative w-full h-[300px] md:h-[500px] border border-gray-200 rounded-2xl overflow-hidden mb-10">
               <Image
-                src={post.imageUrl || "/images/airplane-wing2.jpg"} 
+                src={post.imageUrl || "/images/airplane-wing2.webp"} 
                 alt={post.title}
                 fill
                 className="object-cover"
@@ -205,7 +205,7 @@ export default async function IndividualBlogPage({ params }: { params: Promise<{
                                 {/* Thumbnail */}
                                 <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                                     <Image 
-                                        src={relatedPost.imageUrl || relatedPost.image || "/images/airplane-wing2.jpg"} 
+                                        src={relatedPost.imageUrl || relatedPost.image || "/images/airplane-wing2.webp"} 
                                         alt={relatedPost.title} 
                                         fill 
                                         className="object-cover group-hover:scale-110 transition-transform duration-300"

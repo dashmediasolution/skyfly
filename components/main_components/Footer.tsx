@@ -8,7 +8,7 @@ import { FaXTwitter, FaPinterestP, FaInstagram, FaFacebook } from "react-icons/f
 
 
 const quickLinks = [
-  { name: "About Us", href: "/about" },
+  { name: "About Us", href: "/about-us" },
   { name: "Flights", href: "/flights" },
   { name: "Blog", href: "/blog" },
   { name: "Car Rental", href: "/car-rental" },
@@ -18,9 +18,9 @@ const quickLinks = [
 
 const usefulLinks = [
   { name: "Disclaimer", href: "/disclaimer" },
-  { name: "Privacy Policy", href: "/privacy" },
-  { name: "Terms & Conditions", href: "/terms" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Terms & Conditions", href: "/terms-and-conditions" },
+  { name: "Contact Us", href: "/contact-us" },
   { name: "Sitemap", href: "/sitemap" },
 ];
 

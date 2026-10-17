@@ -167,7 +167,7 @@ const benefits = [
     Icon: ShieldCheck,
   },
   {
-    title: "Special Offers & Packages",
+    title: "Special Offers",
     description: "Enjoy seasonal deals and group packages.",
     Icon: Gift,
   },

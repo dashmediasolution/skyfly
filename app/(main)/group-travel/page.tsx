@@ -43,7 +43,7 @@ const groupPackages = [
     },
     {
         category: "FRIENDS & GROUP GETAWAYS",
-        name: "Friends' Holiday Packages",
+        name: "Friends' Holiday",
         location: "Bali, Indonesia",
         image: "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=900&q=85",
         label: "Group Getaways",
@@ -283,7 +283,7 @@ export default function GroupTravelPage() {
                 </div>
             </section>
 
-            {/* Group Travel Package Cards */}
+           
             <section className="mx-auto max-w-[1440px] px-5 pb-10 sm:px-8 lg:px-12">
                 <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                     <div className="max-w-2xl">

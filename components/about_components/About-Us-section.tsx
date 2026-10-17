@@ -84,7 +84,7 @@ export function AboutUsSection() {
 
             <div className="relative h-[340px] overflow-hidden rounded-[1.75rem] shadow-2xl shadow-primary/10 sm:h-[440px] lg:h-[520px]">
               <Image
-                src="/images/airplane-wing2.jpg"
+                src="/images/airplane-wing2.webp"
                 alt="Airplane soaring above the clouds on a memorable journey"
                 fill
                 priority

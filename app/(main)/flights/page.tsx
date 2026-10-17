@@ -125,7 +125,7 @@ export default function FlightBookingPage() {
     return (
         <main className="flex min-h-screen flex-col items-center bg-white">
             <HeroSection
-                image="/images/FlightBanner.jpg"
+                image="/images/FlightBanner.webp"
                 alt="Explore destinations around the world"
             />
 

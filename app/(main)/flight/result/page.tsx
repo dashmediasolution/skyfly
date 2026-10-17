@@ -30,7 +30,7 @@ const mapFlightData = (flightData: any) => {
     const arrName = lastSegment.arrival_airport.name || lastSegment.arrival_airport.id;
 
     return {
-        imageUrl: "/images/airplane-wing2.jpg",
+        imageUrl: "/images/airplane-wing2.webp",
         airline: firstSegment.airline,
         flightCode: firstSegment.flight_number,
         flightClass: firstSegment.travel_class,

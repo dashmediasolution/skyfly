@@ -114,20 +114,18 @@ export const siteMetadata = {
 
     groupTravel: {
         path: "/group-travel",
-        title: "Group Travel Packages & Deals | SkyFlyWithUs",
+        title: "Group Travel  Deals | SkyFlyWithUs",
         description:
             "Planning travel for a group? Explore group travel options with SkyFlyWithUs and find booking solutions for your group's travel needs.",
         keywords: [
             "group travel",
-            "group travel packages",
-            "group flight booking",
+             "group flight booking",
             "group airline tickets",
             "group airfare",
             "group travel deals",
             "group flight discounts",
             "group reservations",
-            "group vacation packages",
-            "group travel services",
+             "group travel services",
             "book group flights",
             "corporate group travel",
             "family group travel",
