@@ -47,7 +47,7 @@ export function PreFooterBanner() {
 
           <Button 
             onClick={handleBookNowClick} 
-            className="bg-black text-white hover:bg-gray-900 px-8 py-6 rounded-full text-lg font-bold shadow-md transition-transform hover:scale-105"
+            className="bg-black cursor-pointer text-white hover:bg-gray-900 px-8 py-6 rounded-full text-lg font-bold shadow-md transition-transform hover:scale-105"
           >
             Book Now
           </Button>

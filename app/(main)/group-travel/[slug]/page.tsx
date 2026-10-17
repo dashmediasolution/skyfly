@@ -1,5 +1,6 @@
  import Image from "next/image";
 import Link from "next/link";
+import FlightFAQ from "@/components/FlightFAQ";
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -341,7 +342,13 @@ export default async function GroupTravelDetailPage({
               className="mt-4 flex items-center justify-center gap-2 text-sm font-semibold text-gray-700 hover:text-[#538440]"
              >
                <Phone size={16} />
-             <span className="text-xl">1-855-509-3791</span>
+  <a
+              href="tel:+18555093791"
+              className="mt-4 inline-flex items-center justify-center gap-2 text-lg font-semibold text-gray-700 transition hover:text-[#538440]"
+            >
+              <Phone size={16} />
+              <span>1-855-509-3791</span>
+            </a>
 
             </div>
 
@@ -390,29 +397,13 @@ export default async function GroupTravelDetailPage({
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <div className="flex items-center gap-2">
-              <MapPin size={17} className="text-[#538440]" />
-              <h2 className="text-sm font-bold text-gray-800">
-                Featured Destination
-              </h2>
-            </div>
-            <p className="mt-2 text-sm font-semibold text-[#538440]">
-              {page.location}
-            </p>
-            <p className="mt-1 text-xs leading-5 text-gray-500">
-              Explore flight options and plan the details of your group's
-              next journey.
-            </p>
-            <Link
-              href="/flights"
-              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#538440] hover:underline"
-            >
-              Explore flights <ArrowRight size={13} />
-            </Link>
-          </div>
+       
         </aside>
       </div>
+      <FlightFAQ
+        destinationSlug="group-travel"
+        destinationName="Group Travel"
+      />
     </main>
   );
 }

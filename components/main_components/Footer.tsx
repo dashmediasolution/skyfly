@@ -3,9 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { FaXTwitter, FaPinterestP, FaInstagram , FaFacebook } from "react-icons/fa6";
+import { FaXTwitter, FaPinterestP, FaInstagram, FaFacebook } from "react-icons/fa6";
 
- 
+
 
 const quickLinks = [
   { name: "About Us", href: "/about" },
@@ -21,14 +21,14 @@ const usefulLinks = [
   { name: "Privacy Policy", href: "/privacy" },
   { name: "Terms & Conditions", href: "/terms" },
   { name: "Contact Us", href: "/contact" },
-  { name: "Sitemap", href: "/public-sitemap" },
+  { name: "Sitemap", href: "/sitemap" },
 ];
 
 export function Footer() {
   return (
     <footer
       className="w-full overflow-hidden font-sans text-white bg-primary"
-      
+
     >
       {/* Main Footer */}
       <div className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 sm:py-12 lg:px-12">
@@ -60,44 +60,29 @@ export function Footer() {
 
             {/* Social Media */}
             <div className="mt-5 flex items-center gap-2">
-              <a
-                href="https://x.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="X"
+                    <div
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaXTwitter className="size-4" />
-              </a>
+              </div>
 
-              <a
-                href="https://pinterest.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Pinterest"
+                  <div
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaPinterestP className="size-4" />
-              </a>
+              </div>
 
-              <a
-                href="https://instagram.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
+              <div
+                
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaInstagram className="size-4" />
-              </a>
-                <a
-                href="https://facebook.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
+              </div>
+                    <div
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaFacebook className="size-4" />
-              </a>
+              </div>
             </div>
           </div>
 
@@ -160,15 +145,16 @@ export function Footer() {
             </div>
 
             <div className="space-y-5">
-              <div
-                 className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
+              <a
+                href="tel:18555093791"
+                className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
               >
                 <Phone className="mt-0.5 size-4 shrink-0 fill-white" />
-                 <span>1-855-509-3791</span>
-              </div>
+                <span>1-855-509-3791</span>
+              </a>
 
               <div
-                 className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
+                className="flex items-start gap-3 text-sm text-white/90 transition hover:text-white"
               >
                 <Mail className="mt-0.5 size-4 shrink-0  " />
                 <span>support@skyflywithus.com</span>
@@ -177,7 +163,7 @@ export function Footer() {
               <div className="flex items-start gap-3 text-sm leading-6 text-white/90">
                 <MapPin className="mt-0.5 size-4 shrink-0" />
                 <span>
-                1803 Hickory Avenue, Panama City, Florida 32405, United States
+                  1803 Hickory Avenue, Panama City, Florida 32405, United States
                 </span>
               </div>
             </div>
@@ -198,12 +184,12 @@ export function Footer() {
 
       {/* Copyright */}
       <div className="border-t border-white/10 bg-primary flex justify-center items-center">
-           <p className="text-xs leading-5 text-white/85 sm:text-sm w-fit my-4">
-            © {new Date().getFullYear()} SkyFlyWithUs. All rights reserved.
-          </p>
+        <p className="text-xs leading-5 text-white/85 sm:text-sm w-fit my-4">
+          © {new Date().getFullYear()} SkyFlyWithUs. All rights reserved.
+        </p>
 
-          
-       </div>
+
+      </div>
     </footer>
   );
 }

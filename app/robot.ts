@@ -5,9 +5,9 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules: {
-      userAgent: '*',
+       userAgent: '*',
       allow: '/',
-      disallow: ['/dashboard/', '/api/'], // Keep dashboard private
+      disallow: ['/dashboard/', '/api/',"/_next/static/chunks/"], // Keep dashboard private
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

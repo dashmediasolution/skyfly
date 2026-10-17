@@ -131,15 +131,45 @@ export default function FlightBookingPage() {
 
 
             {/* Flight Benefits */}
-            <section className="w-[95%] py-3 sm:px-8 md:py-2 lg:pt-20">
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
-                    Find the Best Flights for Your Next Adventure
-                </h2>
-                <p className="text-base md:text-xl lg:text-lg">
-                    Compare flight fares, explore popular destinations, and discover affordable ways to reach your favourite places.
-                    Plan your journey with  skyflywithus and find flight options that suit your travel dates and budget.
-                </p>
-            </section>
+      <section className="mx-auto w-full max-w-[1440px] px-5 py-6 sm:px-8 lg:px-12 lg:pt-12">
+    <h2 className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
+        Plan Your Next Flight Journey
+    </h2>
+
+    <p className="mt-2 max-w-5xl text-base leading-7 text-gray-600 md:text-lg">
+        Planning your next trip or need help with an existing flight
+        booking? Explore flight services for reservations, booking changes,
+        cancellations, and travel information. Get assistance understanding
+        available options and organizing your travel plans with
+        SkyFlyWithUs.
+    </p>
+</section>
+
+{/* Flight Benefits */}
+<section className="w-full px-4 py-5 sm:px-6 md:px-8 lg:px-12">
+    <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {benefits.map(({ title, description, Icon }) => (
+            <div
+                key={title}
+                            className="flex items-start gap-3 border border-[#538440]/15 bg-[#F8FBF6] p-4 transition hover:border-[#538440]/40 hover:shadow-sm"
+            >
+                            <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#EAF2E6] text-[#538440]">
+                    <Icon size={23} />
+                </div>
+
+                <div>
+                    <h3 className="text-sm font-bold text-gray-900 sm:text-base">
+                        {title}
+                    </h3>
+
+                    <p className="mt-1 text-xs leading-5 text-gray-600 sm:text-sm">
+                        {description}
+                    </p>
+                </div>
+            </div>
+        ))}
+    </div>
+</section>
 
             {/* Flight Deals Introduction */}
             <section className="w-full px-4 py-8 sm:px-6 md:px-8 lg:px-12 lg:py-12">
@@ -233,7 +263,7 @@ export default function FlightBookingPage() {
                                                 Flight to {route.destination}
                                             </p>
                                             <div className="w-full      flex justify-center items-center">
-                                                <Button >
+                                                <Button className="cursor-pointer" >
                                                     {route.description}
                                                 </Button>
                                             </div>

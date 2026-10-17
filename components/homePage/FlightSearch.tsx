@@ -42,14 +42,14 @@ export default function FlightSearch() {
     const [searchType, setSearchType] = useState<SearchType>("flights");
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-    const [from, setFrom] = useState("Delhi DEL");
-    const [to, setTo] = useState("Bali DPS");
+  const [from, setFrom] = useState("New York JFK");
+const [to, setTo] = useState("Los Angeles LAX");
 
     const [fromAirport, setFromAirport] = useState<Airport | null>(null);
     const [toAirport, setToAirport] = useState<Airport | null>(null);
 
-    const [departure, setDeparture] = useState("2026-11-12");
-    const [returnDate, setReturnDate] = useState("2026-11-18");
+    const [departure, setDeparture] = useState("");
+    const [returnDate, setReturnDate] = useState("");
 
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
   title: {
     default: "SkyFlyWithUs - Cheap Flights and Travel Blogs",
-    template: "%s | SkyFlyWithUs",
+    template: "%s",
   },
 
   description: "Book cheap flights and read travel blogs on SkyFlyWithUs.",
@@ -27,10 +27,7 @@ export const metadata: Metadata = {
   verification: {
     google: "ag0nLen_8F-Yes_X1qwJRCHvc_hNnblzOSXncz2RAW0",
   },
-
-  alternates: {
-    canonical: "/",
-  },
+ 
 
   authors: [{ name: "skyflywithus.com" }],
   publisher: "skyflywithus.com",
