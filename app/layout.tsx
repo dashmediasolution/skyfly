@@ -8,12 +8,7 @@ import Script from 'next/script';
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 
-const figtree = Figtree({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-    display: "swap",
-});
-
+ 
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://skyflywithus.com"),
@@ -118,7 +113,7 @@ export default async function RootLayout({
         />
       </head>
       {/* Use the font here */}
-      <body className={`${figtree.className}`}>
+      <body>
         {/* SessionProvider and Toaster wrap EVERYTHING */}
         <SessionProvider session={session}>
           {children} {/* <-- This will be your (main) or (dashboard) layout */}

@@ -396,7 +396,7 @@ const [to, setTo] = useState("Los Angeles LAX");
                                 type="button"
                                 variant="ghost"
                                 onClick={() => setSearchType("flights")}
-                                className={`h-auto rounded-none border-b-[3px] px-0 pb-2 text-base font-bold hover:bg-transparent ${searchType === "flights"
+                                className={`h-auto rounded-none border-b-[3px] hover:text-primary px-0 pb-2 text-base font-bold hover:bg-transparent ${searchType === "flights"
                                     ? "border-[#548746] text-[#548746]"
                                     : "border-transparent text-gray-500"
                                     }`}
@@ -409,7 +409,7 @@ const [to, setTo] = useState("Los Angeles LAX");
                                 type="button"
                                 variant="ghost"
                                 onClick={() => setSearchType("hotels")}
-                                className={`h-auto rounded-none border-b-[3px] px-0 pb-2 text-base font-bold hover:bg-transparent ${searchType === "hotels"
+                                className={`h-auto rounded-none border-b-[3px] hover:text-primary px-0 pb-2 text-base font-bold hover:bg-transparent ${searchType === "hotels"
                                     ? "border-[#548746] text-[#548746]"
                                     : "border-transparent text-gray-500"
                                     }`}
