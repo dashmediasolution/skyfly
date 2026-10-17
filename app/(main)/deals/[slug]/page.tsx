@@ -88,7 +88,7 @@ export default async function DealDetailPage({
       {/* Hero Banner */}
       <section className="relative isolate min-h-[240px] overflow-hidden border-t-2 border-[#538440] sm:min-h-[285px] lg:min-h-[315px]">
         <Image
-          src="/images/dealsBanner.png"
+          src="/images/dealsBanner.webp"
           alt={`${deal.title} travel offers`}
           fill
           priority

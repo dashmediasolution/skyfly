@@ -177,7 +177,7 @@ export default function FlightBookingPage() {
                     <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2 md:gap-7 lg:gap-10">
                         <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-[#538440]/20">
                             <Image
-                                src="/images/flight-deals.png"
+                                src="/images/flight-deals.webp"
                                 alt="Traveler enjoying a flight"
                                 fill
                                 sizes="(max-width: 767px) 100vw, 50vw"

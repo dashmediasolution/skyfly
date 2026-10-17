@@ -202,7 +202,7 @@ export default function HotelsBookingPage() {
       {/* Hero section — no search bar */}
       <section className="relative isolate flex min-h-[310px] items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
         <Image
-  src="/images/HotelBanner.png"
+  src="/images/HotelBanner.webp"
   alt="Luxury beachfront hotel and tropical infinity pool"
   fill
   priority
@@ -363,7 +363,7 @@ export default function HotelsBookingPage() {
         <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2 w-[93%]  border-y border-[#DDEAD7] bg-[#EAF4E5]">
           <div className="relative min-h-[210px] lg:min-h-[260px]">
             <Image
-              src="/images/HotelPromotion.png"
+              src="/images/HotelPromotion.webp"
               alt="Tropical beachside hotel with ocean views"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

@@ -89,7 +89,7 @@ export default function DealsBookingPage() {
         <main className="flex min-h-screen flex-col items-center bg-white">
             {/* Hero */}
             <HeroSection
-                image="/images/dealsBanner.png"
+                image="/images/dealsBanner.webp"
                 alt="Beautiful mountain destination for your next travel adventure"
             />
 
@@ -138,7 +138,7 @@ export default function DealsBookingPage() {
                     <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2 md:gap-7 lg:gap-10">
                         <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-[#538440]/20">
                             <Image
-                                src="/images/flight-deals.png"
+                                src="/images/flight-deals.webp"
                                 alt="Travelers planning their next trip"
                                 fill
                                 sizes="(max-width: 767px) 100vw, 50vw"
