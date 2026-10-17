@@ -11,6 +11,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 const figtree = Figtree({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
+    display: "swap",
 });
 
 
