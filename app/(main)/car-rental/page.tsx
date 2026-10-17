@@ -116,7 +116,7 @@ const cars = [
         name: "BMW 5 Series",
         type: "Executive Sedan",
         location: "San Francisco, USA",
-        image: "/images/cars/BMW 5 Seriesr.webp",
+        image: "/images/cars/BMW 5 Series.webp",
         discount: "20% Off",
         passengers: "5 Seats",
         luggage: "3 Bags",
