@@ -31,14 +31,14 @@ export const destinations = [
     country: "USA",
     tagline: "Iconic skyscrapers, world-class entertainment and diverse culture.",
     overlayTitle: "The City That Never Sleeps",
-    image: "/images/destinations/image001.png",
+    image: "/images/destinations/image001.webp",
   },
   {
     name: "Tokyo",
     country: "Japan",
     tagline: "A perfect blend of ancient traditions and cutting-edge technology.",
     overlayTitle: "Tradition Meets Tomorrow",
-    image: "/images/destinations/image002.png",
+    image: "/images/destinations/image002.webp",
   },
   {
     name: "Dubai",

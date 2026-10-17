@@ -212,7 +212,7 @@ export default function CarBookingPage() {
             {/* Hero */}
             <section className="relative isolate flex min-h-[310px] items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
                 <Image
-                    src="/images/CarBanner1.png"
+                    src="/images/CarBanner1.webp"
                     alt="Premium car ready for a road trip"
                     fill
                     priority
@@ -385,7 +385,7 @@ export default function CarBookingPage() {
         <div className="grid min-h-[220px] grid-cols-1 lg:grid-cols-2 w-[93%]  border-y border-[#DDEAD7] bg-[#EAF4E5]">
                     <div className="relative min-h-[210px] lg:min-h-[260px]">
                         <Image
-                            src="/images/CarPromotion.png"
+                            src="/images/CarPromotion.webp"
                             alt="Car ready for a scenic road trip"
                             fill
                             sizes="(max-width: 1024px) 100vw, 50vw"
