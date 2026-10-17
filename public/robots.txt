@@ -5,6 +5,7 @@ Allow: /
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
+Disallow: /_next/static/chunks/
 
 # Sitemap location
 Sitemap: https://skyflywithus.com/sitemap.xml
