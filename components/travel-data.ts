@@ -10,7 +10,7 @@ export const destinations = [
     country: "France",
     tagline: "Romantic streets, iconic landmarks and timeless charm.",
     overlayTitle: "City of Love",
-    image: "/images/destinations/image006.png",
+    image: "/images/destinations/paris.webp",
   },
   {
     name: "London",
@@ -24,7 +24,7 @@ export const destinations = [
     country: "Singapore",
     tagline: "Futuristic skylines, lush gardens and unforgettable experiences.",
     overlayTitle: "The City in a Garden",
-    image: "/images/destinations/image004.png",
+    image: "/images/destinations/singapore.webp",
   },
   {
     name: "New York",
@@ -45,7 +45,7 @@ export const destinations = [
     country: "UAE",
     tagline: "Luxury shopping, desert adventures and breathtaking skyscrapers.",
     overlayTitle: "Where Dreams Touch the Sky",
-    image: "/images/destinations/image003.png",
+    image: "/images/destinations/image_13_60.webp",
   },
 ];
 

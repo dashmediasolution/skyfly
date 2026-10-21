@@ -29,17 +29,16 @@ const hotels = [
     heading: "Popular Airport Hotels Near Dallas-Fort Worth (DFW)",
     name: "La Quinta Inn & Suites by Wyndham Dallas DFW Airport North",
     location: "Dallas, Texas",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=85",
-    discount: "20% Off",
+    image:"/images/hotels/Dallas.webp",
+     discount: "20% Off",
   },
   {
     category: "TOP AIRPORT HOTELS",
     heading: "Popular Airport Hotels Near Dallas-Fort Worth (DFW)",
     name: "Comfort Suites DFW Airport",
     location: "Dallas, Texas",
-    image:
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=85",
+    image:"/images/hotels/Comfort Suites DFW Airport.webp",
+
     discount: "20% Off",
   },
   {
@@ -47,8 +46,8 @@ const hotels = [
     heading: "Popular Airport Hotels Near Dallas-Fort Worth (DFW)",
     name: "Wingate by Wyndham DFW North Irving",
     location: "Dallas, Texas",
-    image:
-      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=900&q=85",
+      image:"/images/hotels/Wingate.webp",
+
     discount: "20% Off",
   },
   {
@@ -56,8 +55,8 @@ const hotels = [
     heading: "Affordable Hotels Near Major East Coast Airports",
     name: "Holiday Inn Express",
     location: "New York, USA",
-    image:
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=85",
+    image:"/images/hotels/Holiday.webp",
+
     discount: "20% Off",
   },
   {
@@ -65,8 +64,8 @@ const hotels = [
     heading: "Affordable Hotels Near Major East Coast Airports",
     name: "Hampton Inn",
     location: "Boston, USA",
-    image:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=85",
+    image:"/images/hotels/Hampton Inn.webp",
+
     discount: "20% Off",
   },
   {
@@ -74,8 +73,8 @@ const hotels = [
     heading: "Affordable Hotels Near Major East Coast Airports",
     name: "Hyatt Place",
     location: "Philadelphia, USA",
-    image:
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=85",
+      image:"/images/hotels/Hyatt Place.webp",
+
     discount: "20% Off",
   },
   {
@@ -83,8 +82,8 @@ const hotels = [
     heading: "Top-Rated Hotels Near West Coast Airports",
     name: "Aloft San Francisco Airport",
     location: "San Francisco, USA",
-    image:
-      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=85",
+    image:"/images/hotels/Aloft San Francisco Airport.webp",
+
     discount: "20% Off",
   },
   {
@@ -92,8 +91,8 @@ const hotels = [
     heading: "Top-Rated Hotels Near West Coast Airports",
     name: "San Francisco Airport Marriott",
     location: "San Francisco, USA",
-    image:
-      "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=900&q=85",
+    image:"/images/hotels/San Francisco Airport Marriott.webp",
+
     discount: "20% Off",
   },
   {
@@ -101,8 +100,8 @@ const hotels = [
     heading: "Top-Rated Hotels Near West Coast Airports",
     name: "Hilton Los Angeles Airport",
     location: "Los Angeles, USA",
-    image:
-      "https://images.unsplash.com/photo-1563911302283-d2bc129e7570?auto=format&fit=crop&w=900&q=85",
+    image:"/images/hotels/Hilton Los Angeles Airport.webp",
+
     discount: "20% Off",
   },
 ];

@@ -25,7 +25,7 @@ const groupPackages = [
         category: "FAMILY GROUP TRAVEL",
         name: "Family Holiday Getaways",
         location: "Orlando, Florida",
-        image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=900&q=85",
+        image: "/images/group/Family Holiday Getaways.webp",
         label: "Family Trips",
         description:
             "Plan a memorable family vacation with travel options designed to bring everyone together.",
@@ -35,7 +35,7 @@ const groupPackages = [
         category: "CORPORATE GROUP TRAVEL",
         name: "Corporate Travel Solutions",
         location: "New York, USA",
-        image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85",
+        image: "/images/group/Corporate Travel Solutions.webp",
         label: "Business Trips",
         description:
             "Coordinate team travel for conferences, business meetings, and corporate events.",
@@ -45,7 +45,7 @@ const groupPackages = [
         category: "FRIENDS & GROUP GETAWAYS",
         name: "Friends' Holiday",
         location: "Bali, Indonesia",
-        image: "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=900&q=85",
+        image: "/images/group/Friends' Holiday.webp",
         label: "Group Getaways",
         description:
             "Discover exciting destinations for reunions, celebrations, and trips with friends.",

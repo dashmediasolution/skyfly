@@ -109,7 +109,7 @@ export default function DisclaimerPage() {
               If you have any questions about this Disclaimer, please
               visit our{" "}
               <Link
-                href="/contact"
+                href="/contact-us"
                 className="font-medium text-teal-700 hover:underline"
               >
                 Contact Us

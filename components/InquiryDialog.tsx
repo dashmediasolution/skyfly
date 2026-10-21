@@ -75,15 +75,28 @@ export default function InquiryDialog({
                 }),
             });
 
-            const result = await response.json();
+      const contentType = response.headers.get("content-type") || "";
 
-            if (!response.ok || !result.success) {
-                throw new Error(
-                    result.message ||
-                        "Unable to send your inquiry. Please try again."
-                );
-            }
+if (!contentType.includes("application/json")) {
+    console.error(
+        "Expected JSON but received:",
+        response.status,
+        await response.text()
+    );
 
+    throw new Error(
+        "The server returned an unexpected response. Please try again."
+    );
+}
+
+const result = await response.json();
+
+if (!response.ok || !result.success) {
+    throw new Error(
+        result.message ||
+            "Unable to send your inquiry. Please try again."
+    );
+}
             setSubmitted(true);
         } catch (err) {
             setError(
