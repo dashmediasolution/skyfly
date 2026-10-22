@@ -103,7 +103,7 @@ const popularRoutes = [
     },
     {
         destination: "Tokyo",
-        image: "/images/routes/tokyo.png",
+        image: "/images/routes/tokyo.webp",
         description: "Book Now",
         href: "/flights/tokyo",
     },
