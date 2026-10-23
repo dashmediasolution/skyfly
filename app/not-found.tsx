@@ -14,7 +14,7 @@ export default function NotFound() {
         }}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/90 to-white" />
+      <div className="absolute inset-0 bg-linear-to-b from-white/70 via-white/90 to-white" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto w-full max-w-2xl text-center">
