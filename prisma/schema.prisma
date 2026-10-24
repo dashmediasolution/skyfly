@@ -1,7 +1,7 @@
 // prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -25,8 +25,8 @@ model Booking {
   fromLocation  String
   toLocation    String
   departureDate DateTime
-  returnDate    DateTime 
-  travelClass   String   
+  returnDate    DateTime
+  travelClass   String
   adults        Int
   infants       Int
   createdAt     DateTime @default(now())
@@ -34,37 +34,59 @@ model Booking {
 
 model ContactMessage {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   
-  email     String   
-  company   String?  
-  message   String   
+  name      String
+  email     String
+  company   String?
+  message   String
   createdAt DateTime @default(now())
 }
 
 model Blog {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  slug          String   @unique 
-  categories    String[]  
-  content       String
-  image         String
-  focusKeyword  String   @default("")
-  metaTitle     String
-  metaDesc      String
-  metaKeywords  String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  author        User     @relation(fields: [authorId], references: [id])
-  authorId      String   @db.ObjectId
-  faqs          Faq[]    
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  slug         String   @unique
+  categories   String[]
+  content      String
+  image        String
+  focusKeyword String   @default("")
+  metaTitle    String
+  metaDesc     String
+  metaKeywords String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  author       User     @relation(fields: [authorId], references: [id])
+  authorId     String   @db.ObjectId
+  faqs         Faq[]
 }
 
 model Faq {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  question  String
-  answer    String
-  blog      Blog     @relation(fields: [blogId], references: [id])
-  blogId    String   @db.ObjectId
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  question String
+  answer   String
+  blog     Blog   @relation(fields: [blogId], references: [id])
+  blogId   String @db.ObjectId
 }
 
+model AirlinePolicyCategory {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  name      String          @unique
+  policies  AirlinePolicy[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
 
+model AirlinePolicy {
+  id              String                @id @default(auto()) @map("_id") @db.ObjectId
+  excerpt         String?
+  content         String
+  policyType      String
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[]              @default([])
+  status          String                @default("DRAFT")
+  publishedAt     DateTime?
+  categoryId      String                @db.ObjectId
+  category        AirlinePolicyCategory @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+}
