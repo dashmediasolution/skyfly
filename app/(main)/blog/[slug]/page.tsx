@@ -162,17 +162,16 @@ export default async function IndividualBlogPage({ params }: { params: Promise<{
             </div>
 
             {/* Main Image */}
-            <div className="relative w-full h-[300px] md:h-[500px] border border-gray-200 rounded-2xl overflow-hidden mb-10">
-              <Image
-                src={post.imageUrl || "/images/airplane-wing2.webp"} 
-                alt={post.title}
-                fill
-                className="object-cover"
-                loading="eager" 
-                priority={true}
-                sizes="(max-width: 1024px) 100vw, 800px"
-              />
-            </div>
+         <div className="relative w-full aspect-[2/1] border border-gray-200 rounded-2xl overflow-hidden mb-10">
+  <Image
+    src={post.imageUrl || "/images/airplane-wing2.webp"}
+    alt={post.title}
+    fill
+    className="object-contain"
+    priority
+    sizes="100vw"
+  />
+</div>
 
             {/* Blog Content */}
             <article className="prose prose-lg dark:prose-invert prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-[#FF8C00] max-w-none bg-white dark:bg-gray-800 p-8 md:p-10 rounded-2xl border border-gray-200 dark:border-gray-700 mb-10">

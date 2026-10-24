@@ -17,6 +17,7 @@ const quickLinks = [
 ];
 
 const usefulLinks = [
+   { name: "Name Correction", href: "/name-correction" },
   { name: "Disclaimer", href: "/disclaimer" },
   { name: "Privacy Policy", href: "/privacy-policy" },
   { name: "Terms & Conditions", href: "/terms-and-conditions" },
