@@ -59,45 +59,18 @@ export default function Navbar() {
                         </Link>
                     ))}
 
-                    {/* Airline Policies Dropdown */}
-                    <div className="group relative">
-                        <button
-                            type="button"
-                            className="flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] md:text-base"
-                            aria-haspopup="true"
-                        >
-                            Airline Policies
-                            <ChevronDown
-                                size={16}
-                                className="transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180"
-                            />
-                        </button>
 
-                        <div className="invisible absolute left-0 top-full z-50 w-64 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                            <div className="overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
-                                {policyNavigation.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className="block px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-[#EAF2E6] hover:text-[#548746]"
-                                    >
-                                        {item.label}
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
                 </nav>
 
                 {/* Right Actions */}
                 <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                     {/* Desktop Phone Button */}
                     <a
-                        href="tel:+1-855-509-3791"
-                        className="hidden items-center gap-2 rounded-full border border-[#548746]/40 px-4 py-2.5 text-sm font-semibold text-[#477b3c] transition-colors hover:bg-[#548746] hover:text-white sm:flex lg:px-5 lg:text-base"
+                        href="tel:+18555093791"
+                        className="hidden items-center gap-2 rounded-full border border-[#548746]/40 px-4 py-2.5 text-sm font-semibold text-[#477b3c] transition-colors bg-[#548746] hover:text-white sm:flex lg:px-5 lg:text-base"
                     >
-                        <Phone size={16} />
-                        <span>1-855-509-3791</span>
+                        <Phone className="text-white" size={20} />
+                        <span className="text-base font-semibold text-white">1-855-509-3791</span>
                     </a>
 
                     {/* Mobile Phone Icon */}
@@ -152,40 +125,7 @@ export default function Navbar() {
                             </Link>
                         ))}
 
-                        {/* Mobile Airline Policies Dropdown */}
-                        <div className="border-b border-gray-100">
-                            <button
-                                type="button"
-                                aria-expanded={mobilePolicyOpen}
-                                onClick={() =>
-                                    setMobilePolicyOpen((open) => !open)
-                                }
-                                className="flex w-full items-center justify-between py-4 text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] sm:text-base"
-                            >
-                                Airline Policies
-                                <ChevronDown
-                                    size={18}
-                                    className={`text-[#548746] transition-transform duration-200 ${
-                                        mobilePolicyOpen ? "rotate-180" : ""
-                                    }`}
-                                />
-                            </button>
-
-                            {mobilePolicyOpen && (
-                                <div className="pb-3 pl-4">
-                                    {policyNavigation.map((item) => (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            onClick={() => setMenuOpen(false)}
-                                            className="block rounded-lg px-3 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-[#EAF2E6] hover:text-[#548746]"
-                                        >
-                                            {item.label}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                         
 
                         {/* Mobile Language Selector */}
                         <div className="border-t border-gray-100 pt-4 sm:hidden">

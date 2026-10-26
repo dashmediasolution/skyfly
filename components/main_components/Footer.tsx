@@ -14,15 +14,19 @@ const quickLinks = [
   { name: "Car Rental", href: "/car-rental" },
   { name: "Hotel", href: "/hotels" },
   { name: "Deals", href: "/deals" },
+    { name: "Sitemap", href: "/sitemap" },
 ];
 
 const usefulLinks = [
-   { name: "Name Correction", href: "/name-correction" },
+  { name: "Flight Change Policy", href: "/flight-chnage" },
+  { name: "Name Correction Policy", href: "/name-correction" },
+  { name: "Cancellation Policy", href: "/cancellation" },
+  { name: "Baggage Policy", href: "/baggage" },
   { name: "Disclaimer", href: "/disclaimer" },
   { name: "Privacy Policy", href: "/privacy-policy" },
   { name: "Terms & Conditions", href: "/terms-and-conditions" },
   { name: "Contact Us", href: "/contact-us" },
-  { name: "Sitemap", href: "/sitemap" },
+
 ];
 
 export function Footer() {
@@ -61,25 +65,25 @@ export function Footer() {
 
             {/* Social Media */}
             <div className="mt-5 flex items-center gap-2">
-                    <div
+              <div
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaXTwitter className="size-4" />
               </div>
 
-                  <div
+              <div
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaPinterestP className="size-4" />
               </div>
 
               <div
-                
+
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaInstagram className="size-4" />
               </div>
-                    <div
+              <div
                 className="flex size-[30px] items-center justify-center bg-white text-[#00616A] transition hover:bg-white/80"
               >
                 <FaFacebook className="size-4" />
