@@ -18,7 +18,7 @@ const quickLinks = [
 ];
 
 const usefulLinks = [
-  { name: "Flight Change Policy", href: "/flight-chnage" },
+  { name: "Flight Change Policy", href: "/flight-change" },
   { name: "Name Correction Policy", href: "/name-correction" },
   { name: "Cancellation Policy", href: "/cancellation" },
   { name: "Baggage Policy", href: "/baggage" },

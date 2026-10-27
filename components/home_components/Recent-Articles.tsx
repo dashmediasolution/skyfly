@@ -14,19 +14,21 @@ import { BlogCard, Article } from "@/components/blog_components/blog-card";
 // Fetch the latest blog articles
  async function getRecentBlogs(): Promise<Article[]> {
   try {
+    console.log("Blog Checking......")
     const response = await fetch(
       `${process.env.NEXTAUTH_URL}/api/blogs/all`,
       {
         cache: "no-store",
       }
     );
-
+    console.log(response)
     if (!response.ok) {
       console.error("API Fetch Failed:", response.status);
       return [];
     }
 
     const allBlogs: Article[] = await response.json();
+    console.log(allBlogs)
     return allBlogs.slice(0, 3);
   } catch (error) {
     console.error("Homepage Blog Fetch Error:", error);

@@ -195,7 +195,7 @@ export function UpdateBlogDialog({ blog }: UpdateBlogDialogProps) {
                     Update
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="!w-[95vw] !max-w-none max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Update Blog Post: {blog.title}</DialogTitle>
                 </DialogHeader>

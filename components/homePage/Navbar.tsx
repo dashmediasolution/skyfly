@@ -1,4 +1,5 @@
- "use client";
+ 
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -22,7 +23,7 @@ const navigation = [
 ];
 
 const policyNavigation = [
-    { label: "Flight Change Policy", href: "/flight-chnage" },
+    { label: "Flight Change Policy", href: "/flight-change" },
     { label: "Name Correction Policy", href: "/name-correction" },
     { label: "Cancellation Policy", href: "/cancellation" },
     { label: "Baggage Policy", href: "/baggage" },
@@ -31,6 +32,7 @@ const policyNavigation = [
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [mobilePolicyOpen, setMobilePolicyOpen] = useState(false);
+    const [desktopPolicyOpen, setDesktopPolicyOpen] = useState(false);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white shadow-lg">
@@ -59,7 +61,48 @@ export default function Navbar() {
                         </Link>
                     ))}
 
+                    {/* Airline Policy Dropdown */}
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setDesktopPolicyOpen(true)}
+                        onMouseLeave={() => setDesktopPolicyOpen(false)}
+                    >
+                        <button
+                            type="button"
+                            aria-expanded={desktopPolicyOpen}
+                            onClick={() =>
+                                setDesktopPolicyOpen((open) => !open)
+                            }
+                            className="flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] md:text-base"
+                        >
+                            Airline Policy
+                            <ChevronDown
+                                size={16}
+                                className={`transition-transform ${
+                                    desktopPolicyOpen ? "rotate-180" : ""
+                                }`}
+                            />
+                        </button>
 
+                        {desktopPolicyOpen && (
+                            <div className="absolute left-0 top-full z-50 w-60 pt-3">
+                                <div className="overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
+                                    {policyNavigation.map((item) => (
+                                        <Link
+                                            key={item.label}
+                                            href={item.href}
+                                            onClick={() =>
+                                                setDesktopPolicyOpen(false)
+                                            }
+                                            className="block px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-[#EAF2E6] hover:text-[#548746]"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </nav>
 
                 {/* Right Actions */}
@@ -67,15 +110,17 @@ export default function Navbar() {
                     {/* Desktop Phone Button */}
                     <a
                         href="tel:+18555093791"
-                        className="hidden items-center gap-2 rounded-full border border-[#548746]/40 px-4 py-2.5 text-sm font-semibold text-[#477b3c] transition-colors bg-[#548746] hover:text-white sm:flex lg:px-5 lg:text-base"
+                        className="hidden items-center gap-2 rounded-full border border-[#548746]/40 bg-[#548746] px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-[#416d36] sm:flex lg:px-5 lg:text-base"
                     >
                         <Phone className="text-white" size={20} />
-                        <span className="text-base font-semibold text-white">1-855-509-3791</span>
+                        <span className="text-base font-semibold text-white">
+                            1-855-509-3791
+                        </span>
                     </a>
 
                     {/* Mobile Phone Icon */}
                     <a
-                        href="tel:+1-855-509-3791"
+                        href="tel:+18555093791"
                         aria-label="Call customer support"
                         className="flex size-10 items-center justify-center rounded-full border border-[#548746]/40 text-[#548746] transition-colors hover:bg-[#548746] hover:text-white sm:hidden"
                     >
@@ -125,7 +170,43 @@ export default function Navbar() {
                             </Link>
                         ))}
 
-                         
+                        {/* Mobile Airline Policy Dropdown */}
+                        <div className="border-b border-gray-100">
+                            <button
+                                type="button"
+                                aria-expanded={mobilePolicyOpen}
+                                onClick={() =>
+                                    setMobilePolicyOpen((open) => !open)
+                                }
+                                className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] sm:text-base"
+                            >
+                                Airline Policy
+                                <ChevronDown
+                                    size={18}
+                                    className={`text-[#548746] transition-transform ${
+                                        mobilePolicyOpen ? "rotate-180" : ""
+                                    }`}
+                                />
+                            </button>
+
+                            {mobilePolicyOpen && (
+                                <div className="mb-3 ml-3 border-l-2 border-[#548746]/30 pl-3">
+                                    {policyNavigation.map((item) => (
+                                        <Link
+                                            key={item.label}
+                                            href={item.href}
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                setMobilePolicyOpen(false);
+                                            }}
+                                            className="block py-3 text-sm font-medium text-gray-600 transition-colors hover:text-[#548746]"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
                         {/* Mobile Language Selector */}
                         <div className="border-t border-gray-100 pt-4 sm:hidden">
@@ -134,7 +215,7 @@ export default function Navbar() {
 
                         {/* Mobile Contact Link */}
                         <a
-                            href="tel:+1-855-509-3791"
+                            href="tel:+18555093791"
                             className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-[#548746] px-4 py-3 font-semibold text-white transition-colors hover:bg-[#416d36] sm:hidden"
                         >
                             <Headset size={19} />

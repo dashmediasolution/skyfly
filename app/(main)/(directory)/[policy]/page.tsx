@@ -37,9 +37,9 @@ const policyConfig: Record<
         infoDescription: string;
     }
 > = {
-    flight: {
+    "flight-change": {
         type: "FLIGHT",
-        title: "Flight",
+        title: "Flight Change",
         description:
             "Explore airline-specific flight policies, ticket conditions, and important travel requirements.",
         directoryTitle: "Flight Change Policy Directory",
@@ -173,9 +173,9 @@ export default function AirlinePolicyDirectoryPage() {
             category.name.toLowerCase().includes(normalizedSearch)
         );
     }, [categories, search]);
-
+ 
     if (!config || !policyRoute) {
-        return (
+         return (
             <main className="flex min-h-[50vh] items-center justify-center bg-slate-50 px-5">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-slate-900">
