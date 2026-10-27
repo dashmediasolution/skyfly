@@ -48,7 +48,7 @@ const destinations: Record<
   london: {
     name: "London",
     country: "United Kingdom",
-    image: "/images/routes/london.webp",
+    image: "/images/destinations/london2.webp",
     description: "Discover historic landmarks, culture and iconic city attractions.",
   },
   paris: {

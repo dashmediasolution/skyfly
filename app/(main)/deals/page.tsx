@@ -1,4 +1,4 @@
- 
+
 
 import Image from "next/image";
 import Link from "next/link";
@@ -88,10 +88,46 @@ export default function DealsBookingPage() {
     return (
         <main className="flex min-h-screen flex-col items-center bg-white">
             {/* Hero */}
-            <HeroSection
-                image="/images/dealsBanner.webp"
-                alt="Beautiful mountain destination for your next travel adventure"
-            />
+            <section className="relative w-full isolate flex min-h-[310px] items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
+                <Image
+                    src="/images/dealsBanner.webp"
+                    alt="Luxury beachfront hotel and tropical infinity pool"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover object-center"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-r from-[#F4F8F0]/95 via-[#F4F8F0]/55 to-transparent" />
+
+                <div className="relative mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 lg:px-12">
+                    <div className="max-w-2xl">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-[#DCEFD2] px-3 py-1.5 text-xs font-bold tracking-wide text-[#315F2A]">
+                            TRAVEL DEALS
+                        </span>
+
+                        <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-6xl">
+                            Discover Deals for Your Next Journey
+                        </h1>
+
+                        <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
+                            Explore exciting flight offers, seasonal discounts, and travel deals
+                            to make your next getaway easier on your budget.
+                        </p>
+
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
+                                <ShieldCheck size={17} />
+                                Offers for Every Journey
+                            </div>
+
+                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
+                                Exclusive Travel Offers
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* Deals introduction */}
             <section className="w-[95%] py-3 sm:px-8 md:py-2 lg:pt-20">

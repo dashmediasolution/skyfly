@@ -201,16 +201,7 @@ export default function AirlinePolicyDirectoryPage() {
         <main className="min-h-screen bg-slate-50">
             {/* Hero */}
             <section className="relative isolate overflow-hidden bg-slate-950">
-                <Image
-                    src="/images/travel-desk.webp"
-                    alt="Travel planning desk with a world map"
-                    fill
-                    priority
-                    sizes="100vw"
-                    className="object-cover object-center"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/30" />
+              
 
                 <div className="relative mx-auto flex min-h-[250px] max-w-7xl flex-col justify-center px-5 py-12 sm:px-8 lg:min-h-[300px] lg:px-12">
                     <div className="mb-5 flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-md">
@@ -219,11 +210,8 @@ export default function AirlinePolicyDirectoryPage() {
                     </div>
 
                     <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                        {config.title}
-                        <span className="block text-primary">
-                            Airline Policies
-                        </span>
-                    </h1>
+                        {config.title} Airline Policies
+                     </h1>
 
                     <p className="mt-4 max-w-xl text-sm leading-6 text-slate-200 sm:text-base">
                         {config.description}
@@ -257,15 +245,9 @@ export default function AirlinePolicyDirectoryPage() {
                             Browse by airline
                         </span>
 
-                        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-                            {config.directoryTitle}
-                        </h2>
+                        
 
-                        <p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">
-                            Select an airline to explore its{" "}
-                            {config.title.toLowerCase()} policy information
-                            and relevant travel requirements.
-                        </p>
+                       
                     </div>
 
                     {/* Search */}

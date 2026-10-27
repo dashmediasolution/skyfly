@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Flights | SkyFlyWithUs",
-  robots: {
-    index: false,
-    follow: false,
-  },
+    title: "Flights | SkyFlyWithUs",
+    robots: {
+        index: false,
+        follow: false,
+    },
 }
 const benefits = [
     {
@@ -124,52 +124,72 @@ const popularRoutes = [
 export default function FlightBookingPage() {
     return (
         <main className="flex min-h-screen flex-col items-center bg-white">
-            <HeroSection
-                image="/images/FlightBanner.webp"
-                alt="Explore destinations around the world"
-            />
+            <section className="relative w-full isolate flex min-h-[310px] items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
+                <Image
+                    src="/images/FlightBanner1.webp"
+                    alt="Luxury beachfront hotel and tropical infinity pool"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover object-center"
+                />
 
+                <div className="absolute inset-0 bg-gradient-to-r from-[#F4F8F0]/95 via-[#F4F8F0]/55 to-transparent" />
+
+                <div className="relative mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 lg:px-12">
+                    <div className="max-w-2xl">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-[#DCEFD2] px-3 py-1.5 text-xs font-bold tracking-wide text-[#315F2A]">
+                            FLIGHTS
+                        </span>
+
+                        <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-6xl">
+                            Find Flights for Your Next Adventure
+                        </h1>
+
+                        <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
+                            Explore domestic and international flight options, compare available
+                            fares, and discover convenient ways to reach your favorite destinations.
+                        </p>
+
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
+                                <ShieldCheck size={17} />
+                                Explore Flight Options
+                            </div>
+
+                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
+                                Domestic & International
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* Flight Benefits */}
-      <section className="mx-auto w-full max-w-[1440px] px-5 py-6 sm:px-8 lg:px-12 lg:pt-12">
-    <h2 className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
-        Plan Your Next Flight Journey
-    </h2>
-
-    <p className="mt-2 max-w-5xl text-base leading-7 text-gray-600 md:text-lg">
-        Planning your next trip or need help with an existing flight
-        booking? Explore flight services for reservations, booking changes,
-        cancellations, and travel information. Get assistance understanding
-        available options and organizing your travel plans with
-        SkyFlyWithUs.
-    </p>
-</section>
-
-{/* Flight Benefits */}
-<section className="w-full px-4 py-5 sm:px-6 md:px-8 lg:px-12">
-    <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {benefits.map(({ title, description, Icon }) => (
-            <div
-                key={title}
+            <section className="w-full px-4 py-5 sm:px-6 md:px-8 lg:px-12">
+                <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {benefits.map(({ title, description, Icon }) => (
+                        <div
+                            key={title}
                             className="flex items-start gap-3 border border-[#538440]/15 bg-[#F8FBF6] p-4 transition hover:border-[#538440]/40 hover:shadow-sm"
-            >
+                        >
                             <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#EAF2E6] text-[#538440]">
-                    <Icon size={23} />
-                </div>
+                                <Icon size={23} />
+                            </div>
 
-                <div>
-                    <h3 className="text-sm font-bold text-gray-900 sm:text-base">
-                        {title}
-                    </h3>
+                            <div>
+                                <h3 className="text-sm font-bold text-gray-900 sm:text-base">
+                                    {title}
+                                </h3>
 
-                    <p className="mt-1 text-xs leading-5 text-gray-600 sm:text-sm">
-                        {description}
-                    </p>
+                                <p className="mt-1 text-xs leading-5 text-gray-600 sm:text-sm">
+                                    {description}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            </div>
-        ))}
-    </div>
-</section>
+            </section>
 
             {/* Flight Deals Introduction */}
             <section className="w-full px-4 py-8 sm:px-6 md:px-8 lg:px-12 lg:py-12">
@@ -218,11 +238,11 @@ export default function FlightBookingPage() {
                         <div className="flex flex-col justify-center gap-5 sm:flex-row sm:items-end">
                             <div className="max-w-5xl">
                                 <div className="mb-3 inline-flex justify-center w-full items-center  gap-2 rounded-full  px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#538440]">
-                                   <div className=" bg-[#EAF2E6] inline-flex px-3 py-1.5 text-xs rounded-full gap-3">
+                                    <div className=" bg-[#EAF2E6] inline-flex px-3 py-1.5 text-xs rounded-full gap-3">
 
-                                    <MapPin size={14} />
-                                    Travel More
-                                   </div>
+                                        <MapPin size={14} />
+                                        Travel More
+                                    </div>
                                 </div>
 
                                 <h2 className="text-3xl font-extrabold text-center leading-tight text-gray-900 sm:text-4xl lg:text-5xl">

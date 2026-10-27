@@ -9,8 +9,7 @@ async function main() {
   // (Prisma hides fields not in schema, so we use findRaw)
   const allBlogs = await prisma.blog.findRaw({}) as unknown as any[]
 
-  console.log(`Found ${allBlogs.length} blogs. Processing...`)
-
+ 
   for (const blog of allBlogs) {
     // Check if the old 'category' string exists and 'categories' is empty/missing
     const oldCategory = blog.category
@@ -18,8 +17,7 @@ async function main() {
 
     if (oldCategory && (!newCategories || newCategories.length === 0)) {
       
-      console.log(`🛠 Fixing blog: "${blog.title}" | Category: ${oldCategory}`)
-
+ 
       // Update the blog to put the string into the new array
       await prisma.blog.update({
         where: { id: blog._id.$oid }, // MongoDB raw ID format

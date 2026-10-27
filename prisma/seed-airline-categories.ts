@@ -109,12 +109,9 @@ async function main() {
 
     // Count existing categories separately before running this script
     // if you need exact created-versus-existing totals.
-    console.log(`Processed: ${result.name}`);
-  }
+   }
 
-  console.log(
-    `Successfully processed ${airlineCategories.length} airline categories.`
-  );
+   
 }
 
 main()
