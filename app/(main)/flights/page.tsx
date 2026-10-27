@@ -14,13 +14,7 @@ import {
     MapPin,
 } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Flights | SkyFlyWithUs",
-  robots: {
-    index: false,
-    follow: false,
-  },
-}
+ 
 const benefits = [
     {
         title: "Best Price Guarantee",
