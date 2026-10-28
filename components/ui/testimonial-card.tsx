@@ -57,7 +57,7 @@ const Testimonial = React.forwardRef<HTMLDivElement, TestimonialProps>(
               </Avatar>
 
               <div className="flex flex-col">
-                <h3 className="font-semibold text-gray-900 dark:text-white">{name}</h3>
+                <p className="font-semibold text-gray-900 dark:text-white">{name}</p>
                 <p className="text-sm text-primary font-medium"> {/* Orange for role */}
                   {role}
                   {company && <span className="text-gray-500 font-normal"> @ {company}</span>}

@@ -74,10 +74,10 @@ export async function RecentArticles() {
               Traveling Stories
             </div>
 
-            <h2 className="text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
+            <div className="text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
               Level up your knowledge
               <br className="hidden sm:block" /> with our fresh blogs
-            </h2>
+            </div>
 
             <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-gray-600 sm:text-lg">
               Stay ahead with our latest travel updates, expert insights, and

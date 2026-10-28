@@ -32,9 +32,9 @@ export default function TravelInformation() {
 
         {/* Services */}
         <div>
-          <h2 className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
+          <p className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
             What Services Do We Offer?
-          </h2>
+          </p>
 
           <p className="text-sm md:text-base  leading-[1.4] text-gray-500">
             We provide a seamless and all in one booking platform for travelers.
@@ -63,9 +63,9 @@ export default function TravelInformation() {
 
         {/* Why Book With Us */}
         <div>
-          <h2 className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
+          <p className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
             Why Book With Us?
-          </h2>
+          </p>
 
           <ul className="list-disc pl-5 text-sm leading-[1.4] text-gray-500 marker:text-gray-950">
             <li>

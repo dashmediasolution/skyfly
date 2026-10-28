@@ -72,14 +72,14 @@ export default function Benefits() {
                 />
               </div>
 
-              <h2
+              <div
                 className="text-lg font-bold leading-snug text-[#548746]
                            sm:text-xl
                            lg:text-xl
                            xl:text-2xl"
               >
                 {title}
-              </h2>
+              </div>
 
               <p
                 className="mt-2 max-w-[360px] text-sm leading-6 text-gray-600

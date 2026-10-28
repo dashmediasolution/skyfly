@@ -53,10 +53,10 @@ export default function DestinationCard({
 
         <CardContent className="flex min-h-[88px] items-center gap-3 p-4 rounded-none">
           <div className="min-w-0 flex-1">
-            <h3 className="flex items-center gap-2 text-base font-bold text-slate-900">
+            <p className="flex items-center gap-2 text-base font-bold text-slate-900">
               <MapPin className="h-4 w-4 shrink-0 text-emerald-600" />
               {name}
-            </h3>
+            </p>
 
             <p className="mt-2 line-clamp-2 text-base leading-relaxed text-slate-500">
               {tagline}

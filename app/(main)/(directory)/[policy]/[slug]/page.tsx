@@ -47,14 +47,14 @@ type AirlinePolicy = {
 
 const routePolicyTypes: Record<string, PolicyType> = {
     "flight-change": "FLIGHT",
-    "name-correction": "NAME",
+    "name-change": "NAME",
     cancellation: "CANCELLATION",
     baggage: "BAGGAGE",
 };
 
 const policyLabels: Record<PolicyType, string> = {
     FLIGHT: "Flight Change Policy",
-    NAME: "Name Correction Policy",
+    NAME: "Name Change Policy",
     CANCELLATION: "Cancellation Policy",
     BAGGAGE: "Baggage Policy",
 };
@@ -308,7 +308,7 @@ export default function AirlinePolicyDetailPage() {
 
     if (!policy || !airline) return null;
 
-     const faqJsonLd = policy?.faqs?.length
+    const faqJsonLd = policy?.faqs?.length
         ? {
             "@context": "https://schema.org",
             "@type": "FAQPage",
@@ -569,60 +569,102 @@ export default function AirlinePolicyDetailPage() {
                     </article>
 
                     {/* Sidebar */}
-                    <aside className="space-y-5 lg:sticky lg:top-32">
 
+                    <aside className="w-full space-y-3 lg:sticky lg:top-28 lg:w-[360px] lg:shrink-0">
+                        <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+                            <div className="border-b border-slate-100 bg-gradient-to-br from-[#538440]/10 via-white to-white px-5 py-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--primary)] text-white shadow-sm">
+                                        <FileText className="h-5 w-5" />
+                                    </div>
 
-                        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                            <h2 className="text-base font-bold text-slate-900">
-                                Related Flight Change Policies
-                            </h2>
+                                    <div className="min-w-0">
+                                        <h2 className="text-lg font-extrabold tracking-tight text-slate-900">
+                                            Airline Policies
+                                        </h2>
+                                        <p className="mt-0.5 text-xs font-medium text-slate-500">
+                                            Flight change guides
+                                        </p>
+                                    </div>
+                                </div>
 
-                            <p className="mt-1 text-sm text-slate-500">
-                                Explore flight-change rules for other airlines.
-                            </p>
+                                <p className="mt-3 text-sm leading-5 text-slate-600">
+                                    Compare flight change rules and explore policies for other airlines.
+                                </p>
+                            </div>
 
-                            <div className="mt-4 space-y-2">
-                                {relatedPolicies.length > 0 ? (
-                                    relatedPolicies.map((item) => {
-                                        const airlineName =
-                                            item.category?.name || item.airlineName;
+                            <div className="p-3">
+                                <h3 className="mb-2 px-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+                                    Explore airlines
+                                </h3>
 
-                                        return (
-                                            <Link
-                                                key={item.id}
-                                                href={`/flight-change/${toSlug(airlineName)}`}
-                                                className="group flex items-center justify-between gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-teal-200 hover:bg-teal-50"
-                                            >
-                                                <div className="min-w-0">
-                                                    <p className="truncate text-sm font-semibold text-slate-800 group-hover:text-teal-800">
-                                                        {airlineName}
-                                                    </p>
+                                <div className="space-y-1">
+                                    {relatedPolicies.length > 0 ? (
+                                        relatedPolicies.map((item) => {
+                                            const airlineName =
+                                                item.category?.name || item.airlineName;
 
-                                                    <p className="mt-1 text-xs text-slate-500">
-                                                        Flight Change Policy
-                                                    </p>
-                                                </div>
+                                            return (
+                                                <Link
+                                                    key={item.id}
+                                                    href={`/flight-change/${toSlug(airlineName)}`}
+                                                    className="group flex items-center gap-3 rounded-xl border border-transparent p-2.5 transition-all duration-200 hover:border-[#538440]/20 hover:bg-[#538440]/5"
+                                                >
+                                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors group-hover:bg-[#538440]/10 group-hover:text-[var(--primary)]">
+                                                        <FileText className="h-4 w-4" />
+                                                    </div>
 
-                                                <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-teal-700" />
-                                            </Link>
-                                        );
-                                    })
-                                ) : (
-                                    <p className="py-3 text-sm text-slate-500">
-                                        No related flight-change policies are available yet.
-                                    </p>
-                                )}
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="truncate text-sm font-bold text-slate-800 transition-colors group-hover:text-[var(--primary)]">
+                                                            {airlineName}
+                                                        </p>
+                                                        <p className="mt-0.5 text-xs text-slate-500">
+                                                            Flight Change Policy
+                                                        </p>
+                                                    </div>
+
+                                                    <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--primary)]" />
+                                                </Link>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="rounded-xl border border-dashed border-slate-200 px-3 py-5 text-center">
+                                            <FileText className="mx-auto h-6 w-6 text-slate-300" />
+                                            <p className="mt-2 text-sm font-bold text-slate-700">
+                                                No policies available
+                                            </p>
+                                            <p className="mt-1 text-xs leading-5 text-slate-500">
+                                                Airline policies will appear here when available.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         <Link
                             href={`/${policyRoute}`}
-                            className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-200 hover:text-teal-800"
+                            className="group flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all duration-200 hover:border-[#538440]/30 hover:shadow-md"
                         >
-                            <ArrowLeft className="h-4 w-4" />
-                            All airlines
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition-colors group-hover:bg-[#538440]/10 group-hover:text-[var(--primary)]">
+                                    <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                                </div>
+
+                                <div>
+                                    <p className="text-sm font-bold text-slate-800">
+                                        Browse all airlines
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-slate-500">
+                                        View all airline policies
+                                    </p>
+                                </div>
+                            </div>
+
+                            <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-[var(--primary)]" />
                         </Link>
                     </aside>
+
                 </div>
             </section>
         </main>

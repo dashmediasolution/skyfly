@@ -95,7 +95,8 @@ export async function GET(request: Request) {
         const search = searchParams.get("search")?.trim();
         const excludeId = searchParams.get("excludeId");
         const limitParam = searchParams.get("limit");
-
+        console.log(policyType,"ksldfjklsjfklsdjflksdfklsdf")
+        
         if (id && !isValidObjectId(id)) {
             return NextResponse.json({ error: "Invalid policy ID." }, { status: 400 });
         }
@@ -176,70 +177,126 @@ export async function GET(request: Request) {
 }
 
 // POST /api/airline-policies
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        const categoryId = typeof body.categoryId === "string" ? body.categoryId.trim() : "";
-        const policyType = body.policyType;
-        const excerpt = typeof body.excerpt === "string" ? body.excerpt.trim() : "";
-        const content = typeof body.content === "string" ? body.content.trim() : "";
-        const metaTitle = typeof body.metaTitle === "string" ? body.metaTitle.trim() : "";
-        const metaDescription = typeof body.metaDescription === "string" ? body.metaDescription.trim() : "";
-        const metaKeywords = cleanKeywords(body.metaKeywords);
-        const status: PolicyStatus = body.status === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
-        const parsedFaqs = parseFaqs(body.faqs);
+        const categoryId =
+            typeof body.categoryId === "string"
+                ? body.categoryId.trim()
+                : "";
 
+        const policyType = body.policyType;
+        const excerpt =
+            typeof body.excerpt === "string" ? body.excerpt.trim() : "";
+        const content =
+            typeof body.content === "string" ? body.content.trim() : "";
+        const metaTitle =
+            typeof body.metaTitle === "string" ? body.metaTitle.trim() : "";
+        const metaDescription =
+            typeof body.metaDescription === "string"
+                ? body.metaDescription.trim()
+                : "";
+        const metaKeywords = cleanKeywords(body.metaKeywords);
+        const status: PolicyStatus =
+            body.status === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
+        const parsedFaqs = parseFaqs(body.faqs);
         if (!categoryId || !isValidObjectId(categoryId)) {
-            return NextResponse.json({ error: "Please select a valid airline category." }, { status: 400 });
+            return NextResponse.json(
+                { error: "Please select a valid airline category." },
+                { status: 400 }
+            );
         }
+
         if (!isValidPolicyType(policyType)) {
-            return NextResponse.json({ error: "Please select a valid policy type." }, { status: 400 });
+            return NextResponse.json(
+                { error: "Please select a valid policy type." },
+                { status: 400 }
+            );
         }
+
         if (content.replace(/<[^>]*>/g, "").trim().length < 10) {
-            return NextResponse.json({ error: "Article content must be at least 10 characters." }, { status: 400 });
+            return NextResponse.json(
+                { error: "Article content must be at least 10 characters." },
+                { status: 400 }
+            );
         }
+
         if (parsedFaqs.error) {
-            return NextResponse.json({ error: parsedFaqs.error }, { status: 400 });
+            return NextResponse.json(
+                { error: parsedFaqs.error },
+                { status: 400 }
+            );
         }
 
         const category = await prisma.airlinePolicyCategory.findUnique({
             where: { id: categoryId },
-            select: { id: true },
+            select: { id: true, name: true },
         });
 
         if (!category) {
-            return NextResponse.json({ error: "The selected airline category does not exist." }, { status: 404 });
+            return NextResponse.json(
+                { error: "The selected airline category does not exist." },
+                { status: 404 }
+            );
         }
 
-      const policy = await prisma.airlinePolicy.create({
-  data: {
-    category: {
-      connect: { id: categoryId },
-    },
-    policyType,
-    excerpt: excerpt || null,
-    content,
-    metaTitle: metaTitle || null,
-    metaDescription: metaDescription || null,
-    metaKeywords,
-faqs: parsedFaqs.faqs as unknown as Prisma.InputJsonValue,
-    status,
-    publishedAt: status === "PUBLISHED" ? new Date() : null,
-  },
-  include: {
-    category: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
-  },
-});
+        const existingPolicy = await prisma.airlinePolicy.findFirst({
+            where: {
+                categoryId,
+                policyType,
+            },
+            select: {
+                id: true,
+                policyType: true,
+                status: true,
+            },
+        });
+
+        if (existingPolicy) {
+            return NextResponse.json(
+                {
+                    error: `A ${policyType.toLowerCase()} policy already exists for ${category.name}. Please edit the existing policy instead of creating a duplicate.`,
+                    existingPolicyId: existingPolicy.id,
+                },
+                { status: 409 }
+            );
+        }
+
+        const policy = await prisma.airlinePolicy.create({
+            data: {
+                category: {
+                    connect: { id: categoryId },
+                },
+                policyType,
+                excerpt: excerpt || null,
+                content,
+                metaTitle: metaTitle || null,
+                metaDescription: metaDescription || null,
+                metaKeywords,
+                faqs: parsedFaqs.faqs as unknown as Prisma.InputJsonValue,
+                status,
+                publishedAt: status === "PUBLISHED" ? new Date() : null,
+            },
+            include: {
+                category: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+
         return NextResponse.json({ policy }, { status: 201 });
     } catch (error) {
         console.error("Failed to create airline policy:", error);
-        return NextResponse.json({ error: "Failed to create airline policy." }, { status: 500 });
+
+        return NextResponse.json(
+            { error: "Failed to create airline policy." },
+            { status: 500 }
+        );
     }
 }
 
