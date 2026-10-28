@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 const SITE_URL = "https://skyflywithus.com";
 
+ 
 export const siteMetadata = {
     home: {
         path: "/",

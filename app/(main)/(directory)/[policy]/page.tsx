@@ -48,9 +48,9 @@ const policyConfig: Record<
         infoDescription:
             "Flight rules and ticket conditions may vary by airline, route, and fare type. Verify the applicable requirements directly with your airline before travelling.",
     },
-    "name-correction": {
+    "name-change": {
         type: "NAME",
-        title: "Name Correction",
+        title: "Name Change",
         description:
             "Find airline-specific information about correcting passenger names and reviewing applicable ticket requirements.",
         directoryTitle: "Name Correction Policy Directory",
@@ -61,7 +61,7 @@ const policyConfig: Record<
     },
     cancellation: {
         type: "CANCELLATION",
-        title: "Cancellation",
+        title: "Cancellation & Refund",
         description:
             "Explore airline cancellation policies, ticket refund conditions, and applicable cancellation requirements.",
         directoryTitle: "Cancellation Policy Directory",
@@ -101,57 +101,58 @@ export default function AirlinePolicyDirectoryPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const controller = new AbortController();
+  
+useEffect(() => {
+    const controller = new AbortController();
 
-        async function fetchCategories() {
-            try {
-                setLoading(true);
-                setError("");
+    async function fetchCategories() {
+        try {
+            setLoading(true);
+            setError("");
 
-                const response = await fetch(
-                    "/api/airline-policy-categories",
-                    {
-                        method: "GET",
-                        cache: "no-store",
-                        signal: controller.signal,
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error("Unable to load airline categories.");
+            const response = await fetch(
+                "/api/airline-policy-categories",
+                {
+                    method: "GET",
+                    signal: controller.signal,
+                    next: { revalidate: 3600 },
                 }
+            );
 
-                const data: { categories?: AirlineCategory[] } =
-                    await response.json();
+            if (!response.ok) {
+                throw new Error("Unable to load airline categories.");
+            }
 
-                setCategories(
-                    Array.isArray(data.categories) ? data.categories : []
-                );
-            } catch (err) {
-                if (
-                    err instanceof Error &&
-                    err.name === "AbortError"
-                ) {
-                    return;
-                }
+            const data: { categories?: AirlineCategory[] } =
+                await response.json();
 
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : "Something went wrong while loading airline categories."
-                );
-            } finally {
-                if (!controller.signal.aborted) {
-                    setLoading(false);
-                }
+            setCategories(
+                Array.isArray(data.categories) ? data.categories : []
+            );
+        } catch (err) {
+            if (
+                err instanceof Error &&
+                err.name === "AbortError"
+            ) {
+                return;
+            }
+
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Something went wrong while loading airline categories."
+            );
+        } finally {
+            if (!controller.signal.aborted) {
+                setLoading(false);
             }
         }
+    }
 
-        fetchCategories();
+    fetchCategories();
 
-        return () => controller.abort();
-    }, []);
+    return () => controller.abort();
+}, []);
 
     const filteredCategories = useMemo(() => {
         const normalizedSearch = search.trim().toLowerCase();

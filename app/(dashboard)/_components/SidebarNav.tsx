@@ -36,6 +36,7 @@ const navLinks = [
     label: "Policy Categories",
     icon: FolderOpen,
   },
+ 
 ];
 
 export function SidebarNav() {

@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { POLICY_TYPES } from "@/app/types/airline-policy"
+import PolicyFaqEditor, {
+  type PolicyFAQ,
+} from "@/app/(dashboard)/_components/PolicyFaqEditor";
 import {
   Select,
   SelectContent,
@@ -31,7 +34,7 @@ type PolicyStatus = "DRAFT" | "PUBLISHED";
 export default function PolicyForm() {
   const router = useRouter();
   const submitStatus = useRef<PolicyStatus>("DRAFT");
-
+const [faqs, setFaqs] = useState<PolicyFAQ[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   
   
@@ -116,6 +119,7 @@ const [policyType, setPolicyType] = useState("FLIGHT");
             .map((keyword) => keyword.trim())
             .filter(Boolean),
           status,
+          faqs
         }),
       });
 
@@ -239,7 +243,7 @@ const [policyType, setPolicyType] = useState("FLIGHT");
 
         <ArticleEditor value={content} onChange={setContent} />
       </section>
-
+<PolicyFaqEditor faqs={faqs} onChange={setFaqs} />
       <section className="space-y-5">
         <div>
           <h2 className="text-lg font-semibold">SEO Settings</h2>

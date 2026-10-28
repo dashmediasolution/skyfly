@@ -1,4 +1,4 @@
- 
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -37,12 +37,16 @@ type AirlinePolicy = {
         id: string;
         name: string;
     };
+    faqs?: {
+        question: string;
+        answer: string;
+    }[] | null;
     createdAt?: string;
     updatedAt?: string;
 };
 
 const routePolicyTypes: Record<string, PolicyType> = {
-    flight: "FLIGHT",
+    "flight-change": "FLIGHT",
     "name-correction": "NAME",
     cancellation: "CANCELLATION",
     baggage: "BAGGAGE",
@@ -79,11 +83,10 @@ function formatDate(date?: string | null) {
 
 export default function AirlinePolicyDetailPage() {
     const params = useParams<{ policy: string; slug: string }>();
-
+    const [relatedPolicies, setRelatedPolicies] = useState<AirlinePolicy[]>([]);
     const policyRoute = String(params?.policy ?? "").toLowerCase();
     const airlineSlug = String(params?.slug ?? "").toLowerCase();
     const policyType = routePolicyTypes[policyRoute];
-
     const [airline, setAirline] = useState<AirlineCategory | null>(null);
     const [policy, setPolicy] = useState<AirlinePolicy | null>(null);
     const [loading, setLoading] = useState(true);
@@ -91,7 +94,6 @@ export default function AirlinePolicyDetailPage() {
 
     useEffect(() => {
         const controller = new AbortController();
-
         async function loadPolicy() {
             setLoading(true);
             setError("");
@@ -99,7 +101,7 @@ export default function AirlinePolicyDetailPage() {
             setPolicy(null);
 
             try {
-                if (!policyType || !airlineSlug) {
+                if (!policyType) {
                     setError("The requested policy page could not be found.");
                     return;
                 }
@@ -118,7 +120,7 @@ export default function AirlinePolicyDetailPage() {
                 if (!categoriesResponse.ok) {
                     throw new Error(
                         categoriesData.error ||
-                            "Unable to load airline categories."
+                        "Unable to load airline categories."
                     );
                 }
 
@@ -156,7 +158,7 @@ export default function AirlinePolicyDetailPage() {
                 if (!policiesResponse.ok) {
                     throw new Error(
                         policiesData.error ||
-                            "Unable to load the airline policy."
+                        "Unable to load the airline policy."
                     );
                 }
 
@@ -172,6 +174,39 @@ export default function AirlinePolicyDetailPage() {
 
                 if (matchedPolicy) {
                     setPolicy(matchedPolicy);
+
+                    const relatedQuery = new URLSearchParams({
+                        policyType,
+                        status: "PUBLISHED",
+                    });
+
+                    const relatedResponse = await fetch(
+                        `/api/airline-policies?${relatedQuery.toString()}`,
+                        {
+                            cache: "no-store",
+                            signal: controller.signal,
+                        }
+                    );
+
+                    if (relatedResponse.ok) {
+                        const relatedData = await relatedResponse.json();
+
+                        const related: AirlinePolicy[] = relatedData.policies ?? [];
+
+                        const uniqueRelated = Array.from(
+                            new Map(
+                                related
+                                    .filter(
+                                        (item) =>
+                                            item.id !== matchedPolicy.id &&
+                                            item.categoryId !== matchedAirline.id
+                                    )
+                                    .map((item) => [item.categoryId, item])
+                            ).values()
+                        ).slice(0, 5);
+
+                        setRelatedPolicies(uniqueRelated);
+                    }
                 }
             } catch (err) {
                 if (
@@ -199,7 +234,7 @@ export default function AirlinePolicyDetailPage() {
     }, [airlineSlug, policyRoute, policyType]);
 
     const policyLabel = policyType ? policyLabels[policyType] : "Airline Policy";
-    const pageTitle =`${airline?.name ?? "Airline"} ${policyLabel}`;
+    const pageTitle = `${airline?.name ?? "Airline"} ${policyLabel}`;
 
     if (loading) {
         return (
@@ -250,7 +285,7 @@ export default function AirlinePolicyDetailPage() {
                         <FileText className="h-7 w-7 text-teal-700" />
                     </div>
 
-                    <h1 className="mt-5 text-2xl font-bold text-slate-900">
+                    <h1 className="mt-5 text-xl font-bold text-slate-900">
                         {airline.name} {policyLabel}
                     </h1>
 
@@ -273,11 +308,31 @@ export default function AirlinePolicyDetailPage() {
 
     if (!policy || !airline) return null;
 
-    const publishedDate = formatDate(policy.publishedAt);
-
+     const faqJsonLd = policy?.faqs?.length
+        ? {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: policy.faqs.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: faq.answer,
+                },
+            })),
+        }
+        : null;
     return (
         <main className="min-h-screen bg-slate-50">
             {/* Article header */}
+            {faqJsonLd && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
+                    }}
+                />
+            )}
             <section className="bg-slate-950 px-4 py-10 text-white sm:px-6 sm:py-14 lg:px-8">
                 <div className="mx-auto max-w-5xl">
                     <nav
@@ -312,11 +367,11 @@ export default function AirlinePolicyDetailPage() {
                         {policyLabel}
                     </div>
 
-                    <h1 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+                    <h1 className="mt-5 w-full text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl lg:text-4xl">
                         {pageTitle}
                     </h1>
 
-                   
+
 
                     <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-300">
                         <span className="inline-flex items-center gap-2">
@@ -324,12 +379,6 @@ export default function AirlinePolicyDetailPage() {
                             {airline.name}
                         </span>
 
-                        {publishedDate && (
-                            <span className="inline-flex items-center gap-2">
-                                <CalendarDays className="h-4 w-4 text-teal-300" />
-                                Published {publishedDate}
-                            </span>
-                        )}
                     </div>
                 </div>
             </section>
@@ -467,7 +516,48 @@ export default function AirlinePolicyDetailPage() {
                                 border-color: #e2e8f0;
                             }
                         `}</style>
+                        {policy.faqs && policy.faqs.length > 0 && (
+                            <section
+                                className="mt-10 border-t border-slate-200 pt-8"
+                                aria-labelledby="policy-faq-heading"
+                            >
+                                <div className="mb-6">
+                                    <h2
+                                        id="policy-faq-heading"
+                                        className="text-2xl font-bold tracking-tight text-slate-900"
+                                    >
+                                        Frequently Asked Questions
+                                    </h2>
 
+                                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                                        Common questions about the {airline.name} {policyLabel.toLowerCase()}.
+                                    </p>
+                                </div>
+
+                                <div className="space-y-3">
+                                    {policy.faqs.map((faq, index) => (
+                                        <details
+                                            key={`${faq.question}-${index}`}
+                                            className="group rounded-xl border border-slate-200 bg-white transition-colors open:border-[#538440]/40 open:bg-[#EAF2E6]/40"
+                                        >
+                                            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4 font-semibold text-slate-800 marker:hidden sm:p-5">
+                                                <span className="text-sm leading-6 sm:text-base">
+                                                    {faq.question}
+                                                </span>
+
+                                                <ChevronRight className="h-5 w-5 shrink-0 text-[#538440] transition-transform group-open:rotate-90" />
+                                            </summary>
+
+                                            <div className="px-4 pb-5 sm:px-5">
+                                                <p className="text-sm leading-7 text-slate-600">
+                                                    {faq.answer}
+                                                </p>
+                                            </div>
+                                        </details>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
                         <div className="mt-10 border-t border-slate-100 pt-5">
                             <p className="text-xs leading-6 text-slate-500">
                                 Disclaimer: Airline policies, fees, and
@@ -479,43 +569,48 @@ export default function AirlinePolicyDetailPage() {
                     </article>
 
                     {/* Sidebar */}
-                    <aside className="space-y-5 lg:sticky lg:top-6">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                                <ShieldCheck className="h-5 w-5" />
-                            </div>
+                    <aside className="space-y-5 lg:sticky lg:top-32">
 
-                            <h2 className="mt-4 text-base font-bold text-slate-900">
-                                Before you travel
-                            </h2>
-
-                            <p className="mt-2 text-sm leading-6 text-slate-600">
-                                Check your ticket conditions and confirm
-                                applicable rules with the airline.
-                            </p>
-                        </div>
 
                         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                             <h2 className="text-base font-bold text-slate-900">
-                                Explore policies
+                                Related Flight Change Policies
                             </h2>
 
-                            <div className="mt-4 space-y-1">
-                                {Object.entries(routePolicyTypes).map(
-                                    ([route, type]) => (
-                                        <Link
-                                            key={route}
-                                            href={`/${route}/${toSlug(airline.name)}`}
-                                            className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm transition ${
-                                                route === policyRoute
-                                                    ? "bg-teal-50 font-semibold text-teal-800"
-                                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                                            }`}
-                                        >
-                                            <span>{policyLabels[type]}</span>
-                                            <ChevronRight className="h-4 w-4 shrink-0" />
-                                        </Link>
-                                    )
+                            <p className="mt-1 text-sm text-slate-500">
+                                Explore flight-change rules for other airlines.
+                            </p>
+
+                            <div className="mt-4 space-y-2">
+                                {relatedPolicies.length > 0 ? (
+                                    relatedPolicies.map((item) => {
+                                        const airlineName =
+                                            item.category?.name || item.airlineName;
+
+                                        return (
+                                            <Link
+                                                key={item.id}
+                                                href={`/flight-change/${toSlug(airlineName)}`}
+                                                className="group flex items-center justify-between gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-teal-200 hover:bg-teal-50"
+                                            >
+                                                <div className="min-w-0">
+                                                    <p className="truncate text-sm font-semibold text-slate-800 group-hover:text-teal-800">
+                                                        {airlineName}
+                                                    </p>
+
+                                                    <p className="mt-1 text-xs text-slate-500">
+                                                        Flight Change Policy
+                                                    </p>
+                                                </div>
+
+                                                <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-teal-700" />
+                                            </Link>
+                                        );
+                                    })
+                                ) : (
+                                    <p className="py-3 text-sm text-slate-500">
+                                        No related flight-change policies are available yet.
+                                    </p>
                                 )}
                             </div>
                         </div>

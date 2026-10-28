@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,6 +13,9 @@ import {
 import { toast } from "sonner";
 
 import ArticleEditor from "../../ArticleEditor";
+import PolicyFaqEditor, {
+  type PolicyFAQ,
+} from "@/app/(dashboard)/_components/PolicyFaqEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,8 +37,6 @@ type PolicyType = "FLIGHT" | "NAME" | "CANCELLATION" | "BAGGAGE";
 
 type Policy = {
   id: string;
-
-  
   policyType?: PolicyType;
   categoryId: string;
   excerpt: string | null;
@@ -45,18 +46,29 @@ type Policy = {
   metaKeywords: string[];
   status: string;
   category?: Category;
+  faqs?: unknown;
 };
 
 const POLICY_TYPES: { label: string; value: PolicyType }[] = [
   { label: "Flight Change Policy", value: "FLIGHT" },
-  { label: "Name Correction Policy", value: "NAME" },
-  { label: "Cancellation Policy", value: "CANCELLATION" },
+  { label: "Name Change Policy", value: "NAME" },
+  { label: "Cancellation & Refund Policy", value: "CANCELLATION" },
   { label: "Baggage Policy", value: "BAGGAGE" },
 ];
 
+function parseFaqs(value: unknown): PolicyFAQ[] {
+  if (!Array.isArray(value)) return [];
 
-
-  
+  return value.filter(
+    (faq): faq is PolicyFAQ =>
+      typeof faq === "object" &&
+      faq !== null &&
+      "question" in faq &&
+      "answer" in faq &&
+      typeof faq.question === "string" &&
+      typeof faq.answer === "string"
+  );
+}
 
 export default function EditAirlinePolicyPage() {
   const router = useRouter();
@@ -64,8 +76,7 @@ export default function EditAirlinePolicyPage() {
   const id = params?.id ?? "";
 
   const [categories, setCategories] = useState<Category[]>([]);
-
-  
+  const [faqs, setFaqs] = useState<PolicyFAQ[]>([]);
   const [policyType, setPolicyType] = useState<PolicyType>("FLIGHT");
   const [categoryId, setCategoryId] = useState("");
   const [excerpt, setExcerpt] = useState("");
@@ -109,23 +120,18 @@ export default function EditAirlinePolicyPage() {
       }
 
       if (!categoryResponse.ok) {
-        throw new Error(
-          categoryData.error || "Failed to load categories."
-        );
+        throw new Error(categoryData.error || "Failed to load categories.");
       }
 
-      const policy: Policy =
+      const policy: Policy | null =
         policyData.policy ??
         (Array.isArray(policyData.policies)
-          ? policyData.policies.find((item: Policy) => item.id === id)
+          ? policyData.policies.find((item: Policy) => item.id === id) ?? null
           : null);
 
       if (!policy) {
         throw new Error("Airline policy not found.");
       }
-
-   
-      ;
 
       const validPolicyTypes: PolicyType[] = [
         "FLIGHT",
@@ -147,11 +153,14 @@ export default function EditAirlinePolicyPage() {
       setMetaDescription(policy.metaDescription ?? "");
       setMetaKeywords((policy.metaKeywords ?? []).join(", "));
       setStatus(policy.status === "PUBLISHED" ? "PUBLISHED" : "DRAFT");
+      setFaqs(parseFaqs(policy.faqs));
 
       setCategories(
         Array.isArray(categoryData)
           ? categoryData
-          : categoryData.categories ?? []
+          : Array.isArray(categoryData.categories)
+            ? categoryData.categories
+            : []
       );
     } catch (err) {
       const message =
@@ -165,12 +174,10 @@ export default function EditAirlinePolicyPage() {
   }, [id]);
 
   useEffect(() => {
-    loadPolicy();
+    void loadPolicy();
   }, [loadPolicy]);
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (saving) return;
@@ -179,9 +186,6 @@ export default function EditAirlinePolicyPage() {
       toast.error("Policy ID is missing.");
       return;
     }
-
-  
-    
 
     if (!POLICY_TYPES.some((type) => type.value === policyType)) {
       toast.error("Please select a valid policy type.");
@@ -198,6 +202,36 @@ export default function EditAirlinePolicyPage() {
       return;
     }
 
+    const cleanedFaqs = faqs.map((faq) => ({
+      question: faq.question.trim(),
+      answer: faq.answer.trim(),
+    }));
+
+    const incompleteFaqIndex = cleanedFaqs.findIndex(
+      (faq) => !faq.question || !faq.answer
+    );
+
+    if (incompleteFaqIndex !== -1) {
+      toast.error(
+        `Please complete both the question and answer for FAQ ${incompleteFaqIndex + 1}, or remove it.`
+      );
+      return;
+    }
+
+    if (
+      cleanedFaqs.some(
+        (faq) => faq.question.length > 300 || faq.answer.length > 5000
+      )
+    ) {
+      toast.error("FAQ questions must be under 300 characters and answers under 5000 characters.");
+      return;
+    }
+
+    if (cleanedFaqs.length > 50) {
+      toast.error("A policy can have at most 50 FAQs.");
+      return;
+    }
+
     setSaving(true);
 
     try {
@@ -208,8 +242,6 @@ export default function EditAirlinePolicyPage() {
         },
         body: JSON.stringify({
           id,
-        
-          
           policyType,
           categoryId,
           excerpt: excerpt.trim(),
@@ -221,6 +253,7 @@ export default function EditAirlinePolicyPage() {
             .map((keyword) => keyword.trim())
             .filter(Boolean),
           status,
+          faqs: cleanedFaqs,
         }),
       });
 
@@ -259,7 +292,7 @@ export default function EditAirlinePolicyPage() {
         <p className="text-sm text-destructive">{error}</p>
 
         <div className="flex gap-3">
-          <Button variant="outline" onClick={loadPolicy}>
+          <Button variant="outline" onClick={() => void loadPolicy()}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Try Again
           </Button>
@@ -289,7 +322,8 @@ export default function EditAirlinePolicyPage() {
           </h1>
 
           <p className="mt-2 text-muted-foreground">
-            Update the article, policy type, category, publication status, and SEO settings.
+            Update the article, FAQs, policy type, category, publication status,
+            and SEO settings.
           </p>
         </div>
 
@@ -312,68 +346,62 @@ export default function EditAirlinePolicyPage() {
           <div>
             <h2 className="text-lg font-semibold">Article Information</h2>
             <p className="text-sm text-muted-foreground">
-              Edit the airline details, policy type, and article URL.
+              Edit the airline details, policy type, and article summary.
             </p>
           </div>
 
-          
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="categoryId">Category</Label>
+              <Select value={categoryId} onValueChange={setCategoryId}>
+                <SelectTrigger id="categoryId">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
 
-         
-          
-              <div className="flex gap-8">
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-           
-          <div className="space-y-2">
-            <Label htmlFor="categoryId">Category</Label>
-            <Select value={categoryId} onValueChange={setCategoryId}>
-              <SelectTrigger id="categoryId">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
+              {categories.length === 0 && (
+                <p className="text-sm text-destructive">
+                  No categories found. Create a category before updating this
+                  policy.
+                </p>
+              )}
+            </div>
 
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-2">
+              <Label htmlFor="policyType">Policy Type</Label>
+              <Select
+                value={policyType}
+                onValueChange={(value) => setPolicyType(value as PolicyType)}
+              >
+                <SelectTrigger id="policyType">
+                  <SelectValue placeholder="Select policy type" />
+                </SelectTrigger>
 
-            {categories.length === 0 && (
-              <p className="text-sm text-destructive">
-                No categories found. Create a category before updating this policy.
-              </p>
-            )}
+                <SelectContent>
+                  {POLICY_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
- <div className="space-y-2">
-            <Label htmlFor="policyType">Policy Type</Label>
 
-            <Select
-              value={policyType}
-              onValueChange={(value) =>
-                setPolicyType(value as PolicyType)
-              }
-            >
-              <SelectTrigger id="policyType">
-                <SelectValue placeholder="Select policy type" />
-              </SelectTrigger>
-
-              <SelectContent>
-                {POLICY_TYPES.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-   </div>
           <div className="space-y-2">
             <Label htmlFor="excerpt">Excerpt</Label>
             <Textarea
               id="excerpt"
               value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
+              onChange={(event) => setExcerpt(event.target.value)}
               placeholder="Write a short summary for the airline directory."
               rows={3}
             />
@@ -391,6 +419,8 @@ export default function EditAirlinePolicyPage() {
           <ArticleEditor value={content} onChange={setContent} />
         </section>
 
+        <PolicyFaqEditor faqs={faqs} onChange={setFaqs} />
+
         <section className="space-y-5">
           <div>
             <h2 className="text-lg font-semibold">SEO Settings</h2>
@@ -404,7 +434,7 @@ export default function EditAirlinePolicyPage() {
             <Input
               id="metaTitle"
               value={metaTitle}
-              onChange={(e) => setMetaTitle(e.target.value)}
+              onChange={(event) => setMetaTitle(event.target.value)}
               placeholder="Airline Policy"
             />
           </div>
@@ -414,7 +444,7 @@ export default function EditAirlinePolicyPage() {
             <Textarea
               id="metaDescription"
               value={metaDescription}
-              onChange={(e) => setMetaDescription(e.target.value)}
+              onChange={(event) => setMetaDescription(event.target.value)}
               placeholder="Enter the search result description."
               rows={3}
             />
@@ -425,7 +455,7 @@ export default function EditAirlinePolicyPage() {
             <Input
               id="metaKeywords"
               value={metaKeywords}
-              onChange={(e) => setMetaKeywords(e.target.value)}
+              onChange={(event) => setMetaKeywords(event.target.value)}
               placeholder="airline policy, name correction, airline rules"
             />
             <p className="text-xs text-muted-foreground">
