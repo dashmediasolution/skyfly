@@ -104,23 +104,23 @@ const destinations: Record<
 const popularRoutes = [
   {
     name: "Bali",
-    image: "/images/routes/bali.png",
+    image: "/images/routes/bali.webp",
     href: "/flights/bali",
   },
   {
     name: "Dubai",
-    image: "/images/routes/dubai.png",
+    image: "/images/routes/dubai.webp",
     href: "/flights/dubai",
   },
  
   {
     name: "Italy",
-    image: "/images/routes/rome.png",
+    image: "/images/routes/rome.webp",
     href: "/flights/rome",
   },
   {
     name: "Paris",
-    image: "/images/routes/paris.png",
+    image: "/images/routes/image_60.webp",
     href: "/flights/paris",
   },
 ];
