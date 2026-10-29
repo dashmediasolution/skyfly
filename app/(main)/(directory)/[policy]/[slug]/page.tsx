@@ -160,7 +160,7 @@ export default function AirlinePolicyDetailPage() {
 
                 const policiesData = await policiesResponse.json();
 
-                if (!policiesResponse.ok) {
+                    if (!policiesResponse.ok) {
                     throw new Error(
                         policiesData.error ||
                         "Unable to load the airline policy."
