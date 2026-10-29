@@ -75,14 +75,12 @@ export async function RecentArticles() {
             </div>
 
             <div className="text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
-              Level up your knowledge
-              <br className="hidden sm:block" /> with our fresh blogs
+              Get useful insights
+              <br className="hidden sm:block" /> with our latest blogs. 
             </div>
 
             <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-gray-600 sm:text-lg">
-              Stay ahead with our latest travel updates, expert insights, and
-              helpful airline guides. Explore our newest articles for practical
-              advice and inspiration for your next journey.
+            Stay one-step ahead with our latest travel blogs, valuable insights, and helpful travel guidelines. Plan your next travel journey with our latest travel insights and guidance.
             </p>
           </div>
 

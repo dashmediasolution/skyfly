@@ -15,15 +15,12 @@ import {
   type Article,
 } from "@/components/blog_components/blog-card";
 import { PaginationControls } from "@/components/ui/pagination-controls";
-
+import { BlogCategoryNav } from "./blog_components/blog-category-nav";
 export const metadata: Metadata = {
   title: "Travel Journal & Flight Tips | SkyFlyWithUs",
   description:
     "Explore expert travel advice, flight tips, airline policies, refunds, and smarter ways to plan your next journey with SkyFlyWithUs.",
-  robots: {
-    index: false,
-    follow: true,
-  },
+
 };
 
 const emptyMetadata = {
@@ -208,34 +205,8 @@ export default async function BlogPage({
       </section>
 
       {/* Category Navigation */}
-      <section className="border-b border-[#E7EDE3] bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-12">
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-[#53684D]">
-              Browse by topic
-            </h2>
-
-            <span className="text-xs text-[#858D83]">
-              Find what you need
-            </span>
-          </div>
-
-          <nav
-            aria-label="Blog categories"
-            className="flex gap-2.5 overflow-x-auto pb-2"
-          >
-            {categories.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/blog/category/${category.slug}`}
-                className="shrink-0 rounded-full border border-[#E3E9DE] bg-[#FFFCF8] px-5 py-3 text-sm font-medium text-[#515B54] transition-all duration-200 hover:border-[#538440] hover:bg-[#EAF2E6] hover:text-[#3F6632]"
-              >
-                {category.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </section>
+      {/* Dynamic Category Navigation */}
+<BlogCategoryNav />
 
       {/* Latest Articles */}
       <section

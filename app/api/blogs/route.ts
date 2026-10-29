@@ -58,70 +58,95 @@ export async function POST(req: Request) {
   }
 }
 
-// --- GET (Fetch Blogs) ---
-export async function GET(req: Request) {
-    const url = new URL(req.url);
-    const categoryName = url.searchParams.get('category');
-    const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const limit = parseInt(url.searchParams.get('limit') || '6', 10);
-    const skip = (page - 1) * limit;
-
  
-    const whereClause: any = {};
+export async function GET(req: Request) {
+  const url = new URL(req.url);
 
-    if (categoryName) {
-        whereClause.categories = { has: categoryName };
-    }
+  const categoryName = url.searchParams.get("category")?.trim() || "";
+  const parsedPage = Number.parseInt(url.searchParams.get("page") || "1", 10);
+  const parsedLimit = Number.parseInt(url.searchParams.get("limit") || "6", 10);
 
-    try {
-        const totalPosts = await prisma.blog.count({ where: whereClause });
-        
-        const blogs = await prisma.blog.findMany({
-            where: whereClause,
-            orderBy: { createdAt: 'desc' },
-            skip: skip,
-            take: limit,
-            include: { author: { select: { name: true } } },
-        });
+  const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+  const limit =
+    Number.isFinite(parsedLimit) && parsedLimit > 0
+      ? Math.min(parsedLimit, 100)
+      : 6;
 
-        // Map data
-        const formattedBlogs = blogs.map(blog => ({
-            id: blog.id,
-            title: blog.title,
-            slug: blog.slug,
-            categories: blog.categories, 
-            
-            // Fallbacks for backward compatibility
-            category: (blog.categories && blog.categories.length > 0) ? blog.categories[0] : "Uncategorized",
-            categorySlug: (blog.categories && blog.categories.length > 0) ? blog.categories[0].toLowerCase().replace(/\s+/g, '-') : "uncategorized",
-            
-            description: blog.metaDesc,
-            imageUrl: blog.image,
-            authorName: blog.author?.name || "Unknown Author",
-            publishDate: new Date(blog.createdAt).toLocaleDateString('en-GB'),
-            content: blog.content,
-            
-            // 👇 NEW: Include focusKeyword in response
-            focusKeyword: blog.focusKeyword || "",
+  const skip = (page - 1) * limit;
 
-            metaTitle: blog.metaTitle,
-            metaDesc: blog.metaDesc,
-            metaKeywords: blog.metaKeywords,
-            faqs: [],
-        }));
+  try {
+    const whereClause = categoryName
+      ? {
+          categories: {
+            has: categoryName,
+          },
+        }
+      : {};
 
-        return NextResponse.json({
-            data: formattedBlogs,
-            metadata: {
-                totalPosts: totalPosts,
-                totalPages: Math.ceil(totalPosts / limit),
-                currentPage: page,
-                limit: limit,
+    const [totalPosts, blogs] = await Promise.all([
+      prisma.blog.count({
+        where: whereClause,
+      }),
+      prisma.blog.findMany({
+        where: whereClause,
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: limit,
+        include: {
+          author: {
+            select: {
+              name: true,
             },
-        }, { status: 200 });
+          },
+        },
+      }),
+    ]);
 
-    } catch (error) {
-        console.error('Fetch Blogs Error:', error);
-        return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 });
-    }
+    const formattedBlogs = blogs.map((blog) => ({
+      id: blog.id,
+      title: blog.title,
+      slug: blog.slug,
+      categories: blog.categories,
+      category:
+        blog.categories.length > 0
+          ? blog.categories[0]
+          : "Uncategorized",
+      categorySlug:
+        blog.categories.length > 0
+          ? blog.categories[0].toLowerCase().replace(/\s+/g, "-")
+          : "uncategorized",
+      description: blog.metaDesc,
+      imageUrl: blog.image,
+      authorName: blog.author?.name || "Unknown Author",
+      publishDate: new Date(blog.createdAt).toLocaleDateString("en-GB"),
+      content: blog.content,
+      focusKeyword: blog.focusKeyword || "",
+      metaTitle: blog.metaTitle,
+      metaDesc: blog.metaDesc,
+      metaKeywords: blog.metaKeywords,
+      faqs: [],
+    }));
+
+    return NextResponse.json(
+      {
+        data: formattedBlogs,
+        metadata: {
+          totalPosts,
+          totalPages: Math.ceil(totalPosts / limit),
+          currentPage: page,
+          limit,
+        },
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Fetch Blogs Error:", error);
+
+    return NextResponse.json(
+      { error: "Failed to fetch blogs" },
+      { status: 500 }
+    );
+  }
 }

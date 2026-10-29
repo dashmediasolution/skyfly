@@ -40,7 +40,13 @@ model ContactMessage {
   message   String
   createdAt DateTime @default(now())
 }
-
+model BlogCategory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 model Blog {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String

@@ -52,13 +52,12 @@ export default function TopTravelDeals() {
     </div>
 
     <div className="text-[25px] font-extrabold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-[42px]">
-      Top Travel{" "}
+    Unlock Efficient Travel{" "}
       <span style={{ color: PRIMARY }}>Deals</span>
     </div>
 
     <p className="mx-auto mt-2 max-w-xl px-2 text-xs leading-5 text-slate-500 sm:mt-3 sm:px-0 sm:text-sm sm:leading-6 md:text-base">
-      Explore handpicked flight &amp; holiday deals to your favorite
-      destinations, save more, travel further!
+      Save More, Travel More. Explore top-notch holiday deal to your favorite destination.  
     </p>
   </div>
 

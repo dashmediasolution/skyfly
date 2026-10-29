@@ -15,27 +15,25 @@ import {
   BlogCard,
   type Article,
 } from "@/components/blog_components/blog-card";
+import { BlogCategoryNav } from "../../blog_components/blog-category-nav";
 import { PaginationControls } from "@/components/ui/pagination-controls";
+import prisma from "@/lib/prisma";
 
-const categories = [
-  { name: "Cancellation and Refund", slug: "cancellation-and-refund" },
-  { name: "Change Flight", slug: "change-flight" },
-  { name: "Compensation", slug: "compensation" },
-  { name: "Seat Upgrade", slug: "seat-upgrade" },
-  { name: "Voucher", slug: "voucher" },
-  { name: "Lost and Found", slug: "lost-and-found" },
-  { name: "Check In", slug: "check-in" },
-  { name: "Airport", slug: "airport" },
-];
+const PAGE_SIZE = 6;
+const SITE_URL = "https://skyflywithus.com";
 
-const emptyMetadata = {
-  totalPosts: 0,
-  totalPages: 1,
-  currentPage: 1,
-  limit: 6,
-};
-
-type BlogMetadata = typeof emptyMetadata;
+async function getCategoryBySlug(categorySlug: string) {
+  return prisma.blogCategory.findUnique({
+    where: {
+      slug: categorySlug,
+    },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+    },
+  });
+}
 
 interface CategoryPageProps {
   params: Promise<{
@@ -46,42 +44,78 @@ interface CategoryPageProps {
   }>;
 }
 
+interface BlogMetadata {
+  totalPosts: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
 async function getFilteredBlogs(
   categoryName: string,
   page: number
 ): Promise<{ data: Article[]; metadata: BlogMetadata }> {
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL;
+  const where = {
+    categories: {
+      has: categoryName,
+    },
+  };
 
-    if (!baseUrl) {
-      console.error("NEXTAUTH_URL is not configured.");
-      return { data: [], metadata: emptyMetadata };
-    }
-
-    const response = await fetch(
-      `${baseUrl}/api/blogs?category=${encodeURIComponent(
-        categoryName
-      )}&page=${page}&limit=6`,
-      { cache: "no-store" }
-    );
-
-    if (!response.ok) {
-      return { data: [], metadata: emptyMetadata };
-    }
-
-    const result = await response.json();
-
-    return {
-      data: Array.isArray(result.data) ? result.data : [],
-      metadata: {
-        ...emptyMetadata,
-        ...(result.metadata ?? {}),
+  const [totalPosts, blogs] = await Promise.all([
+    prisma.blog.count({
+      where,
+    }),
+    prisma.blog.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc",
       },
-    };
-  } catch (error) {
-    console.error("Category Blog Fetch Error:", error);
-    return { data: [], metadata: emptyMetadata };
-  }
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      include: {
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const data: Article[] = blogs.map((blog) => ({
+    id: blog.id,
+    title: blog.title,
+    slug: blog.slug,
+    categories: blog.categories,
+    category:
+      blog.categories.length > 0
+        ? blog.categories[0]
+        : "Uncategorized",
+    categorySlug:
+      blog.categories.length > 0
+        ? blog.categories[0].toLowerCase().replace(/\s+/g, "-")
+        : "uncategorized",
+    description: blog.metaDesc,
+    imageUrl: blog.image,
+    authorName: blog.author?.name || "Unknown Author",
+    publishDate: new Date(blog.createdAt).toLocaleDateString("en-GB"),
+    content: blog.content,
+    focusKeyword: blog.focusKeyword || "",
+    metaTitle: blog.metaTitle,
+    metaDesc: blog.metaDesc,
+    metaKeywords: blog.metaKeywords,
+    faqs: [],
+  }));
+
+  return {
+    data,
+    metadata: {
+      totalPosts,
+      totalPages: Math.max(1, Math.ceil(totalPosts / PAGE_SIZE)),
+      currentPage: page,
+      limit: PAGE_SIZE,
+    },
+  };
 }
 
 export async function generateMetadata({
@@ -90,22 +124,23 @@ export async function generateMetadata({
   params: Promise<{ categorySlug: string }>;
 }): Promise<Metadata> {
   const { categorySlug } = await params;
-
-  const category = categories.find((item) => item.slug === categorySlug);
+  const category = await getCategoryBySlug(categorySlug);
 
   if (!category) {
     return {
       title: "Category Not Found | SkyFlyWithUs",
-      robots: { index: false, follow: true },
+      robots: {
+        index: false,
+        follow: true,
+      },
     };
   }
 
   return {
     title: `${category.name} Articles | SkyFlyWithUs`,
     description: `Explore travel articles, expert tips, and helpful guides about ${category.name.toLowerCase()} on SkyFlyWithUs.`,
-    robots: {
-      index: false,
-      follow: true,
+    alternates: {
+      canonical: `${SITE_URL}/blog/category/${category.slug}`,
     },
   };
 }
@@ -118,10 +153,10 @@ export default async function CategoryBlogPage({
   const resolvedSearchParams = await searchParams;
 
   const parsedPage = Number.parseInt(resolvedSearchParams.page || "1", 10);
-  const currentPage =
+  const requestedPage =
     Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
-  const category = categories.find((item) => item.slug === categorySlug);
+  const category = await getCategoryBySlug(categorySlug);
 
   if (!category) {
     notFound();
@@ -129,17 +164,15 @@ export default async function CategoryBlogPage({
 
   const { data: filteredBlogs, metadata } = await getFilteredBlogs(
     category.name,
-    currentPage
+    requestedPage
   );
 
   return (
     <main className="min-h-screen w-full overflow-hidden bg-[#FFFCF8] text-[#17211D]">
-      {/* Hero */}
       <section className="relative border-b border-[#E7EDE3]">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(83,132,64,0.13),_transparent_55%)]" />
 
         <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-8 sm:pb-20 sm:pt-28 lg:px-12 lg:pb-24 lg:pt-32">
-          {/* Breadcrumbs */}
           <nav
             aria-label="Breadcrumb"
             className="mb-10 flex flex-wrap items-center gap-2 text-sm"
@@ -179,9 +212,8 @@ export default async function CategoryBlogPage({
 
               <p className="mt-7 max-w-xl text-base leading-8 text-[#68716A] sm:text-lg">
                 Explore helpful articles, expert insights, and practical
-                travel guides about{" "}
-                {category.name.toLowerCase()}. Find the information you need
-                to make your next journey easier.
+                travel guides about {category.name.toLowerCase()}. Find the
+                information you need to make your next journey easier.
               </p>
 
               <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -215,7 +247,6 @@ export default async function CategoryBlogPage({
               </div>
             </div>
 
-            {/* Decorative category panel */}
             <div className="relative mx-auto w-full max-w-md lg:max-w-none">
               <div className="absolute -right-3 -top-3 h-24 w-24 rounded-full bg-[#D6E5CF]/80 blur-2xl" />
 
@@ -269,7 +300,8 @@ export default async function CategoryBlogPage({
 
                 <p className="mt-1 text-sm font-bold text-[#20331D]">
                   {metadata.totalPosts}{" "}
-                  {metadata.totalPosts === 1 ? "article" : "articles"} to explore
+                  {metadata.totalPosts === 1 ? "article" : "articles"} to
+                  explore
                 </p>
               </div>
             </div>
@@ -277,48 +309,8 @@ export default async function CategoryBlogPage({
         </div>
       </section>
 
-      {/* Category navigation */}
-      <section className="border-b border-[#E7EDE3] bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-12">
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-[#53684D]">
-              Explore other topics
-            </h2>
+      <BlogCategoryNav activeSlug={category.slug} />
 
-            <Link
-              href="/blog"
-              className="shrink-0 text-xs font-semibold text-[#538440] transition hover:text-[#3F6632]"
-            >
-              View all articles
-            </Link>
-          </div>
-
-          <nav
-            aria-label="Other blog categories"
-            className="flex gap-2.5 overflow-x-auto pb-2"
-          >
-            {categories.map((item) => {
-              const isActive = item.slug === category.slug;
-
-              return (
-                <Link
-                  key={item.slug}
-                  href={`/blog/category/${item.slug}`}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`shrink-0 rounded-full border px-5 py-3 text-sm font-medium transition-all duration-200 ${isActive
-                      ? "border-[#538440] bg-[#538440] text-white"
-                      : "border-[#E3E9DE] bg-[#FFFCF8] text-[#515B54] hover:border-[#538440] hover:bg-[#EAF2E6] hover:text-[#3F6632]"
-                    }`}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </section>
-
-      {/* Article listing */}
       <section
         id="category-articles"
         className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
@@ -342,7 +334,6 @@ export default async function CategoryBlogPage({
 
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E3E9DE] bg-white px-4 py-2.5 text-sm text-[#53684D]">
             <BookOpen size={16} className="text-[#538440]" />
-
             <span>
               {metadata.totalPosts}{" "}
               {metadata.totalPosts === 1 ? "article" : "articles"}
@@ -397,7 +388,6 @@ export default async function CategoryBlogPage({
         )}
       </section>
 
-      {/* Bottom CTA */}
       <section className="px-5 pb-16 sm:px-8 sm:pb-20 lg:px-12">
         <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#20331D] px-7 py-10 sm:px-12 sm:py-14 lg:px-16">
           <div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-center">

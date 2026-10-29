@@ -13,20 +13,9 @@ import { RichTextEditor } from "./rich_text_editor";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SEOAnalyzer } from "./SeoAnalyser";
 import { MultiSelect } from "@/components/ui/multi-select"; 
-
+import { Plus, LoaderCircle } from "lucide-react";
 // --- CATEGORIES ---
-const blogCategories = [
-  { name: "Cancellation and Refund", slug: "cancellation-and-refund" },
-  { name: "Change Flight", slug: "change-flight" },
-  { name: "Compensation", slug: "compensation" },
-  { name: "Seat Upgrade", slug: "seat-upgrade" },
-  { name: "Voucher", slug: "voucher" },
-  { name: "Lost and Found", slug: "lost-and-found" },
-  { name: "Check In", slug: "check-in" },
-  { name: "Airport", slug: "airport" },
-];
-
-const categoryOptions = blogCategories.map(cat => ({ label: cat.name, value: cat.name }));
+ 
 
 function slugify(text: string) {
   return text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
@@ -42,6 +31,11 @@ type BlogFormInputs = {
   metaTitle: string;
   metaDesc: string;
   metaKeywords: string; 
+};
+type BlogCategoryOption = {
+  id: string;
+  name: string;
+  slug: string;
 };
 
 export function BlogForm() {
@@ -62,6 +56,139 @@ export function BlogForm() {
     },
   });
 
+const [categoriesList, setCategoriesList] = useState<BlogCategoryOption[]>([]);
+const [newCategory, setNewCategory] = useState("");
+const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+const [isAddingCategory, setIsAddingCategory] = useState(false);
+useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/blog-categories");
+
+      if (!response.ok) {
+        throw new Error("Failed to load categories.");
+      }
+
+      const categories = await response.json();
+      setCategoriesList(categories);
+    } catch (error) {
+      toast.error("Could not load blog categories.");
+    } finally {
+      setIsLoadingCategories(false);
+    }
+  };
+
+  fetchCategories();
+}, []);
+
+
+const handleAddCategory = async () => {
+  const name = newCategory.trim();
+
+  if (!name) {
+    toast.error("Please enter a category name.");
+    return;
+  }
+
+  const existing = categoriesList.find(
+    (category) =>
+      category.name.toLowerCase() === name.toLowerCase() ||
+      category.slug === slugify(name)
+  );
+
+  if (existing) {
+    toast.info("This category already exists.");
+
+    const selected = watch("categories") || [];
+
+    if (!selected.includes(existing.name)) {
+      setValue("categories", [...selected, existing.name], {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+
+    setNewCategory("");
+    return;
+  }
+
+  setIsAddingCategory(true);
+
+  try {
+    const response = await fetch("/api/blog-categories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+
+    const result = await response.json();
+
+    if (response.status === 409 && result.category) {
+      const existingCategory = result.category;
+
+      setCategoriesList((previous) => {
+        const alreadyAdded = previous.some(
+          (category) => category.id === existingCategory.id
+        );
+
+        return alreadyAdded
+          ? previous
+          : [...previous, existingCategory].sort((a, b) =>
+              a.name.localeCompare(b.name)
+            );
+      });
+
+      const selected = watch("categories") || [];
+
+      if (!selected.includes(existingCategory.name)) {
+        setValue("categories", [...selected, existingCategory.name], {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      }
+
+      setNewCategory("");
+      toast.info("Existing category selected.");
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(result.error || "Failed to create category.");
+    }
+
+    const createdCategory = result as BlogCategoryOption;
+
+    setCategoriesList((previous) =>
+      [...previous, createdCategory].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      )
+    );
+
+    const selected = watch("categories") || [];
+
+    setValue("categories", [...selected, createdCategory.name], {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+
+    setNewCategory("");
+    toast.success("Category created and selected.");
+  } catch (error) {
+    toast.error(
+      error instanceof Error ? error.message : "Failed to create category."
+    );
+  } finally {
+    setIsAddingCategory(false);
+  }
+};
+
+
+const categoryOptions = categoriesList.map((category) => ({
+  label: category.name,
+  value: category.name,
+}));
   const watchedValues = watch(); 
   const titleValue = watch("title");
   const imageUrlValue = watch("image");
@@ -171,23 +298,83 @@ export function BlogForm() {
              {errors.slug && <p className="text-sm text-red-500">{errors.slug.message}</p>}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="categories">Categories</Label>
-            <Controller
-              name="categories"
-              control={control}
-              rules={{ required: "At least one category is required" }}
-              render={({ field }) => (
-                <MultiSelect 
-                    options={categoryOptions}
-                    selected={field.value}
-                    onChange={field.onChange}
-                    placeholder="Select categories..."
-                />
-              )}
-            />
-             {errors.categories && <p className="text-sm text-red-500">{errors.categories.message}</p>}
-          </div>
+         
+<div className="space-y-3">
+  <Label htmlFor="categories">Categories</Label>
+
+  <Controller
+    name="categories"
+    control={control}
+    rules={{
+      validate: (value) =>
+        value.length > 0 || "At least one category is required",
+    }}
+    render={({ field }) => (
+      <MultiSelect
+        options={categoryOptions}
+        selected={field.value}
+        onChange={field.onChange}
+        placeholder={
+          isLoadingCategories
+            ? "Loading categories..."
+            : "Select categories..."
+        }
+      />
+    )}
+  />
+
+  {errors.categories && (
+    <p className="text-sm text-red-500">
+      {errors.categories.message}
+    </p>
+  )}
+
+  <div className="rounded-lg border bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+    <Label htmlFor="newCategory" className="mb-2 block">
+      Add New Category
+    </Label>
+
+    <div className="flex flex-col gap-2 sm:flex-row">
+      <Input
+        id="newCategory"
+        value={newCategory}
+        onChange={(event) => setNewCategory(event.target.value)}
+        placeholder="Enter category name"
+        maxLength={80}
+        disabled={isAddingCategory}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+
+            if (!isAddingCategory) {
+              void handleAddCategory();
+            }
+          }
+        }}
+      />
+
+      <Button
+        type="button"
+        onClick={() => void handleAddCategory()}
+        disabled={isAddingCategory || !newCategory.trim()}
+        className="bg-[#FF8C00] hover:bg-[#e67e00]"
+      >
+        {isAddingCategory ? (
+          <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Plus className="mr-2 h-4 w-4" />
+        )}
+        Add Category
+      </Button>
+    </div>
+
+    <p className="mt-2 text-xs text-muted-foreground">
+      New categories are saved to the database and automatically selected
+      for this blog post.
+    </p>
+  </div>
+</div>
+
 
           <div className="space-y-2">
             <Label>Content</Label>

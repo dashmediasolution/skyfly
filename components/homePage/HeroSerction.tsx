@@ -45,9 +45,9 @@ export default function HeroSection({
               lg:w-[38%]
             "
           >
-            <h1 className="font-light leading-[1.02] tracking-[-0.04em] text-[#153b3c]">
+            <p className="font-light leading-[1.02] tracking-[-0.04em] text-[#153b3c]">
               <span className="block text-[clamp(9px,3.8vw,52px)]">
-                Your Next
+                 Your Wait for the Next 
               </span>
 
               <span className="block whitespace-nowrap bg-gradient-to-r from-[#639c3c] to-[#075b4d] bg-clip-text text-[clamp(11px,4.5vw,64px)] font-extrabold text-transparent">
@@ -55,12 +55,12 @@ export default function HeroSection({
               </span>
 
               <span className="block text-[clamp(9px,3.8vw,52px)]">
-                Awaits
+                Is Over
               </span>
-            </h1>
+            </p>
 
             <p className="mt-[1.2%] whitespace-nowrap text-[clamp(6px,1.5vw,20px)] tracking-wide text-[#686d6d]">
-              Book Flights. Explore the World.
+              Book Your Flights Now & Travel the World.
             </p>
 
             <div className="mt-[2%] h-[3px] w-[13%] rounded-full bg-[#176b5b] sm:h-1" />

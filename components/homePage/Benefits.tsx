@@ -2,21 +2,20 @@
 
 const benefits = [
   {
-    title: "Exclusive Deals",
-    description:
-      "Unlock hidden fares and limited-access discounts thanks to our direct partnerships with major airlines. Travel smarter and save more.",
+    title: "Exclusive Deals & Offers",
+    description:"Access limited-time discount offers and hidden fares through our direct partnerships with major airlines. Get ready to travel efficiently and safely.",
     Icon: ShieldCheck,
   },
   {
-    title: "24/7 Helpline Support",
+    title: "Instant Support",
     description:
-      "We are always here for you. Enjoy round-the-clock customer support dedicated purely to your comfort and peace of mind.",
+      "You don’t have to worry. We provide 24/7 instant support to keep you comfortable and at peace of mind.",
     Icon: Headset,
   },
   {
-    title: "Expert Travel Advice",
+    title: "Travel With Expertise",
     description:
-      "Beyond booking, access expert-crafted guides on compensation, upgrades, and practical travel tips to smooth your journey.",
+      "Not just bookings, get detailed guidance on fares, discounts and travel tips to help you travel better.",
     Icon: Tag,
   },
 ];

@@ -77,10 +77,7 @@ export async function generateMetadata({
   if (!config) {
     return {
       title: "Policy Not Found | SkyFlyWithUs",
-      robots: {
-        index: false,
-        follow: false,
-      },
+      
     };
   }
 

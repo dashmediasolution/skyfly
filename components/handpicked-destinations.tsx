@@ -36,8 +36,7 @@ export default function HandpickedDestinations() {
           <p className="mx-auto mt-2 max-w-xl px-2 text-xs leading-5 text-slate-500
                         sm:mt-3 sm:px-0 sm:text-sm sm:leading-6
                         md:text-base">
-            Explore the world&apos;s most loved cities, iconic
-            landmarks and unforgettable experiences.
+           Get ready to explore the world's most iconic cities, landmarks and monuments. Experience the unforgettable! 
           </p>
         </div>
 

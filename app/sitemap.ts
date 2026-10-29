@@ -52,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const blogRoutes: MetadataRoute.Sitemap = blogs.map((blog) => ({
-    url: `${BASE_URL}/blog/articles/${blog.slug}`,
+    url: `${BASE_URL}/blog/${blog.slug}`,
     lastModified: blog.updatedAt,
     changeFrequency: "weekly",
     priority: 0.7,

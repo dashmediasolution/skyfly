@@ -7,37 +7,26 @@ export default function TravelInformation() {
 
         <div>
           <h1 className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
-            Make Every Journey Better with SkyFlyWithUs
+            Plan your next travel journey with Skyflywithus!
           </h1>
 
           <p className="text-sm leading-[1.4] text-gray-500 md:text-base">
-            Planning a trip involves more than choosing a destination and finding a
-            suitable flight. Understanding airline rules can help you prepare for
-            unexpected changes, pack according to baggage limits, and avoid unnecessary
-            travel expenses. SkyFlyWithUs helps simplify essential airline information
-            so you can explore your options with greater clarity. Whether you are
-            travelling within India or flying to another country, knowing what to
-            expect before departure can make your journey more comfortable and
-            stress-free.
+            Travel safely and securely with Skyflywithus. Optimize your trips and get detailed guidance to make well-informed travel choices. Whether it is cancellation fees or baggage allowance, travel expert guidance can save you both time and money. Enjoy your domestic or international flights, understand latest airline’s policies to ensure a seamless travel experience.
           </p>
 
           <p className="mt-3 text-sm leading-[1.4] text-gray-500 md:text-base">
-            At SkyFlyWithUs, our goal is to make travel planning easier through
-            informative flight guides, airline policy insights, destination inspiration,
-            and practical tips for travellers. We turn complicated travel information
-            into straightforward guidance that helps you understand your options before
-            making decisions. From preparing for your next getaway to learning about
-            baggage requirements and airline procedures, discover useful information
-            that helps you travel with confidence and make more informed choices.
+            Check our website to get a comprehensive insights into skyflywithus from major airlines. . travelers can allows travelers to compare options and find the best deals that align with their travel plans
           </p>
+          <p className="mt-3 text-sm leading-[1.4] text-gray-500 md:text-base">
+            On our website, we provide comprehensive insights into skyflywithus from major airlines. It allows travelers to compare options and find the best deals that align with their travel plans. We break down complicated jargon into easy-to-understand information to empower you to make confident travel decisions. Let us guide you through the maze of airfare regulations so you can focus on what matters most to make the most of a trip!           </p>
         </div>
 
 
         {/* Services */}
 
         <div>
-        <h2 className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
-            Explore Travel Services with SkyFlyWithUs
+          <h2 className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
+            Sneak-Peek into our services
           </h2>
 
           <p className="text-sm leading-[1.4] text-gray-500 md:text-base">
@@ -77,7 +66,8 @@ export default function TravelInformation() {
         {/* Why Book With Us */}
         <div>
           <p className="mb-2 text-lg font-bold leading-tight text-gray-950 sm:text-xl">
-            Why Book With Us?
+
+            Why you should book travel flight with us?
           </p>
 
           <ul className="list-disc pl-5 text-sm leading-[1.4] text-gray-500 marker:text-gray-950">
