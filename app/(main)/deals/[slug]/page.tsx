@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import {
   ArrowRight,
   CheckCircle2,
@@ -19,7 +20,63 @@ import FlightFAQ from "@/components/FlightFAQ";
 
 const GREEN = "#538440";
 const DARK_GREEN = "#3F6632";
+const SITE_URL = "https://skyflywithus.com";
 
+export async function generateMetadata({
+  params,
+}: DealPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const deal = deals.find((item) => item.slug === slug);
+
+  if (!deal) {
+    return {
+      title: "Travel Deals | SkyFlyWithUs",
+      description:
+        "Explore flight offers, seasonal discounts, and travel deals with SkyFlyWithUs.",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
+  const title = `${deal.title} | SkyFlyWithUs`;
+
+  const description =
+    deal.description.length > 155
+      ? `${deal.description.slice(0, 152).trimEnd()}...`
+      : deal.description;
+
+  const canonicalUrl = `${SITE_URL}/deals/${deal.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "SkyFlyWithUs",
+      type: "website",
+      images: [
+        {
+          url: deal.image,
+          alt: deal.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [deal.image],
+    },
+  };
+}
 type DealPageProps = {
   params: Promise<{
     slug: string;

@@ -140,7 +140,65 @@ const groupPages = {
 } as const;
 
 type GroupSlug = keyof typeof groupPages;
+import type { Metadata } from "next";
 
+const SITE_URL = "https://skyflywithus.com";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const page = groupPages[slug as GroupSlug];
+
+  if (!page) {
+    return {
+      title: "Group Travel | SkyFlyWithUs",
+      description:
+        "Explore family holidays, corporate trips, student travel and group vacation options with SkyFlyWithUs.",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
+  const title = `${page.title} | SkyFlyWithUs`;
+
+  const description = page.description;
+
+  const canonicalUrl = `${SITE_URL}/group-travel/${slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "SkyFlyWithUs",
+      type: "website",
+      images: [
+        {
+          url: page.image,
+          width: 1400,
+          height: 900,
+          alt: page.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [page.image],
+    },
+  };
+}
 const relatedGroups = [
   { title: "Family Travel", slug: "family-travel", Icon: Heart },
   { title: "Corporate Travel", slug: "corporate-travel", Icon: BriefcaseBusiness },

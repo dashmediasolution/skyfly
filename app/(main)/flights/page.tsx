@@ -14,6 +14,9 @@ import {
     MapPin,
 } from "lucide-react";
 
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata("flights");
 
 const benefits = [
     {

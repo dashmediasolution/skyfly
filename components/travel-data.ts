@@ -17,7 +17,7 @@ export const destinations = [
     country: "UK",
     tagline: "Royal landmarks, historic streets and vibrant city life.",
     overlayTitle: "Where History Meets Modern Life",
-    image: "/images/destinations/london2.web",
+    image: "/images/destinations/london2.webp",
   },
   {
     name: "Singapore",

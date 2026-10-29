@@ -1,6 +1,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Metadata } from "next";
 import {
   ArrowRight,
   CalendarDays,
@@ -178,6 +179,73 @@ const contentSections = [
     bullets: [],
   },
 ];
+
+const SITE_URL = "https://skyflywithus.com";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ destination: string }>;
+}): Promise<Metadata> {
+  const { destination: slug } = await params;
+  const destination = destinations[slug.toLowerCase()];
+
+  if (!destination) {
+    return {
+      title: "Destination Not Found | SkyFlyWithUs",
+      description:
+        "Explore available flight routes and find your next destination with SkyFlyWithUs.",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const name = destination.name;
+  const country = destination.country;
+  const pageTitle = `Flights to ${name}, ${country} | SkyFlyWithUs`;
+
+  const description = `Compare flights to ${name}, ${country} with SkyFlyWithUs. Explore flight options, check travel tips and plan your next trip with ease.`;
+
+  const keywords = [
+    `flights to ${name}`,
+    `cheap flights to ${name}`,
+    `flight tickets to ${name}`,
+    `${name} flights`,
+    `flights to ${name} ${country}`,
+    `air tickets to ${name}`,
+    `book flights to ${name}`,
+    `${name} travel guide`,
+    "cheap flights",
+    "SkyFlyWithUs",
+  ];
+
+  const canonicalUrl = `${SITE_URL}/flights/${slug.toLowerCase()}`;
+
+  return {
+    title: pageTitle,
+    description,
+    keywords,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description,
+      url: canonicalUrl,
+      siteName: "SkyFlyWithUs",
+      type: "website",
+      images: [
+        {
+          url: destination.image,
+          alt: `Flights to ${name}`,
+        },
+      ],
+    },
+  
+  };
+}
 
 export default async function DestinationPage({
   params,
