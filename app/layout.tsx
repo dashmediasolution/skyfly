@@ -8,7 +8,7 @@ import Script from 'next/script';
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 
- 
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://skyflywithus.com"),
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   verification: {
     google: "ag0nLen_8F-Yes_X1qwJRCHvc_hNnblzOSXncz2RAW0",
   },
- 
+
 
   authors: [{ name: "skyflywithus.com" }],
   publisher: "skyflywithus.com",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     },
   },
 
- 
+
 
   other: {
     pragma: "no-cache",
@@ -107,9 +107,32 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script 
-          src="https://emrldtp.cc/NTExMDMz.js?t=511033" 
-          strategy="afterInteractive" 
+        <script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Skyflywithus",
+              alternateName: "Skyflywithus",
+              url: "https://skyflywithus.com/",
+              logo: "https://skyflywithus.com/images/SF-logo.svg",
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "1-855-509-3791",
+                contactType: "customer service",
+                contactOption: "TollFree",
+                areaServed: "US",
+                availableLanguage: "en",
+              },
+            }),
+          }}
+        />
+
+        <Script
+          src="https://emrldtp.cc/NTExMDMz.js?t=511033"
+          strategy="afterInteractive"
         />
       </head>
       {/* Use the font here */}
@@ -121,7 +144,7 @@ export default async function RootLayout({
         </SessionProvider>
         <GoogleAnalytics gaId="G-XJF89G4WG3" />
         <Script id="microsoft-clarity" strategy="afterInteractive">
-      {`
+          {`
         (function(c,l,a,r,i,t,y){
           c[a]=c[a]||function(){
             (c[a].q=c[a].q||[]).push(arguments)
@@ -133,7 +156,7 @@ export default async function RootLayout({
           y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "z1m4q775sx");
       `}
-    </Script>
+        </Script>
       </body>
     </html>
   );

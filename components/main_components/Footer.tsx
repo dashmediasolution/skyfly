@@ -19,8 +19,8 @@ const quickLinks = [
 
 const usefulLinks = [
   { name: "Flight Change Policy", href: "/flight-change" },
-  { name: "Name Correction Policy", href: "/name-correction" },
-  { name: "Cancellation Policy", href: "/cancellation" },
+  { name: "Name Change Policy", href: "/name-change" },
+  { name: "Cancellation & Refund Policy", href: "/cancellation" },
   { name: "Baggage Policy", href: "/baggage" },
   { name: "Disclaimer", href: "/disclaimer" },
   { name: "Privacy Policy", href: "/privacy-policy" },

@@ -1,471 +1,389 @@
 
-"use client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  Save,
-  RefreshCw,
-  Plane,
-} from "lucide-react";
-import { toast } from "sonner";
+const prisma = new PrismaClient();
 
-import ArticleEditor from "../../ArticleEditor";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-type Category = {
-  id: string;
-  name: string;
-};
-
-type PolicyType = "FLIGHT" | "NAME" | "CANCELLATION" | "BAGGAGE";
-
-type Policy = {
-  id: string;
-
-  
-  policyType?: PolicyType;
-  categoryId: string;
-  excerpt: string | null;
-  content: string;
-  metaTitle: string | null;
-  metaDescription: string | null;
-  metaKeywords: string[];
-  status: string;
-  category?: Category;
-};
-
-const POLICY_TYPES: { label: string; value: PolicyType }[] = [
-  { label: "Flight Change Policy", value: "FLIGHT" },
-  { label: "Name Correction Policy", value: "NAME" },
-  { label: "Cancellation Policy", value: "CANCELLATION" },
-  { label: "Baggage Policy", value: "BAGGAGE" },
+const airlineCategories = [
+  "Aeromexico",
+  "Alaska Airlines",
+  "American Airlines",
+  "China Eastern Airlines",
+  "Copa Airlines",
+  "Emirates",
+  "Etihad Airways",
+  "EVA Air",
+  "Frontier Airlines",
+  "Hawaiian Airlines",
+  "LATAM Airlines",
+  "Lufthansa",
+  "Norwegian Air",
+  "United Airlines",
+  "Volaris Airlines",
+  "Caribbean Airlines",
+  "Allegiant Air",
+  "Avelo Airlines",
+  "Breeze Airways",
+  "Delta Air Lines",
+  "JetBlue Airways",
+  "Southwest Airlines",
+  "Sun Country Airlines",
+  "Jetstar",
+  "EasyJet",
+  "Jet2.com",
+  "Norse Atlantic UK",
+  "Ryanair UK",
+  "Wizz Air UK",
+  "iberia airlines",
+  "FlyOne Airline",
+  "Norse Atlantic Airways",
+  "ryanair airlines",
+  "Pacific Airlines",
+  "flydubai",
+  "emirates airlines",
+  "thai airways",
+  "SkyJet Airlines",
+  "philippines airlines",
+  "Cebu Pacific",
+  "AirAsia",
+  "SpiceJet",
+  "air china airlines",
+  "viva airlines",
+  "sky airlines",
+  "JetSmart",
+  "Flair Airlines",
+  "air canada",
+  "air arabia maroc airlines",
+  "avenica airline",
+  "Singapore Airlines",
+  "Qatar Airways",
+  "Cathay Pacific Airways",
+  "ANA All Nippon Airways",
+  "Turkish Airlines",
+  "Air France",
+  "Hainan Airlines",
+  "Japan Airlines",
+  "Korean Air",
+  "Qantas Airways",
+  "STARLUX Airlines",
+  "Saudia",
+  "Iberia",
+  "Virgin Atlantic",
+  "Swiss International Air Lines",
+  "Malaysia Airlines",
+  "British Airways",
+  "KLM Royal Dutch Airlines",
+  "Austrian Airlines",
+  "Scoot",
+  "Bangkok Airways",
+  "China Airlines",
+  "China Southern Airlines",
+  "Air New Zealand",
+  "Finnair",
+  "Porter Airlines",
+  "Air Astana",
+  "Ethiopian Airlines",
+  "Virgin Australia",
+  "Fiji Airways",
+  "Vueling Airlines",
+  "Aegean Airlines",
+  "Azerbaijan Airlines",
+  "Eurowings",
+  "LOT Polish Airlines",
+  "Egyptair",
+  "Iberia Express",
+  "Volotea",
+  "ITA Airways",
+  "Transavia France",
 ];
 
+const metaKeywords = [
+  "cancellation and refund policy",
+  "airline cancellation policy",
+  "flight cancellation fees",
+  "flight ticket refund policy",
+  "cancel flight booking",
+  "flight refund eligibility",
+  "non-refundable flight tickets",
+  "flight cancellation charges",
+  "airline refund process",
+  "flight cancellation rules",
+  "refund for cancelled flights",
+  "flight booking cancellation",
+];
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
-  
+function createCancellationContent(airline: string): string {
+  const name = escapeHtml(airline);
 
-export default function EditAirlinePolicyPage() {
-  const router = useRouter();
-  const params = useParams<{ id: string }>();
-  const id = params?.id ?? "";
+  return `
+<h1>${name} Cancellation &amp; Refund Policy</h1>
 
-  const [categories, setCategories] = useState<Category[]>([]);
+<p>The ${name} cancellation and refund policy explains the general conditions passengers should review before cancelling a flight or requesting money back for an unused ticket. Refund eligibility, cancellation charges, deadlines, and available alternatives depend on the fare purchased, ticket conditions, route, and reason for cancellation.</p>
 
-  
-  const [policyType, setPolicyType] = useState<PolicyType>("FLIGHT");
-  const [categoryId, setCategoryId] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [content, setContent] = useState("");
-  const [metaTitle, setMetaTitle] = useState("");
-  const [metaDescription, setMetaDescription] = useState("");
-  const [metaKeywords, setMetaKeywords] = useState("");
-  const [status, setStatus] = useState("DRAFT");
+<p>Before cancelling your ${name} reservation, review the terms attached to your ticket and confirm the applicable rules with the airline or the travel provider that issued your booking.</p>
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+<h2>Understanding the ${name} Cancellation Policy</h2>
 
-  const loadPolicy = useCallback(async () => {
-    if (!id) {
-      setError("Policy ID is missing.");
-      setLoading(false);
-      return;
-    }
+<p>The ${name} cancellation policy sets out the conditions that apply when a passenger requests to cancel an existing flight reservation. The outcome can differ depending on whether the ticket is refundable, restricted, partially refundable, or subject to other fare conditions.</p>
 
-    setLoading(true);
-    setError("");
+<p>Some tickets may qualify for a refund under specified conditions, while others may have cancellation charges or restrictions. Additional rules may apply when a booking includes multiple flights, connecting journeys, or separate ticket segments.</p>
 
-    try {
-      const [policyResponse, categoryResponse] = await Promise.all([
-        fetch(`/api/airline-policies?id=${encodeURIComponent(id)}`, {
-          cache: "no-store",
-        }),
-        fetch("/api/airline-policy-categories", {
-          cache: "no-store",
-        }),
-      ]);
+<p>The exact conditions for your reservation should be confirmed through the official ${name} website, the airline's customer service team, or the original booking provider.</p>
 
-      const policyData = await policyResponse.json();
-      const categoryData = await categoryResponse.json();
+<h2>How to Cancel a ${name} Flight</h2>
 
-      if (!policyResponse.ok) {
-        throw new Error(
-          policyData.error || "Failed to load airline policy."
-        );
-      }
+<p>If you need to cancel a ${name} flight, follow these general steps:</p>
 
-      if (!categoryResponse.ok) {
-        throw new Error(
-          categoryData.error || "Failed to load categories."
-        );
-      }
+<ol>
+  <li>Locate your booking confirmation and reservation reference.</li>
+  <li>Visit the official ${name} website or contact the provider that issued your ticket.</li>
+  <li>Open your reservation using the requested booking and passenger details.</li>
+  <li>Review the cancellation conditions and determine whether your ticket qualifies for a refund.</li>
+  <li>Check any cancellation charges, refund deductions, or alternative options offered.</li>
+  <li>Review the cancellation details carefully before confirming your request.</li>
+  <li>Save the cancellation confirmation and any reference number provided.</li>
+  <li>Keep records of any refund estimate or subsequent refund communication.</li>
+</ol>
 
-      const policy: Policy =
-        policyData.policy ??
-        (Array.isArray(policyData.policies)
-          ? policyData.policies.find((item: Policy) => item.id === id)
-          : null);
+<p>The available cancellation process may vary depending on how the ticket was purchased and the conditions of the reservation.</p>
 
-      if (!policy) {
-        throw new Error("Airline policy not found.");
-      }
+<h2>${name} Cancellation Fees</h2>
 
-   
-      ;
+<p>Cancellation charges for a ${name} ticket depend on the fare conditions and the circumstances of the cancellation. Some tickets may permit cancellation under specific conditions, while others may be subject to deductions or may not qualify for a refund of the original fare.</p>
 
-      const validPolicyTypes: PolicyType[] = [
-        "FLIGHT",
-        "NAME",
-        "CANCELLATION",
-        "BAGGAGE",
-      ];
+<p>If a ticket was purchased through a travel agency or third-party booking website, that provider may also have service charges or separate processing conditions.</p>
 
-      setPolicyType(
-        validPolicyTypes.includes(policy.policyType as PolicyType)
-          ? (policy.policyType as PolicyType)
-          : "FLIGHT"
-      );
+<p>Before confirming your cancellation, ask for a breakdown of any applicable deductions and the expected refund amount, if a refund is available.</p>
 
-      setCategoryId(policy.categoryId ?? policy.category?.id ?? "");
-      setExcerpt(policy.excerpt ?? "");
-      setContent(policy.content ?? "");
-      setMetaTitle(policy.metaTitle ?? "");
-      setMetaDescription(policy.metaDescription ?? "");
-      setMetaKeywords((policy.metaKeywords ?? []).join(", "));
-      setStatus(policy.status === "PUBLISHED" ? "PUBLISHED" : "DRAFT");
+<h2>${name} Refund Policy</h2>
 
-      setCategories(
-        Array.isArray(categoryData)
-          ? categoryData
-          : categoryData.categories ?? []
-      );
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to load policy.";
+<p>Whether a cancelled ${name} ticket qualifies for a refund depends on the ticket conditions, applicable airline rules, and the reason for cancellation. Refundable and non-refundable fares may be treated differently.</p>
 
-      setError(message);
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+<p>Depending on the applicable rules, the available outcome may include:</p>
 
-  useEffect(() => {
-    loadPolicy();
-  }, [loadPolicy]);
+<ul>
+  <li>A refund of the eligible ticket amount.</li>
+  <li>A refund after applicable cancellation charges or deductions.</li>
+  <li>A refund of certain unused taxes or charges, where permitted.</li>
+  <li>A travel credit or voucher, if offered and accepted under the applicable terms.</li>
+  <li>No refund of some or all of the fare when the ticket conditions do not permit it.</li>
+</ul>
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
+<p>These are general possibilities, not a guarantee of eligibility. Confirm the terms that apply to your specific ${name} booking before cancelling.</p>
 
-    if (saving) return;
+<h2>Refunds for Non-Refundable ${name} Tickets</h2>
 
-    if (!id) {
-      toast.error("Policy ID is missing.");
-      return;
-    }
+<p>A non-refundable ${name} ticket generally has restrictions on returning the base fare after a voluntary cancellation. However, the outcome depends on the fare conditions and any applicable legal or regulatory requirements.</p>
 
-  
-    
+<p>Some unused taxes or other eligible amounts may be handled separately, depending on the ticket and applicable rules. Do not assume that every non-refundable ticket qualifies for a cash refund or that every tax is refundable.</p>
 
-    if (!POLICY_TYPES.some((type) => type.value === policyType)) {
-      toast.error("Please select a valid policy type.");
-      return;
-    }
+<p>Contact ${name} or the original booking provider to confirm what, if anything, can be recovered from your reservation.</p>
 
-    if (!categoryId) {
-      toast.error("Please select a category.");
-      return;
-    }
+<h2>When ${name} Cancels Your Flight</h2>
 
-    if (content.replace(/<[^>]*>/g, "").trim().length < 10) {
-      toast.error("Article content must be at least 10 characters.");
-      return;
-    }
+<p>If ${name} cancels your flight, the available options may differ from those that apply when you voluntarily cancel a reservation. Depending on the circumstances and applicable rules, passengers may be offered a refund, an alternative flight, or other assistance.</p>
 
-    setSaving(true);
+<p>Eligibility for a refund, rebooking, compensation, or other assistance depends on the reason for the disruption, the itinerary, the applicable law, and the conditions of the booking.</p>
 
-    try {
-      const response = await fetch("/api/airline-policies", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-        
-          
-          policyType,
-          categoryId,
-          excerpt: excerpt.trim(),
-          content,
-          metaTitle: metaTitle.trim(),
-          metaDescription: metaDescription.trim(),
-          metaKeywords: metaKeywords
-            .split(",")
-            .map((keyword) => keyword.trim())
-            .filter(Boolean),
-          status,
-        }),
+<p>Check the notification from ${name} and contact the airline or booking provider to understand the options available for your particular flight.</p>
+
+<h2>Refunds for Flights Booked Through a Travel Agency</h2>
+
+<p>If you booked your ${name} flight through a travel agency or third-party booking website, contact the provider that issued your ticket to find out how to submit a cancellation or refund request.</p>
+
+<p>The original provider may need to process the cancellation and refund. Processing times, service charges, and communication procedures can differ between providers.</p>
+
+<p>Keep your booking confirmation, ticket number, cancellation reference, and relevant payment records available when following up on your request.</p>
+
+<h2>How Long Does a ${name} Refund Take?</h2>
+
+<p>The time required to process a ${name} refund depends on the type of ticket, the reason for cancellation, the booking channel, and the payment method. The airline or issuing provider may need to review the request before authorizing the refund.</p>
+
+<p>After a refund is approved, the time for the money to appear in your account may also depend on the payment provider or financial institution.</p>
+
+<p>Ask ${name} or your booking provider for the expected processing timeframe and retain your refund reference so you can follow up if necessary.</p>
+
+<h2>Can You Change Your ${name} Booking Instead of Cancelling?</h2>
+
+<p>If your travel dates have changed but you still intend to travel, changing your ${name} reservation may be an alternative to cancelling it. The availability and cost of a change depend on your ticket conditions and the replacement flight.</p>
+
+<p>Compare the cost of changing the reservation with the cancellation deductions and any new booking costs before deciding which option is more suitable.</p>
+
+<h2>Important Things to Check Before Cancelling a ${name} Flight</h2>
+
+<ul>
+  <li>Whether your ticket is refundable or subject to restrictions.</li>
+  <li>The cancellation deadline and applicable fare conditions.</li>
+  <li>Any cancellation charges or service fees.</li>
+  <li>The estimated refundable amount, if applicable.</li>
+  <li>Whether eligible unused taxes or charges can be refunded.</li>
+  <li>Whether the booking provider or airline must process the request.</li>
+  <li>Alternative flights, credits, or vouchers, if available.</li>
+  <li>The expected refund processing timeframe.</li>
+  <li>Any applicable rights under relevant passenger protection rules.</li>
+</ul>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Can I cancel my ${name} flight and get a refund?</h3>
+
+<p>A refund may be available depending on your fare conditions, the reason for cancellation, and applicable rules. Review your ticket terms and confirm the refund eligibility with ${name} or the original booking provider.</p>
+
+<h3>Does ${name} charge a cancellation fee?</h3>
+
+<p>Cancellation charges depend on the ticket conditions and the circumstances of the cancellation. Additional service charges may apply when a reservation was purchased through a third-party provider.</p>
+
+<h3>Can I get a refund on a non-refundable ${name} ticket?</h3>
+
+<p>The base fare on a non-refundable ticket is generally subject to restrictions, but the outcome depends on the applicable conditions and legal requirements. Certain unused taxes or other eligible amounts may be treated differently.</p>
+
+<h3>What happens if ${name} cancels my flight?</h3>
+
+<p>If the airline cancels your flight, you may have options such as a refund or alternative travel arrangements, depending on the circumstances and applicable rules. Check the airline's notification and contact the relevant booking provider.</p>
+
+<h3>How can I check my ${name} refund status?</h3>
+
+<p>Use the refund tracking facility if available, or contact ${name} or the provider that issued your ticket. Keep your booking reference, cancellation confirmation, and refund reference available when requesting an update.</p>
+
+<h2>Conclusion</h2>
+
+<p>The ${name} cancellation and refund policy depends on your ticket conditions, the circumstances of cancellation, and the rules applicable to your journey. Review the cancellation terms, confirm any deductions, and check your refund eligibility with the airline or original booking provider before finalizing your request.</p>
+`;
+}
+
+function createCancellationFaqs(
+  airline: string
+): Prisma.InputJsonValue {
+  return [
+    {
+      question: `Can I cancel my ${airline} flight and get a refund?`,
+      answer: `A refund may be available depending on your fare conditions, the reason for cancellation, and applicable rules. Confirm your eligibility with ${airline} or the original booking provider.`,
+    },
+    {
+      question: `Does ${airline} charge a cancellation fee?`,
+      answer: `Cancellation charges depend on the ticket conditions and the circumstances of the cancellation. Additional booking-provider service charges may also apply.`,
+    },
+    {
+      question: `Can I get a refund on a non-refundable ${airline} ticket?`,
+      answer: `The base fare on a non-refundable ticket is generally subject to restrictions. Certain unused taxes or other amounts may be handled differently, depending on the applicable conditions and rules.`,
+    },
+    {
+      question: `What happens if ${airline} cancels my flight?`,
+      answer: `If the airline cancels your flight, you may have options such as a refund or alternative travel arrangements, depending on the circumstances and applicable rules.`,
+    },
+    {
+      question: `How can I check my ${airline} refund status?`,
+      answer: `Use the refund tracking facility if available, or contact ${airline} or the provider that issued your ticket. Keep your booking and refund references ready.`,
+    },
+  ];
+}
+
+async function main() {
+  console.log("Starting airline cancellation and refund policy seed...");
+
+  let createdCategories = 0;
+  let existingCategories = 0;
+  let createdPolicies = 0;
+  let updatedPolicies = 0;
+
+  for (const airlineName of airlineCategories) {
+    let category = await prisma.airlinePolicyCategory.findUnique({
+      where: { name: airlineName },
+    });
+
+    if (!category) {
+      category = await prisma.airlinePolicyCategory.create({
+        data: { name: airlineName },
       });
 
-      const data = await response.json();
+      createdCategories++;
+    } else {
+      existingCategories++;
+    }
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to update policy.");
-      }
+    const excerpt =
+      `${airlineName} Cancellation & Refund Policy: Rules, Fees, and Refund Eligibility`;
 
-      toast.success("Airline policy updated successfully.");
-      router.push("/dashboard/airline");
-      router.refresh();
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Failed to update policy."
-      );
-    } finally {
-      setSaving(false);
+    const metaTitle =
+      `${airlineName} Cancellation & Refund Policy`;
+
+    const metaDescription =
+      `Learn about the ${airlineName} cancellation and refund policy, including cancellation fees, refund eligibility, non-refundable tickets, and refund requests.`;
+
+    const policyData = {
+      excerpt,
+      content: createCancellationContent(airlineName),
+      policyType: "CANCELLATION",
+      metaTitle,
+      metaDescription,
+      metaKeywords: [
+        ...metaKeywords,
+        `${airlineName} cancellation policy`,
+        `${airlineName} refund policy`,
+        `${airlineName} cancellation fees`,
+        `${airlineName} flight refund`,
+      ],
+      status: "PUBLISHED",
+      categoryId: category.id,
+      faqs: createCancellationFaqs(airlineName),
+    };
+
+    const existingPolicy = await prisma.airlinePolicy.findFirst({
+      where: {
+        categoryId: category.id,
+        policyType: "CANCELLATION",
+      },
+      select: {
+        id: true,
+        publishedAt: true,
+      },
+    });
+
+    if (existingPolicy) {
+      await prisma.airlinePolicy.update({
+        where: { id: existingPolicy.id },
+        data: {
+          ...policyData,
+          publishedAt: existingPolicy.publishedAt ?? new Date(),
+        },
+      });
+
+      updatedPolicies++;
+      console.log(`Updated CANCELLATION policy: ${airlineName}`);
+    } else {
+      await prisma.airlinePolicy.create({
+        data: {
+          ...policyData,
+          publishedAt: new Date(),
+        },
+      });
+
+      createdPolicies++;
+      console.log(`Created CANCELLATION policy: ${airlineName}`);
     }
   }
 
-  if (loading) {
-    return (
-      <main className="flex min-h-96 items-center justify-center gap-3 p-6">
-        <RefreshCw className="h-5 w-5 animate-spin" />
-        <span className="text-sm text-muted-foreground">
-          Loading airline policy...
-        </span>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="space-y-4 p-6 md:p-10">
-        <p className="text-sm text-destructive">{error}</p>
-
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={loadPolicy}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Try Again
-          </Button>
-
-          <Button variant="outline" asChild>
-            <Link href="/dashboard/airline">Back to Policies</Link>
-          </Button>
-        </div>
-      </main>
-    );
-  }
-
-  return (
-    <main className="mx-auto w-full max-w-5xl space-y-6 p-6 md:p-10">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Button variant="ghost" size="sm" asChild className="mb-3 -ml-3">
-            <Link href="/dashboard/airline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Policies
-            </Link>
-          </Button>
-
-          <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
-            <Plane className="h-8 w-8" />
-            Edit Airline Policy
-          </h1>
-
-          <p className="mt-2 text-muted-foreground">
-            Update the article, policy type, category, publication status, and SEO settings.
-          </p>
-        </div>
-
-        <span
-          className={`w-fit rounded-full px-3 py-1 text-sm font-medium ${
-            status === "PUBLISHED"
-              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-          }`}
-        >
-          {status === "PUBLISHED" ? "Published" : "Draft"}
-        </span>
-      </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-8 rounded-xl border bg-card p-5 md:p-8"
-      >
-        <section className="space-y-5">
-          <div>
-            <h2 className="text-lg font-semibold">Article Information</h2>
-            <p className="text-sm text-muted-foreground">
-              Edit the airline details, policy type, and article URL.
-            </p>
-          </div>
-
-          
-
-         
-          
-              <div className="flex gap-8">
-
-           
-          <div className="space-y-2">
-            <Label htmlFor="categoryId">Category</Label>
-            <Select value={categoryId} onValueChange={setCategoryId}>
-              <SelectTrigger id="categoryId">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {categories.length === 0 && (
-              <p className="text-sm text-destructive">
-                No categories found. Create a category before updating this policy.
-              </p>
-            )}
-          </div>
- <div className="space-y-2">
-            <Label htmlFor="policyType">Policy Type</Label>
-
-            <Select
-              value={policyType}
-              onValueChange={(value) =>
-                setPolicyType(value as PolicyType)
-              }
-            >
-              <SelectTrigger id="policyType">
-                <SelectValue placeholder="Select policy type" />
-              </SelectTrigger>
-
-              <SelectContent>
-                {POLICY_TYPES.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-   </div>
-          <div className="space-y-2">
-            <Label htmlFor="excerpt">Excerpt</Label>
-            <Textarea
-              id="excerpt"
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              placeholder="Write a short summary for the airline directory."
-              rows={3}
-            />
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">Article Content</h2>
-            <p className="text-sm text-muted-foreground">
-              Edit and format the airline policy article.
-            </p>
-          </div>
-
-          <ArticleEditor value={content} onChange={setContent} />
-        </section>
-
-        <section className="space-y-5">
-          <div>
-            <h2 className="text-lg font-semibold">SEO Settings</h2>
-            <p className="text-sm text-muted-foreground">
-              Customize search engine metadata.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="metaTitle">Meta Title</Label>
-            <Input
-              id="metaTitle"
-              value={metaTitle}
-              onChange={(e) => setMetaTitle(e.target.value)}
-              placeholder="Airline Policy"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="metaDescription">Meta Description</Label>
-            <Textarea
-              id="metaDescription"
-              value={metaDescription}
-              onChange={(e) => setMetaDescription(e.target.value)}
-              placeholder="Enter the search result description."
-              rows={3}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="metaKeywords">Meta Keywords</Label>
-            <Input
-              id="metaKeywords"
-              value={metaKeywords}
-              onChange={(e) => setMetaKeywords(e.target.value)}
-              placeholder="airline policy, name correction, airline rules"
-            />
-            <p className="text-xs text-muted-foreground">
-              Separate keywords with commas.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="status">Publication Status</Label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger id="status">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectItem value="DRAFT">Draft</SelectItem>
-                <SelectItem value="PUBLISHED">Published</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </section>
-
-        <div className="flex flex-wrap justify-end gap-3 border-t pt-6">
-          <Button type="button" variant="outline" asChild disabled={saving}>
-            <Link href="/dashboard/airline">Cancel</Link>
-          </Button>
-
-          <Button
-            type="submit"
-            disabled={saving || categories.length === 0}
-          >
-            {saving ? (
-              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="mr-2 h-4 w-4" />
-            )}
-            {saving ? "Saving Changes..." : "Save Changes"}
-          </Button>
-        </div>
-      </form>
-    </main>
-  );
+  console.log("\nCancellation and refund policy seed completed.");
+  console.log(`Existing categories preserved: ${existingCategories}`);
+  console.log(`New categories created: ${createdCategories}`);
+  console.log(`CANCELLATION policies created: ${createdPolicies}`);
+  console.log(`CANCELLATION policies updated: ${updatedPolicies}`);
+  console.log("No categories or other policy types were deleted.");
 }
+
+main()
+  .catch((error) => {
+    console.error("Failed to seed cancellation policies:", error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

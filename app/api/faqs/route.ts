@@ -19,8 +19,7 @@ export async function GET(req: Request) {
             where: { blogId },
             orderBy: { id: 'asc' }, // Order by ID for consistency
         });
-        console.log(`[FAQ DEBUG] Fetched ${faqs.length} FAQs for blog ID: ${blogId}`);
-        return NextResponse.json(faqs, { status: 200 });
+         return NextResponse.json(faqs, { status: 200 });
     } catch (error) {
         console.error('FAQ Read Error:', error);
         return NextResponse.json({ error: 'Failed to fetch FAQs' }, { status: 500 });

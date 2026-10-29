@@ -87,6 +87,7 @@ model AirlinePolicy {
   publishedAt     DateTime?
   categoryId      String                @db.ObjectId
   category        AirlinePolicyCategory @relation(fields: [categoryId], references: [id])
+  faqs Json?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
 }

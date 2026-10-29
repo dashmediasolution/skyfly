@@ -33,9 +33,9 @@ type Policy = {
 
 const policyLabels: Record<PolicyType, string> = {
   FLIGHT: "Flight Change Policy",
-  NAME: "Name Correction",
-  CANCELLATION: "Cancellation",
-  BAGGAGE: "Baggage",
+  NAME: "Name Change Policy",
+  CANCELLATION: "Cancellation & Refund Policy",
+  BAGGAGE: "Baggage Policy",
 };
 
 const policyRoutes: Record<PolicyType, string> = {

@@ -75,10 +75,10 @@ export function Testimonials() {
       <div className="container mx-auto space-y-10 px-6">
         {/* Section Header */}
         <div className="max-w-xl space-y-4">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <p className="text-3xl font-bold text-gray-900 sm:text-4xl">
             Reviews &{" "}
             <span className="text-primary">Experiences</span>
-          </h2>
+          </p>
 
           <p className="text-base leading-7 text-gray-600 sm:text-lg">
             Discover what travelers think about SkyFlyWithUs and how our

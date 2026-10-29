@@ -24,8 +24,8 @@ const navigation = [
 
 const policyNavigation = [
     { label: "Flight Change Policy", href: "/flight-change" },
-    { label: "Name Correction Policy", href: "/name-correction" },
-    { label: "Cancellation Policy", href: "/cancellation" },
+    { label: "Name Change Policy", href: "/name-change" },
+    { label: "Cancellation & Refund Policy", href: "/cancellation" },
     { label: "Baggage Policy", href: "/baggage" },
 ];
 

@@ -66,8 +66,7 @@ export async function GET(req: Request) {
     const limit = parseInt(url.searchParams.get('limit') || '6', 10);
     const skip = (page - 1) * limit;
 
-    console.log(`[API DEBUG] Fetching blogs. Category: ${categoryName}, Page: ${page}`);
-
+ 
     const whereClause: any = {};
 
     if (categoryName) {
