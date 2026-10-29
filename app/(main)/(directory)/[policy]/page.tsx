@@ -202,11 +202,7 @@ useEffect(() => {
         <main className="min-h-screen bg-slate-50">
             {/* Hero */}
             <section className="relative isolate overflow-hidden bg-slate-950">
-<<<<<<< HEAD
-               
-=======
-              
->>>>>>> origin/preview-testing
+ 
 
                 <div className="relative mx-auto flex min-h-[250px] max-w-7xl flex-col justify-center px-5 py-12 sm:px-8 lg:min-h-[300px] lg:px-12">
                     <div className="mb-5 flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-md">
@@ -216,12 +212,7 @@ useEffect(() => {
 
                     <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
                         {config.title} Airline Policies
-<<<<<<< HEAD
-                       
                     </h1>
-=======
-                     </h1>
->>>>>>> origin/preview-testing
 
                     <p className="mt-4 max-w-xl text-sm leading-6 text-slate-200 sm:text-base">
                         {config.description}
@@ -255,15 +246,7 @@ useEffect(() => {
                             Browse by airline
                         </span>
 
-<<<<<<< HEAD
-                      
-
-                        
-=======
-                        
-
-                       
->>>>>>> origin/preview-testing
+ 
                     </div>
 
                     {/* Search */}
