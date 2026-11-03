@@ -8,11 +8,16 @@ import {
   AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered,
   ImageIcon
 } from 'lucide-react';
+import Color from "@tiptap/extension-color";
+import { TextStyle } from "@tiptap/extension-text-style";
+import Highlight from "@tiptap/extension-highlight";
+import { Palette, Highlighter, RotateCcw } from "lucide-react";
 import UnderlineExtension from '@tiptap/extension-underline';
 import LinkExtension from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import ImageExtension from '@tiptap/extension-image';
 import { useState, useEffect, useCallback } from 'react';
+import { BlockBackground } from './extension/BlockBackground';
 import { toast } from 'sonner';
 import { mergeAttributes } from "@tiptap/core";
 // --- Custom Toolbar ---
@@ -60,6 +65,90 @@ const MenuBar = ({ editor, addImage }: { editor: Editor | null, addImage: () => 
       <Button type="button" onClick={() => editor.chain().focus().toggleUnderline().run()} variant={editor.isActive('underline') ? 'secondary' : 'outline'} size="sm">
         <Underline className="h-4 w-4" />
       </Button>
+      {/* Text Colour Picker */}
+      <div className="flex items-center gap-1 border rounded-md px-2 bg-white dark:bg-gray-900">
+        <Palette className="h-4 w-4" />
+
+        <input
+          type="color"
+          title="Text Colour"
+          aria-label="Text Colour"
+          value={editor.getAttributes("textStyle").color || "#000000"}
+          onChange={(e) =>
+            editor.chain().focus().setColor(e.target.value).run()
+          }
+          className="w-7 h-7 cursor-pointer border-0 bg-transparent"
+        />
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          title="Remove Text Colour"
+          onClick={() => editor.chain().focus().unsetColor().run()}
+        >
+          <RotateCcw className="h-3 w-3" />
+        </Button>
+      </div>
+
+      {/* Background / Highlight Colour Picker */}
+      <div className="flex items-center gap-1 border rounded-md px-2 bg-white dark:bg-gray-900">
+        <Highlighter className="h-4 w-4" />
+
+        <input
+          type="color"
+          title="Background Colour"
+          aria-label="Background Colour"
+          value={editor.getAttributes("highlight").color || "#ffff00"}
+          onChange={(e) =>
+            editor.chain().focus().setHighlight({
+              color: e.target.value,
+            }).run()
+          }
+          className="w-7 h-7 cursor-pointer border-0 bg-transparent"
+        />
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          title="Remove Background Colour"
+          onClick={() => editor.chain().focus().unsetHighlight().run()}
+        >
+          <RotateCcw className="h-3 w-3" />
+        </Button>
+      </div>
+      {/* Block Background Colour */}
+<div className="flex items-center gap-1 border rounded-md px-2 bg-white dark:bg-gray-900">
+  <div className="h-4 w-4 rounded-sm border bg-blue-200" />
+
+  <input
+    type="color"
+    title="Block Background Colour"
+    aria-label="Block Background Colour"
+    defaultValue="#e0f2fe"
+    onChange={(e) => {
+      editor
+        .chain()
+        .focus()
+        .setBlockBackground(e.target.value)
+        .run();
+    }}
+    className="w-7 h-7 cursor-pointer border-0 bg-transparent"
+  />
+
+  <Button
+    type="button"
+    variant="ghost"
+    size="sm"
+    title="Remove Block Background"
+    onClick={() => {
+      editor.chain().focus().unsetBlockBackground().run();
+    }}
+  >
+    <RotateCcw className="h-3 w-3" />
+  </Button>
+</div>
       <Button type="button" onClick={setLink} variant={editor.isActive('link') ? 'secondary' : 'outline'} size="sm">
         <Link className="h-4 w-4" />
       </Button>
@@ -112,7 +201,12 @@ export function RichTextEditor({ value, onChange, onBlur }: RichTextEditorProps)
         },
       }),
       UnderlineExtension,
-
+      TextStyle,
+      Color,
+      Highlight.configure({
+        multicolor: true,
+      }),
+      BlockBackground,
       LinkExtension.extend({
         renderHTML({ HTMLAttributes }) {
           const href = HTMLAttributes.href || "";

@@ -49,12 +49,20 @@ export const metadata: Metadata = {
     "googlebot-image": "index,follow",
     "MSNBot-Media": "index,follow",
     Author: "Public",
+    "msvalidate.01": "789130E8146AA1AD6535221713A5C4F5",
     "Resource-Type": "document",
     YahooSeeker: "index,follow",
     "geo.region": "US-FL",
     "geo.placename": "Panama City",
     "geo.position": "30.181372;-85.697392",
     ICBM: "30.181372, -85.697392",
+    "og:type": "business.business",
+    "business:contact_data:street_address": "1803 Hickory Avenue",
+    "business:contact_data:locality": "Panama City",
+    "business:contact_data:region": "Florida",
+    "business:contact_data:postal_code": "32405",
+    "business:contact_data:country_name": "United States of America",
+
   },
 
   icons: {
@@ -68,23 +76,21 @@ export const metadata: Metadata = {
     ],
   },
 
-  openGraph: {
-    title: "SkyFlyWithUs - Fly For Less",
-    description:
-      "Compare hundreds of airlines and explore affordable flight options with SkyFlyWithUs.",
-    url: "https://skyflywithus.com/",
-    siteName: "SkyFlyWithUs",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SkyFlyWithUs - Flight Booking Platform",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
+openGraph: {
+  title: "Online Flight Booking, Hotel and Car Rentals | SkyFlyWithUs",
+  description:
+    "Explore flight booking, hotel stays, and car rental options with SkyFlyWithUs. Compare available travel offers and plan your next trip with ease.",
+  url: "https://skyflywithus.com/",
+  siteName: "SkyFlyWithUs",
+  images: [
+    {
+      url: "https://skyflywithus.com/images/SF-logo.svg",
+      alt: "SkyFlyWithUs",
+    },
+  ],
+  locale: "en_US",
+  type: "website",
+},
 
   twitter: {
     card: "summary_large_image",
@@ -107,6 +113,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta property="og:type" content="business.business" />
         <script
           id="organization-schema"
           type="application/ld+json"
@@ -150,7 +157,7 @@ export default async function RootLayout({
             (c[a].q=c[a].q||[]).push(arguments)
           };
           t=l.createElement(r);
-          t.async=1;
+          t.async=1;  
           t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
           y=l.getElementsByTagName(r)[0];
           y.parentNode.insertBefore(t,y);

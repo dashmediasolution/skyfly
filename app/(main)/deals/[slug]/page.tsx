@@ -58,30 +58,49 @@ function getSafeHtml(value: string | null | undefined) {
 
   return sanitizeHtml(value, {
     allowedTags: [
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "p",
-      "br",
-      "strong",
-      "b",
-      "em",
-      "i",
-      "u",
-      "ul",
-      "ol",
-      "li",
-      "a",
-      "blockquote",
-      "span",
-      "div",
+      "h1", "h2", "h3", "h4", "h5", "h6",
+      "p", "br", "hr",
+      "strong", "b", "em", "i", "u", "s",
+      "ul", "ol", "li",
+      "a", "blockquote", "span", "div",
+      "table", "thead", "tbody", "tr", "th", "td",
+      "sub", "sup",
     ],
+
     allowedAttributes: {
       a: ["href", "target", "rel"],
-      "*": ["class"],
+      "*": ["class", "style"],
     },
+
+    allowedStyles: {
+      "*": {
+        color: [
+          /^#[0-9a-fA-F]{3,8}$/,
+          /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/,
+          /^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+(?:\.\d+)?\s*,\s*(?:0|1|0?\.\d+)\s*\)$/,
+        ],
+        "background-color": [
+          /^#[0-9a-fA-F]{3,8}$/,
+          /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/,
+          /^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+(?:\.\d+)?\s*,\s*(?:0|1|0?\.\d+)\s*\)$/,
+        ],
+        "font-size": [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        "font-weight": [/^(normal|bold|[1-9]00)$/],
+        "font-style": [/^(normal|italic|oblique)$/],
+        "text-align": [/^(left|right|center|justify)$/],
+        "text-decoration": [/^(none|underline|line-through)$/],
+        padding: [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        "padding-top": [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        "padding-bottom": [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        "padding-left": [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        "padding-right": [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        margin: [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+        "border-radius": [/^\d+(?:\.\d+)?(?:px|pt|em|rem|%)$/],
+      },
+    },
+
     allowedSchemes: ["http", "https", "mailto", "tel"],
+
     transformTags: {
       a: sanitizeHtml.simpleTransform("a", {
         rel: "nofollow noopener noreferrer",
@@ -260,7 +279,7 @@ export default async function DealDetailPage({
     })),
   };
 
- 
+
 
   return (
     <main className="min-h-screen bg-white">
@@ -284,11 +303,11 @@ export default async function DealDetailPage({
             </span>
 
             <h1 className="mt-4 text-xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-4xl">
-            {deal?.title}
+              {deal?.title}
             </h1>
- 
 
-         
+
+
           </div>
         </div>
       </section>
@@ -299,47 +318,54 @@ export default async function DealDetailPage({
         <div className="min-w-0 space-y-7">
           {/* Introduction */}
           <section className="flex items-start gap-3 sm:gap-4">
-          
+
 
             <div className="min-w-0 flex-1">
-              
+
 
 
               <div
                 className="
     deal-content
-    
+    w-full
+    min-w-0
     text-base
     leading-7
-    
+    text-gray-700
+
     [&_h1]:mb-4
-    [&_h1]:mt-6
-    [&_h1]:text-2xl
+    [&_h1]:mt-8
+    [&_h1]:text-3xl
     [&_h1]:font-bold
     [&_h1]:text-[#123C32]
+
     [&_h2]:mb-3
-    [&_h2]:mt-6
-    [&_h2]:text-xl
+    [&_h2]:mt-7
+    [&_h2]:text-2xl
     [&_h2]:font-bold
     [&_h2]:text-[#123C32]
+
     [&_h3]:mb-2
-    [&_h3]:mt-5
-    [&_h3]:text-lg
+    [&_h3]:mt-6
+    [&_h3]:text-xl
     [&_h3]:font-semibold
     [&_h3]:text-[#123C32]
+
     [&_p]:mb-4
-    [&_ul]:mb-4
-    [&_ul]:ml-5
+    [&_ul]:mb-5
+    [&_ul]:ml-6
     [&_ul]:list-disc
-    [&_ol]:mb-4
-    [&_ol]:ml-5
+    [&_ol]:mb-5
+    [&_ol]:ml-6
     [&_ol]:list-decimal
     [&_li]:mb-2
+
     [&_a]:font-medium
     [&_a]:text-[#538440]
     [&_a]:underline
+
     [&_strong]:font-bold
-    [&_blockquote]:my-4
+    [&_blockquote]:my-5
     [&_blockquote]:border-l-4
     [&_blockquote]:border-[#538440]
     [&_blockquote]:pl-4
