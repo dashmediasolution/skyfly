@@ -6,15 +6,15 @@ import { Button } from '@/components/ui/button';
 import {
   Bold, Italic, Underline, Link, Heading1, Heading2, Heading3,
   AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered,
-  ImageIcon 
+  ImageIcon
 } from 'lucide-react';
 import UnderlineExtension from '@tiptap/extension-underline';
 import LinkExtension from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
-import ImageExtension from '@tiptap/extension-image'; 
+import ImageExtension from '@tiptap/extension-image';
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
-
+import { mergeAttributes } from "@tiptap/core";
 // --- Custom Toolbar ---
 const MenuBar = ({ editor, addImage }: { editor: Editor | null, addImage: () => void }) => {
   if (!editor) {
@@ -43,7 +43,7 @@ const MenuBar = ({ editor, addImage }: { editor: Editor | null, addImage: () => 
       <Button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} variant={editor.isActive('heading', { level: 1 }) ? 'secondary' : 'outline'} size="sm">
         <Heading1 className="h-4 w-4" />
       </Button>
-      <Button type="button"  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} variant={editor.isActive('heading', { level: 2 }) ? 'secondary' : 'outline'} size="sm">
+      <Button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} variant={editor.isActive('heading', { level: 2 }) ? 'secondary' : 'outline'} size="sm">
         <Heading2 className="h-4 w-4" />
       </Button>
       <Button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} variant={editor.isActive('heading', { level: 3 }) ? 'secondary' : 'outline'} size="sm">
@@ -112,9 +112,46 @@ export function RichTextEditor({ value, onChange, onBlur }: RichTextEditorProps)
         },
       }),
       UnderlineExtension,
-      LinkExtension.configure({ openOnClick: false }),
+
+      LinkExtension.extend({
+        renderHTML({ HTMLAttributes }) {
+          const href = HTMLAttributes.href || "";
+
+          let isInternal = href.startsWith("/") || href.startsWith("#");
+
+          if (href && !isInternal && typeof window !== "undefined") {
+            try {
+              const url = new URL(href, window.location.origin);
+
+              const currentHost = window.location.hostname.replace(/^www\./, "");
+              const targetHost = url.hostname.replace(/^www\./, "");
+
+              isInternal =
+                url.origin === window.location.origin ||
+                (targetHost === currentHost &&
+                  (url.protocol === "http:" || url.protocol === "https:"));
+            } catch {
+              isInternal = false;
+            }
+          }
+
+          return [
+            "a",
+            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+              target: isInternal ? "_self" : "_blank",
+              rel: isInternal
+                ? undefined
+                : "noopener noreferrer nofollow",
+            }),
+            0,
+          ];
+        },
+      }).configure({
+        openOnClick: false,
+      }),
+
       TextAlign.configure({
-        types: ['heading', 'paragraph', 'image'], 
+        types: ['heading', 'paragraph', 'image'],
       }),
       ImageExtension.configure({
         inline: true,
@@ -146,7 +183,7 @@ export function RichTextEditor({ value, onChange, onBlur }: RichTextEditorProps)
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    
+
     input.onchange = async (event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -155,12 +192,12 @@ export function RichTextEditor({ value, onChange, onBlur }: RichTextEditorProps)
         if (altText === null) return; // Cancelled
 
         const toastId = toast.loading('Uploading image...');
-        
+
         try {
           const formData = new FormData();
           formData.append('file', file);
           // Specify subfolder for inline content images
-          formData.append('folder', 'skyfly_blogs/content_images'); 
+          formData.append('folder', 'skyfly_blogs/content_images');
 
           // 2. Upload using standard fetch to your API
           const response = await fetch('/api/upload', {
@@ -172,11 +209,11 @@ export function RichTextEditor({ value, onChange, onBlur }: RichTextEditorProps)
 
           if (response.ok && data.imageUrl) {
             // 3. Insert Image with URL and Alt Text
-            editor?.chain().focus().setImage({ 
+            editor?.chain().focus().setImage({
               src: data.imageUrl,
-              alt: altText 
+              alt: altText
             }).run();
-            
+
             toast.success('Image uploaded successfully', { id: toastId });
           } else {
             throw new Error(data.error || 'Upload failed');
@@ -187,7 +224,7 @@ export function RichTextEditor({ value, onChange, onBlur }: RichTextEditorProps)
         }
       }
     };
-    
+
     input.click();
   }, [editor]);
 

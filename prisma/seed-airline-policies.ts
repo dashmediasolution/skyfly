@@ -1,317 +1,532 @@
 
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const policyType = "BAGGAGE";
+const PHONE_NUMBER = "1-855-509-3791";
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+const loyaltyPrograms: Record<string, string> = {
+    "Aeromexico": "Aeromexico Rewards",
+    "Alaska Airlines": "Atmos Rewards",
+    "American Airlines": "AAdvantage",
+    "China Eastern Airlines": "Eastern Miles",
+    "Copa Airlines": "ConnectMiles",
+    "Emirates": "Skywards",
+    "emirates airlines": "Skywards",
+    "Etihad Airways": "Etihad Guest",
+    "EVA Air": "Infinity MileageLands",
+    "Frontier Airlines": "Frontier Miles",
+    "Hawaiian Airlines": "Atmos Rewards",
+    "LATAM Airlines": "LATAM Pass",
+    "Lufthansa": "Miles & More",
+    "Norwegian Air": "Norwegian Reward",
+    "United Airlines": "MileagePlus",
+    "Volaris Airlines": "v.club",
+    "Caribbean Airlines": "Caribbean Miles",
+    "Allegiant Air": "Allways Rewards",
+    "Avelo Airlines": "No traditional frequent-flyer programme",
+    "Breeze Airways": "BreezePoints",
+    "Delta Air Lines": "SkyMiles",
+    "JetBlue Airways": "TrueBlue",
+    "JetBlue": "TrueBlue",
+    "Southwest Airlines": "Rapid Rewards",
+    "Sun Country Airlines": "Sun Country Rewards",
+    "Jetstar": "No traditional frequent-flyer programme",
+    "EasyJet": "easyJet Plus",
+    "easyJet": "easyJet Plus",
+    "Jet2.com": "No traditional frequent-flyer programme",
+    "Norse Atlantic UK": "No traditional frequent-flyer programme",
+    "Ryanair UK": "myRyanair",
+    "Wizz Air UK": "Wizz Discount Club",
+    "iberia airlines": "Iberia Club / Avios",
+    "Iberia": "Iberia Club / Avios",
+    "FlyOne Airline": "No traditional frequent-flyer programme",
+    "Norse Atlantic Airways": "No traditional frequent-flyer programme",
+    "ryanair airlines": "myRyanair",
+    "Pacific Airlines": "No traditional frequent-flyer programme",
+    "flydubai": "Skywards",
+    "thai airways": "Royal Orchid Plus",
+    "SkyJet Airlines": "No traditional frequent-flyer programme",
+    "philippines airlines": "Mabuhay Miles",
+    "Philippines Airlines": "Mabuhay Miles",
+    "Cebu Pacific": "Go Rewards",
+    "AirAsia": "AirAsia rewards",
+    "SpiceJet": "SpiceClub",
+    "air china airlines": "PhoenixMiles",
+    "Air China": "PhoenixMiles",
+    "viva airlines": "Doters",
+    "Viva Airlines": "Doters",
+    "sky airlines": "SKY Plus",
+    "Sky Airlines": "SKY Plus",
+    "JetSmart": "Club de Descuentos",
+    "Flair Airlines": "No traditional frequent-flyer programme",
+    "air canada": "Aeroplan",
+    "Air Canada": "Aeroplan",
+    "air arabia maroc airlines": "AirRewards",
+    "Air Arabia Maroc": "AirRewards",
+    "avenica airline": "LifeMiles",
+    "Singapore Airlines": "KrisFlyer",
+    "Qatar Airways": "Privilege Club",
+    "Cathay Pacific Airways": "Asia Miles",
+    "ANA All Nippon Airways": "ANA Mileage Club",
+    "Turkish Airlines": "Miles&Smiles",
+    "Air France": "Flying Blue",
+    "Hainan Airlines": "Fortune Wings Club",
+    "Japan Airlines": "JAL Mileage Bank",
+    "Korean Air": "SKYPASS",
+    "Qantas Airways": "Qantas Frequent Flyer",
+    "Qantas": "Qantas Frequent Flyer",
+    "STARLUX Airlines": "COSMILE",
+    "Saudia": "AlFursan",
+    "Virgin Atlantic": "Flying Club",
+    "Swiss International Air Lines": "Miles & More",
+    "Malaysia Airlines": "Enrich",
+    "British Airways": "Executive Club / Avios",
+    "KLM Royal Dutch Airlines": "Flying Blue",
+    "KLM": "Flying Blue",
+    "Austrian Airlines": "Miles & More",
+    "Scoot": "KrisFlyer",
+    "Bangkok Airways": "FlyerBonus",
+    "China Airlines": "Dynasty Flyer",
+    "China Southern Airlines": "Sky Pearl Club",
+    "Air New Zealand": "Airpoints",
+    "Finnair": "Finnair Plus / Avios",
+    "Porter Airlines": "VIPorter",
+    "Air Astana": "Nomad Club",
+    "Ethiopian Airlines": "ShebaMiles",
+    "Virgin Australia": "Velocity Frequent Flyer",
+    "Fiji Airways": "Tabua Club",
+    "Vueling Airlines": "Vueling Club / Avios",
+    "Aegean Airlines": "Miles+Bonus",
+    "Azerbaijan Airlines": "AZAL Miles",
+    "Eurowings": "Miles & More",
+    "LOT Polish Airlines": "Miles & More",
+    "Egyptair": "Egyptair Plus",
+    "Iberia Express": "Iberia Club / Avios",
+    "Volotea": "Megavolotea",
+    "ITA Airways": "Volare",
+    "Transavia France": "Flying Blue",
+};
+
+function escapeHtml(value: string) {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
-function replaceAirlineName(
-  content: string,
-  airlineName: string
-): string {
-  return content.replace(
-    /\{\{AIRLINE_NAME\}\}/g,
-    escapeHtml(airlineName)
-  );
+function getLoyaltyProgram(airlineName: string) {
+    const key = Object.keys(loyaltyPrograms).find(
+        (item) => item.toLowerCase() === airlineName.toLowerCase()
+    );
+
+    return key ? loyaltyPrograms[key] : "frequent flyer programme";
 }
 
-function createBaggageContent(airlineName: string): string {
-  const content = `
-  <h1>{{AIRLINE_NAME}} Baggage Policy</h1>
+function replaceAirlineName(content: string, airlineName: string) {
+    const safeAirlineName = escapeHtml(airlineName);
+    const safeLoyaltyProgram = escapeHtml(getLoyaltyProgram(airlineName));
 
-<p>This will outline any baggage policies that apply to you, including carry on baggage, checked baggage, size, weight, excess baggage and what compensation you will receive for lost/damaged baggage. This will depend on the type of ticket, journey, class of ticket and any frequent flyer benefits.</p>
+    return content
+        .replace(/\{\{AIRLINE_NAME\}\}/g, safeAirlineName)
+        .replace(/\{\{LOYALTY_PROGRAM\}\}/g, safeLoyaltyProgram)
+        .replace(
+            /\{\{PHONE_NUMBER\}\}/g,
+            `<strong style="color: #1f2937;">${PHONE_NUMBER}</strong>`
+        );
+}
 
-<p>Please ensure you check with your booking confirmation, website or who you booked with for the latest information. Depending on the type of ticket you have.</p>
+function createBaggageContent(airlineName: string) {
+    const content = `
+<h2>{{AIRLINE_NAME}} Baggage Policy</h2>
 
-<h2>Baggage Policy</h2>
+<p>When travelling with {{AIRLINE_NAME}}, it's important to know what the baggage policy is. This will allow you to avoid any unexpected charges and travel with ease.</p>
 
-<p>Will outline any baggage you are allowed to take.</p>
+<p>{{AIRLINE_NAME}} will have different baggage allowances depending on your destination, ticket, class of travel and frequent flyer status. You will be able to take one personal item and piece of carry on luggage, but charges may apply for checked luggage.</p>
 
-<p>Depending on your journey, price of ticket, class and airline you may have different size baggage, weight and what you can bring. If you are taking a connecting flight please check the baggage policy for all of your flights.</p>
+<p>We'll explain everything you need to know about {{AIRLINE_NAME}} baggage policy including carry on size, checked baggage charges, special items and what to do in case of delayed or damaged luggage.</p>
 
-<h2>Hand Luggage Policy</h2>
+<p>Need help with anything related to booking your flight?</p>
 
-<p>Hand luggage refers to any baggage you are taking onboard. This will depend on your ticket and baggage policy.</p>
+<p>Contact SkyFlyWithUs on {{PHONE_NUMBER}}.</p>
 
-<p>Before travelling, please check:</p>
+<h2>{{AIRLINE_NAME}} Carry On Size</h2>
+
+<p>You will be able to take 1 personal item and 1 carry on bag with you as long as they fit within the size limits.</p>
+
+<p>Standard carry on size limits:</p>
+
+<p><strong>Personal Item –</strong> No larger than 18" x 14" x 8". Must fit underneath the seat.</p>
+
+<p><strong>Carry On Bag –</strong> No larger than 22" x 14" x 9" (including handles and wheels).</p>
+
+<p><strong>Soft sided garment bag –</strong> No larger than 51".</p>
+
+<p>Your carry on luggage should fit within the baggage sizer available at the airport. If your luggage is larger than the maximum size then you may have to check your luggage which can incur charges.</p>
+
+<p>Items such as nappy bags, breast pumps, small coolers with breast milk, medical equipment and mobility aids are not counted towards your standard carry on allowance.</p>
+
+<h2>{{AIRLINE_NAME}} Special Item Baggage Allowance</h2>
+
+<p>{{AIRLINE_NAME}} has additional baggage allowances for those travelling with children, pets and special items. However, there may be specific size limits and charges depending on the item.</p>
+
+<h3>Children &amp; Infants</h3>
+
+<p>Those travelling with children will be able to take extra items with them.</p>
+
+<p>You will be able to take an extra nappy bag per child. Those with a child can also check one stroller and car seat free of charge.</p>
+
+<p>Infants who are travelling in the lap of an adult on international flights may be able to check one bag free of charge. It cannot be larger than 25lbs and 22" x14" x9".</p>
+
+<p>Breast pumps, small soft sided coolers with breast milk are also allowed.</p>
+
+<p>Before you travel with your children, ensure you understand what the airline requires.</p>
+
+<h3>Pets</h3>
+
+<p>Before travelling with your pet, ensure you understand what the pet policy is.</p>
+
+<p>Small dogs and cats can travel in your cabin with you in an approved pet carrier. This will depend on availability, destination and charges.</p>
+
+<p>The pet carrier must fit underneath the seat and the animal must stay in the carrier.</p>
+
+<p>Those with a carry on pet can only take 1 extra personal item or carry on bag. Ensure you book your pet in advance as there is limited space.</p>
+
+<h3>Musical Instruments</h3>
+
+<p>{{AIRLINE_NAME}} allows you to travel with musical instruments. This will depend on the size of the instrument and available space.</p>
+
+<p>Small instruments such as violins can be taken in your cabin if they can fit into the overhead compartment or underneath the seat.</p>
+
+<p>Larger instruments may need an extra seat to be purchased or to be checked.</p>
+
+<p>Checked musical instruments can be no larger than 150" overall and 165lbs. Standard baggage charges may apply along with overweight charges.</p>
+
+<p>Ensure you use hard sided cases to protect your instrument.</p>
+
+<h2>{{AIRLINE_NAME}} Checked Baggage Luggage Policy</h2>
+
+<p>Your checked baggage allowance will depend on your destination, ticket class and frequent flyer benefits.</p>
+
+<p>Standard checked baggage allowances:</p>
+
+<p><strong>Weight –</strong> Up to 50lbs (23kg).</p>
+
+<p><strong>Size –</strong> Up to 62" (158cm).</p>
+
+<p><strong>Premium cabin –</strong> Eligible First and Business Class passengers can have a higher weight allowance of 70lbs (32kg) for qualifying free bags.</p>
+
+<p>Those travelling to and from Australia &amp; New Zealand may have different weight allowances.</p>
+
+<p>The amount of checked baggage you can take will depend on your destination. Most {{AIRLINE_NAME}} operated flights will allow up to 10 pieces of checked baggage for domestic, transatlantic and transpacfic flights. International destinations may have less.</p>
+
+<p>Ensure you understand what your baggage allowance is before travelling to avoid any extra charges.</p>
+
+<h2>{{AIRLINE_NAME}} Checked Baggage Allowance for Active Duty Military</h2>
+
+<p>{{AIRLINE_NAME}} offer special checked baggage allowances for eligible active duty military members from the USA.</p>
+
+<p>Depending on your destination and situation, eligible military passengers can take up to:</p>
+
+<p><strong>5 pieces of checked baggage</strong> up to 100lbs if travelling on official orders.</p>
+
+<p><strong>3 pieces of checked baggage</strong> up to 50lbs if travelling on personal or leisure.</p>
+
+<p>Eligible military members will need to show valid military ID. Official travel orders may also be required.</p>
+
+<p>Military dependents travelling on qualifying orders may also receive baggage allowances if they provide the correct documentation.</p>
+
+<p>This will generally apply to qualifying {{AIRLINE_NAME}} marketed and operated itineraries. Ensure you understand what your allowance is.</p>
+
+<h2>How to Pay Checked Baggage Charges with {{AIRLINE_NAME}}?</h2>
+
+<p>You can pay your checked baggage charges via the online portal.</p>
+
+<p>To pay:</p>
+
+<ol>
+    <li>Go to the official {{AIRLINE_NAME}} website.</li>
+    <li>Click on Manage Trips.</li>
+    <li>Enter your booking reference and passenger details.</li>
+    <li>Select your upcoming flight.</li>
+    <li>Select the checked baggage option during check in.</li>
+    <li>Look at the baggage charges.</li>
+    <li>Pay using a payment method.</li>
+    <li>Save your confirmation.</li>
+</ol>
+
+<p>You can generally pay for up to 3 pieces of checked baggage per person online. This can be done up to 2 hours before departure on qualifying itineraries.</p>
+
+<p>You can save $5 on your first and second checked baggage by paying online on qualifying routes.</p>
+
+<h2>{{AIRLINE_NAME}} Checked Baggage Charges for Special Items</h2>
+
+<p>{{AIRLINE_NAME}} will charge extra baggage charges for certain items.</p>
+
+<p>Charges will vary depending on the item, route, weight, size and baggage allowance.</p>
+
+<h3>Sporting Equipment</h3>
+
+<p>If you're travelling with sport equipment such as golf clubs, bicycles, skis and snowboards, ensure you understand the special baggage requirements.</p>
+
+<p>Some items can be taken as standard checked baggage whilst others will need to be handled specially or charged.</p>
+
+<p>Important things to note:</p>
+
+<p><strong>Golf bags</strong> should be well packed in suitable cases.</p>
+
+<p><strong>Bicycles</strong> may need to be packed in a certain way.</p>
+
+<p><strong>Skiing and snowboarding equipment</strong> must fit within the size and weight limits.</p>
+
+<p><strong>Oversized and overweight items</strong> may incur extra charges.</p>
+
+<p>Some oversized sports items have restrictions. Ensure you understand what the current requirements are.</p>
+
+<h2>How to Avoid {{AIRLINE_NAME}} Baggage Charges?</h2>
+
+<p>Carefully plan your luggage to avoid any unnecessary charges.</p>
+
+<p>Top tips include:</p>
 
 <ul>
-<li>How many bags you can take.</li>
-<li>Size and weight.</li>
-<li>Personal items (small bag/laptop bag).</li>
-<li>Price of ticket.</li>
-<li>Liquids, batteries, electrical items etc.</li>
+    <li>Take advantage of your carry on allowance and pack essential clothing and personal items.</li>
+    <li>Check your ticket as some premium cabins and eligible {{LOYALTY_PROGRAM}} benefits will include free checked baggage.</li>
+    <li>Take advantage of military benefits as eligible active duty military members may receive extra free checked bags.</li>
+    <li>Pay online to save money on your checked baggage charges.</li>
+    <li>Avoid overweight bags by weighing your luggage at home.</li>
+    <li>Check the special items requirements.</li>
+    <li>Plan your luggage in advance to avoid any unnecessary charges at the airport.</li>
 </ul>
 
-<p>If you have excess baggage you may need to check-in please check with {{AIRLINE_NAME}} for the latest baggage policy.</p>
+<h2>{{AIRLINE_NAME}} Extra Baggage Charges</h2>
 
-<h2>Checked Baggage Policy</h2>
+<p>If you have more luggage than your ticket allows you may have to pay extra baggage charges.</p>
 
-<p>Checked baggage refers to any baggage you give to the airline to put into the hold. This depends on the type of ticket, class of travel, journey, terms of ticket and any loyalty benefits.</p>
+<p>{{AIRLINE_NAME}} will calculate extra baggage charges based on how many bags you have, destination, ticket and if your luggage is overweight/oversized.</p>
 
-<p>Depending on your booking you may get free checked baggage or may have to pay extra for excess. You may have certain types of baggage you can take, how many, weight and size.</p>
+<p>For travel within the USA, Puerto Rico, U.S. Virgin Islands, Canada, Mexico and select destinations, standard Main Cabin baggage charges for tickets issued on or after May 18th 2026:</p>
 
-<p>You can check this by:</p>
+<p><strong>First Bag –</strong> $50 at the airport or $45 online.</p>
+
+<p><strong>Second Bag –</strong> $60 at the airport or $55 online.</p>
+
+<p>Basic Economy tickets may incur an extra $5 charge for the first and second bag.</p>
+
+<p>There may be extra charges for overweight and oversized items. International destinations may have much higher charges.</p>
+
+<p>Ensure you check what the charge is for your itinerary.</p>
+
+<h2>{{AIRLINE_NAME}} Delayed or Damaged Baggage</h2>
+
+<p>Whilst airlines will take every precaution to ensure your luggage arrives safely, sometimes your luggage can arrive late or damaged.</p>
+
+<p>{{AIRLINE_NAME}} have processes in place to report your issues.</p>
+
+<h3>Delayed Baggage</h3>
+
+<p>If your checked baggage has not arrived at your destination, visit the baggage service office at the airport.</p>
+
+<p>Report your lost baggage. Provide your baggage claim receipt, flight details and contact information.</p>
+
+<p>You can also check the status of your baggage using the {{AIRLINE_NAME}} website/app.</p>
+
+<h3>Damaged Baggage</h3>
+
+<p>If your baggage has arrived damaged, report this to an baggage representative before leaving the airport or within 6 hours of receiving it.</p>
+
+<p>Provide photos, baggage details and any supporting documents.</p>
+
+<p>Ensure you keep your damaged baggage and contents until further instructions are given. There may be further reporting requirements and time limits if claiming compensation.</p>
+
+<h2>{{AIRLINE_NAME}} Lost and Found</h2>
+
+<p>If you've lost any personal items during your travels, contact the correct lost and found department at the airport or {{AIRLINE_NAME}}.</p>
+
+<p>If you have lost something on the plane, complete a lost item report.</p>
+
+<p>If your checked baggage has been lost, complete a delayed baggage report.</p>
+
+<p>Provide accurate flight details, baggage tags and description of the lost item.</p>
+
+<p>Keep your confirmation and follow the airline's instructions.</p>
+
+<h2>{{AIRLINE_NAME}} Packing Tips</h2>
+
+<p>Packing your luggage correctly can help make your trip more comfortable and avoid any extra baggage charges.</p>
+
+<p>Top tips:</p>
 
 <ul>
-<li>Booking confirmation.</li>
-<li>Terms of baggage on your ticket.</li>
-<li>How many bags.</li>
-<li>Weights/size.</li>
-<li>If you can split your baggage for connecting flights.</li>
-<li>If you have to pay for excess baggage.</li>
+    <li>Weigh your checked baggage.</li>
+    <li>Measure your carry on baggage (wheels and handles).</li>
+    <li>Pack your travel documents, medication and valuables in your personal item.</li>
+    <li>Use baggage tags with up to date contact details.</li>
+    <li>Pack fragile items in protective packaging.</li>
+    <li>Keep electronics and spare lithium batteries in your carry on.</li>
+    <li>Check TSA regulations for liquids and prohibited items.</li>
+    <li>Leave some extra space for any purchases.</li>
 </ul>
 
-<p>Always check your baggage policy for what your terms are. This may depend on the type of ticket.</p>
+<h2>Baggage Policy for Other Airlines</h2>
 
-<h2>Baggage Size and Weight</h2>
+<p>Not all airlines will have the same baggage requirements. If you're travelling with any connections or multiple airlines, ensure you check the baggage policy for each airline.</p>
 
-<p>Depending on your ticket and baggage policy you may have different sizes and weights. This may depend on your hand luggage, checked baggage and specific items.</p>
-
-<p>Ensure your luggage is measured properly, taking into account handles, wheels and external pockets. Also make sure you check the weight of checked baggage.</p>
-
-<p>If you have an oversized or overweight bag you may be charged for excess baggage. Please check with {{AIRLINE_NAME}}.</p>
-
-<h2>Excess Baggage Charges</h2>
-
-<p>If you need to take excess baggage please check if you can buy excess.</p>
-
-<p>This may depend on your journey, price of ticket, how early you book, weight/size of the bags and airline.</p>
-
-<p>Before buying any excess baggage please check:</p>
+<p>Other airlines to consider:</p>
 
 <ul>
-<li>Can you buy excess?</li>
-<li>Price per bag/weight.</li>
-<li>Maximum weight/size.</li>
-<li>Is it cheaper to pre-book.</li>
-<li>Any specific items you need approval for.</li>
+    <li>Delta Air Lines Baggage Policy</li>
+    <li>United Airlines Baggage Policy</li>
+    <li>Southwest Airlines Baggage Policy</li>
+    <li>Alaska Airlines Baggage Policy</li>
+    <li>JetBlue Airways Baggage Policy</li>
 </ul>
 
-<p>Please check with {{AIRLINE_NAME}} for the latest charges. This may vary depending on your journey. Please check with the website or who you booked with. Charges may vary depending on your journey.</p>
-
-<h2>Items Not Allowed</h2>
-
-<p>There will be certain items you cannot take in your hand baggage or checked baggage due to airline and aviation rules. This will depend on the items and what is inside. It will also depend on your journey.</p>
-
-<p>Before packing please check:</p>
-
-<ul>
-<li>Liquids, aerosols, gels.</li>
-<li>Extra batteries/powerbanks.</li>
-<li>Sharp items/tools.</li>
-<li>Flammable and dangerous items.</li>
-<li>Sports equipment/large items.</li>
-<li>Drugs/Medical Equipment.</li>
-<li>Valuables.</li>
-</ul>
-
-<p>Depending on the items, terms, price, packing and how much notice you need to give this can vary. Some items will need organising with Ryanair.</p>
-
-<p>If you wish to take any special items please contact {{AIRLINE_NAME}} in advance to check the terms, size/weight, how it will be handled and if there will be additional charges.</p>
-
-<h2>Infant/Child Baggage</h2>
-
-<p>Depending on your ticket you may have baggage allowance for infants/children. This can include pushchairs, child seat and essential travel items.</p>
-
-<p>Please check with {{AIRLINE_NAME}} for the conditions of your booking for what you can take, if you need to check-in and any additional charges.</p>
-
-<h2>Lost/Delayed/Damaged Baggage</h2>
-
-<p>If your baggage is lost/damaged/delayed please contact baggage team or baggage desk.</p>
-
-<p>Depending on the issue you may need to:</p>
-
-<ul>
-<li>Report any issues.</li>
-<li>Give them your baggage tag reference, booking and flight details.</li>
-<li>Get a report number.</li>
-<li>Keep your receipt.</li>
-<li>Write a claim in time.</li>
-<li>Follow their advice.</li>
-</ul>
-
-<p>This can depend on how long it takes, how much they will pay, if you are entitled to any compensation and what documents you will need. Please contact {{AIRLINE_NAME}} asap and keep all relevant documents.</p>
-
-<h2>Connecting Flights/Codeshares Baggage Policy</h2>
-
-<p>Depending on if you are taking connecting flights or different airlines you may have different baggage policies. The baggage allowance and policy will depend on your type of ticket, airline, journey and any agreements.</p>
-
-<p>Please check your baggage policy for your whole journey. Check if your baggage will be checked through to your final destination. If you are using different airlines please check with the airline/who you booked with.</p>
-
-<h2>How to Check Baggage Allowances</h2>
-
-<ul>
-<li>Find your booking reference and ticket details.</li>
-<li>Go onto their website/bookings.</li>
-<li>Check baggage policy for your ticket.</li>
-<li>Check hand baggage, checked baggage and excess baggage policy.</li>
-<li>Check for any restrictions.</li>
-</ul>
-
-<p>If you are unsure or using multiple airlines please contact {{AIRLINE_NAME}}. Please make sure you check your baggage allowance before travelling, especially if you have a restricted ticket or have bought any excess baggage.</p>
-
-<h2>Key Things to Check</h2>
-
-<ul>
-<li>Baggage Allowance.</li>
-<li>Maximum size/weight.</li>
-<li>Excess baggage charge.</li>
-<li>Excess baggage.</li>
-<li>Dangerous items.</li>
-<li>Special items, sports equipment and musical instruments.</li>
-<li>Infant/Child and mobility aid baggage.</li>
-<li>Baggage issues.</li>
-<li>Connecting Flights/Codeshares.</li>
-</ul>
+<p>Ensure you check what your baggage allowances, weight and extra charges are.</p>
 
 <h2>Conclusion</h2>
 
-<p>Your baggage policy with {{AIRLINE_NAME}} will depend on your ticket, journey, class and baggage policy. Make sure you check what baggage allowance you have for hand and checked baggage, size/weight and any excess baggage charges/policies. Make sure to check their official baggage policy for the most accurate information.</p>
-  `;
+<p>Knowing what the {{AIRLINE_NAME}} baggage policy is can help you avoid any unexpected charges. Knowing what your luggage should be can help you plan your trip.</p>
 
-  return replaceAirlineName(content, airlineName);
+<p>Knowing what the carry on size, checked baggage allowances, special items, military benefits and delayed luggage requirements are can help you plan your trip.</p>
+
+<p>Baggage charges and allowances can vary depending on your route, fare and date of travel. Always check the latest information on the official {{AIRLINE_NAME}} website.</p>
+
+<p>Need help with anything related to booking your flight?</p>
+
+<p>Contact SkyFlyWithUs on {{PHONE_NUMBER}}.</p>
+`;
+
+    return replaceAirlineName(content, airlineName);
 }
 
 function createBaggageFaqs(airlineName: string) {
-  const name = escapeHtml(airlineName);
+    const loyaltyProgram = getLoyaltyProgram(airlineName);
 
-const faqs = [
-  {
-    question: "How much baggage can I take on a {{AIRLINE_NAME}} flight?",
-    answer:
-      "This will depend on what you have booked and what baggage options you have selected for your {{AIRLINE_NAME}} Flight. You can always view your baggage allowances, size restrictions and weight restrictions here by viewing your booking confirmation or looking on the official {{AIRLINE_NAME}} website.",
-  },
-  {
-    question: "Is checked baggage included in my {{AIRLINE_NAME}} ticket?",
-    answer:
-      "Checked baggage will not be included in your {{AIRLINE_NAME}} booking. This will depend on what fare you have booked and what additional baggage options you have selected. You can view how many checked bags are included and the weight restrictions for your booking here.",
-  },
-  {
-    question: "What happens if I have too much baggage?",
-    answer:
-      "If your baggage is too heavy or too large they may charge extra. It is best to check what the baggage restrictions are before going to the airport. This way you can make sure your baggage is within the correct weight/size restrictions.",
-  },
-  {
-    question: "Can I buy extra baggage for my {{AIRLINE_NAME}} flight?",
-    answer:
-      "You may be able to buy extra baggage. You can view what options are available to you by looking at your reservation or visiting the official {{AIRLINE_NAME}} website.",
-  },
-  {
-    question: "What should I do if my baggage is lost or damaged?",
-    answer:
-      "If you have lost, delayed or damaged baggage you should go to the correct baggage desk at the airport. You should also keep your baggage tag, booking confirmation, reference number and supporting documents to help with your claim.",
-  },
-];
-  return JSON.parse(
-    replaceAirlineName(
-      JSON.stringify(faqs),
-      name
-    )
-  ) as Prisma.InputJsonValue;
+    const faqs = [
+        {
+            question: "What is the carry on size for {{AIRLINE_NAME}}?",
+            answer:
+                '{{AIRLINE_NAME}} allows you to take 1 carry on bag no larger than 22" x 14" x 9" (including handles and wheels). Personal items cannot be larger than 18" x14" x8%.',
+        },
+        {
+            question: "How many free checked bags does {{AIRLINE_NAME}} allow?",
+            answer:
+                "This will depend on your destination, ticket, {{LOYALTY_PROGRAM}} status and any eligible credit card benefits. Some passengers may incur charges for their first checked bag.",
+        },
+        {
+            question: "What is the standard checked baggage weight?",
+            answer:
+                "The standard checked baggage weight is generally 50lbs (23kg). Eligible First and Business Class passengers may have a higher allowance of 70lbs for qualifying free bags.",
+        },
+        {
+            question: "Can I pay baggage charges online with {{AIRLINE_NAME}}?",
+            answer:
+                "Yes. Eligible passengers can pay for up to 3 checked bags per person via the online portal or app.",
+        },
+        {
+            question: "Do {{AIRLINE_NAME}} offer free baggage for military?",
+            answer:
+                "Yes. Eligible active duty military members from the USA may have up to 5 free bags if travelling on official orders. Up to 3 bags if travelling on personal travel.",
+        },
+        {
+            question: "Can I take a musical instrument?",
+            answer:
+                "Yes. Small instruments can be taken in your cabin if they fit in overhead compartment or underneath the seat. Larger instruments may need an extra seat or to be checked.",
+        },
+        {
+            question: "What should I do if my luggage is lost?",
+            answer:
+                "Report lost luggage to the baggage service office. Keep your baggage claim receipt and report reference.",
+        },
+        {
+            question: "Are there extra charges for overweight baggage?",
+            answer:
+                "Yes. If your checked baggage exceeds the standard weight and size limits you may incur extra charges. This will depend on your route and baggage.",
+        },
+    ];
+
+    return faqs.map((faq) => ({
+        question: replaceAirlineName(faq.question, airlineName),
+        answer: replaceAirlineName(faq.answer, airlineName),
+    }));
 }
 
 async function main() {
-  const categories = await prisma.airlinePolicyCategory.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
+    const categories = await prisma.airlinePolicyCategory.findMany();
 
-  if (categories.length === 0) {
-    console.log("No airline categories found. Nothing to seed.");
-    return;
-  }
+    let createdCount = 0;
+    let updatedCount = 0;
 
-  let createdCount = 0;
-  let updatedCount = 0;
-  let failedCount = 0;
+    for (const category of categories) {
+        const airlineName = category.name;
 
-  for (const category of categories) {
-    const airlineName = category.name;
-
-    try {
-      const existingPolicy = await prisma.airlinePolicy.findFirst({
-        where: {
-          categoryId: category.id,
-          policyType,
-        },
-        select: {
-          id: true,
-          publishedAt: true,
-        },
-      });
-
-const policyData = {
-  excerpt: `Learn about the ${airlineName} baggage policy, including baggage allowance, hand luggage, checked baggage, size and weight limits, excess baggage charges, and lost or damaged baggage conditions.`,
-  content: createBaggageContent(airlineName),
-  policyType,
-  metaTitle: `${airlineName} Baggage Policy`,
-  metaDescription: `Learn about the ${airlineName} baggage policy, including carry-on baggage, checked baggage allowance, baggage size and weight limits, excess baggage fees, and lost or damaged baggage.`,
-  metaKeywords: [
-    `${airlineName} baggage policy`,
-    `${airlineName} baggage allowance`,
-    `${airlineName} carry on baggage`,
-    `${airlineName} hand luggage policy`,
-    `${airlineName} checked baggage policy`,
-    `${airlineName} baggage size and weight`,
-    `${airlineName} excess baggage charges`,
-    `${airlineName} lost and damaged baggage`,
-  ],
-  status: "PUBLISHED",
-  publishedAt: existingPolicy?.publishedAt ?? new Date(),
-  categoryId: category.id,
-  faqs: createBaggageFaqs(airlineName),
-};
-
-      if (existingPolicy) {
-        await prisma.airlinePolicy.update({
-          where: {
-            id: existingPolicy.id,
-          },
-          data: policyData,
+        const existingPolicy = await prisma.airlinePolicy.findFirst({
+            where: {
+                categoryId: category.id,
+                policyType,
+            },
         });
 
-        updatedCount++;
-        console.log(`Updated NAME policy: ${airlineName}`);
-      } else {
-        await prisma.airlinePolicy.create({
-          data: policyData,
-        });
+        const policyData = {
+            excerpt: `Understand the ${airlineName} baggage policy, including carry-on size, checked baggage allowances, extra charges and special items.`,
+            content: createBaggageContent(airlineName),
+            metaTitle: `${airlineName} Baggage Policy | Allowance & Fees`,
+            metaDescription: `${airlineName} baggage policy, carry-on size, checked baggage allowance, baggage fees, special items and delayed luggage.`,
+            metaKeywords: [
+                `${airlineName} baggage policy`,
+                `${airlineName} carry on size`,
+                `${airlineName} checked baggage allowance`,
+                `${airlineName} baggage fees`,
+                `${airlineName} extra baggage charges`,
+                `${airlineName} delayed baggage`,
+            ],
+            faqs: createBaggageFaqs(airlineName),
+            status: "PUBLISHED" as const,
+        };
 
-        createdCount++;
-        console.log(`Created NAME policy: ${airlineName}`);
-      }
-    } catch (error) {
-      failedCount++;
-      console.error(
-        `Failed to seed NAME policy for ${airlineName}:`,
-        error
-      );
+        if (existingPolicy) {
+            await prisma.airlinePolicy.update({
+                where: {
+                    id: existingPolicy.id,
+                },
+                data: {
+                    ...policyData,
+                    publishedAt: existingPolicy.publishedAt ?? new Date(),
+                },
+            });
+
+            updatedCount++;
+            console.log(`Updated baggage policy: ${airlineName}`);
+        } else {
+            await prisma.airlinePolicy.create({
+                data: {
+                    ...policyData,
+                    categoryId: category.id,
+                    policyType,
+                    publishedAt: new Date(),
+                },
+            });
+
+            createdCount++;
+            console.log(`Created baggage policy: ${airlineName}`);
+        }
     }
-  }
 
-  console.log("\nNAME policy seeding completed.");
-  console.log(`Created: ${createdCount}`);
-  console.log(`Updated: ${updatedCount}`);
-  console.log(`Failed: ${failedCount}`);
-  console.log(`Total categories: ${categories.length}`);
+    console.log("\nBaggage policy seeding completed.");
+    console.log(`Created: ${createdCount}`);
+    console.log(`Updated: ${updatedCount}`);
+    console.log(`Total categories: ${categories.length}`);
 }
 
 main()
-  .catch((error) => {
-    console.error("NAME policy seeding failed:", error);
-    process.exitCode = 1;
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+    .catch((error) => {
+        console.error("Error seeding baggage policies:", error);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

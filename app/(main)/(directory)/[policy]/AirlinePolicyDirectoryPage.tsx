@@ -243,9 +243,9 @@ useEffect(() => {
             <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
                 <div className="mx-auto max-w-7xl">
                     <div className="mx-auto mb-10 max-w-3xl text-center">
-                        <span className="text-sm font-bold uppercase tracking-[0.18em] text-teal-700">
+                        <h2 className="text-sm font-bold uppercase tracking-[0.18em] text-teal-700">
                             Browse by airline
-                        </span>
+                        </h2>
 
  
                     </div>

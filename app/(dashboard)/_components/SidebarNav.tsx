@@ -7,7 +7,7 @@ import {
   MessageSquare,
   FileText,
   Plane,
-  FolderOpen,
+  FolderOpen,MapPin ,Tag
 } from "lucide-react";
 
 const navLinks = [
@@ -27,18 +27,26 @@ const navLinks = [
     icon: FileText,
   },
   {
-  href: "/dashboard/airline",
-  label: "Airline Policies",
-  icon: Plane,
+  href: "/dashboard/deals",
+  label: "Manage Deals",
+  icon: Tag,
 },
+  {
+    href: "/dashboard/flight-destinations",
+    label: "Flight Destinations",
+    icon: MapPin,
+  },
+  {
+    href: "/dashboard/airline",
+    label: "Airline Policies",
+    icon: Plane,
+  },
   {
     href: "/dashboard/airline-policy-categories",
     label: "Policy Categories",
     icon: FolderOpen,
   },
- 
 ];
-
 export function SidebarNav() {
   const pathname = usePathname();
 

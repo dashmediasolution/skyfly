@@ -458,10 +458,10 @@ export default async function GroupTravelDetailPage({
        
         </aside>
       </div>
-      <FlightFAQ
+      {/* <FlightFAQ
         destinationSlug="group-travel"
         destinationName="Group Travel"
-      />
+      /> */}
     </main>
   );
 }

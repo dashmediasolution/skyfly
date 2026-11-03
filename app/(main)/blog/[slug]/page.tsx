@@ -117,8 +117,8 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Article Not Found | SkyFlyWithUs",
-      description: "The requested article could not be found.",
+      title: "Blog Not Found | SkyFlyWithUs",
+      description: "The requested blog could not be found.",
       robots: { index: false, follow: true },
     };
   }
@@ -128,7 +128,7 @@ export async function generateMetadata({
     post.metaDesc ||
     `Read ${post.title} on SkyFlyWithUs for helpful travel advice and flight tips.`;
 
-  const articleUrl = `${SITE_URL}/blog/articles/${post.slug}`;
+  const articleUrl = `${SITE_URL}/blog/${post.slug}`;
   const imageUrl = getAbsoluteImageUrl(post.imageUrl);
 
   return {

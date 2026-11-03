@@ -2,11 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import {
   ArrowRight,
   CheckCircle2,
-  ChevronRight,
   Headset,
   Phone,
   Plane,
@@ -14,20 +13,79 @@ import {
   Tag,
 } from "lucide-react";
 
+import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
-import { deals } from "@/components/travel-data";
 import FlightFAQ from "@/components/FlightFAQ";
 
-const GREEN = "#538440";
-const DARK_GREEN = "#3F6632";
 const SITE_URL = "https://skyflywithus.com";
 
+type DealPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+type DealFAQ = {
+  question: string;
+  answer: string;
+};
+
+// Remove HTML tags from content for metadata and structured data.
+function getPlainText(value: string | null | undefined) {
+  if (!value) return "";
+
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Use excerpt first, then fall back to content.
+function getDealDescription(deal: {
+  excerpt: string | null;
+  content: string | null;
+}) {
+  return deal.excerpt?.trim() || getPlainText(deal.content);
+}
+
+// Validate FAQ JSON from MongoDB.
+function getSafeFaqs(value: unknown): DealFAQ[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter((item): item is DealFAQ => {
+    return (
+      item !== null &&
+      typeof item === "object" &&
+      !Array.isArray(item) &&
+      typeof item.question === "string" &&
+      item.question.trim().length > 0 &&
+      typeof item.answer === "string" &&
+      item.answer.trim().length > 0
+    );
+  });
+}
+
+// Fetch published deal by slug.
+async function getDealBySlug(slug: string) {
+  return prisma.deal.findFirst({
+    where: {
+      slug,
+      status: "PUBLISHED",
+    },
+  });
+}
+
+// Dynamic SEO metadata.
 export async function generateMetadata({
   params,
 }: DealPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const deal = deals.find((item) => item.slug === slug);
+  const deal = await getDealBySlug(slug);
 
   if (!deal) {
     return {
@@ -41,62 +99,129 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${deal.title} | SkyFlyWithUs`;
+  const description = getDealDescription(deal);
 
-  const description =
-    deal.description.length > 155
-      ? `${deal.description.slice(0, 152).trimEnd()}...`
-      : deal.description;
+  const title =
+    deal.metaTitle?.trim() || `${deal.title} | SkyFlyWithUs`;
 
-  const canonicalUrl = `${SITE_URL}/deals/${deal.slug}`;
+  const metaDescription =
+    deal.metaDescription?.trim() ||
+    (description.length > 155
+      ? `${description.slice(0, 152).trimEnd()}...`
+      : description) ||
+    "Explore travel offers and deals with SkyFlyWithUs.";
+
+  const canonicalUrl =
+    deal.canonicalUrl?.trim() ||
+    `${SITE_URL}/deals/${deal.slug}`;
+
+  const image = deal.featuredImage;
 
   return {
     title,
-    description,
+    description: metaDescription,
+
     alternates: {
       canonical: canonicalUrl,
     },
+
+    ...(deal.metaKeywords
+      ? {
+          keywords: deal.metaKeywords,
+        }
+      : {}),
+
     openGraph: {
       title,
-      description,
+      description: metaDescription,
       url: canonicalUrl,
       siteName: "SkyFlyWithUs",
       type: "website",
-      images: [
-        {
-          url: deal.image,
-          alt: deal.title,
-        },
-      ],
+
+      ...(image
+        ? {
+            images: [
+              {
+                url: image,
+                alt: deal.title,
+              },
+            ],
+          }
+        : {}),
     },
+
     twitter: {
       card: "summary_large_image",
       title,
-      description,
-      images: [deal.image],
+      description: metaDescription,
+
+      ...(image
+        ? {
+            images: [image],
+          }
+        : {}),
     },
   };
 }
-type DealPageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
 
 export default async function DealDetailPage({
   params,
 }: DealPageProps) {
   const { slug } = await params;
 
-  const deal = deals.find((item) => item.slug === slug);
+  const deal = await getDealBySlug(slug);
 
   if (!deal) {
     notFound();
   }
 
-  const otherDeals = deals
-    .filter((item) => item.slug !== deal.slug)
-    .slice(0, 4);
+  // Fetch other published deals for sidebar.
+  const otherDeals = await prisma.deal.findMany({
+    where: {
+      status: "PUBLISHED",
+      slug: {
+        not: deal.slug,
+      },
+    },
+    orderBy: [
+      {
+        isFeatured: "desc",
+      },
+      {
+        publishedAt: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+    ],
+    take: 4,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      featuredImage: true,
+    },
+  });
+
+  const description = getDealDescription(deal);
+  const category = deal.dealType || "Travel Deal";
+
+  // FAQs from MongoDB.
+  const faqs = getSafeFaqs(deal.faqs);
+
+  // FAQ JSON-LD structured data.
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: getPlainText(faq.answer),
+      },
+    })),
+  };
 
   const contentSections = [
     {
@@ -143,7 +268,7 @@ export default async function DealDetailPage({
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Banner */}
-      <section className="relative w-full isolate flex min-h-[310px] items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
+      <section className="relative isolate flex min-h-[310px] w-full items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
         <Image
           src="/images/dealsBanner.webp"
           alt="Luxury beachfront hotel and tropical infinity pool"
@@ -166,8 +291,8 @@ export default async function DealDetailPage({
             </h1>
 
             <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
-              Explore exciting flight offers, seasonal discounts, and travel deals
-              to make your next getaway easier on your budget.
+              Explore exciting flight offers, seasonal discounts, and travel
+              deals to make your next getaway easier on your budget.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -200,22 +325,21 @@ export default async function DealDetailPage({
               </p>
 
               <h2 className="mt-2 text-xl font-bold leading-tight text-[#538440] sm:text-2xl">
-                Make Your Next Journey Special
+                {deal.title}
               </h2>
 
               <p className="mt-3 text-sm leading-6 text-gray-600">
-                {deal.description} Whether you are planning a family
-                holiday, a business trip, a weekend escape, or a visit
-                to a new destination, exploring available flight options
-                can help you make an informed travel decision.
+                {description} Whether you are planning a family holiday, a
+                business trip, a weekend escape, or a visit to a new
+                destination, exploring available flight options can help you
+                make an informed travel decision.
               </p>
 
               <p className="mt-3 text-sm leading-6 text-gray-600">
-                Our {deal.category.toLowerCase()} information helps you
-                explore relevant travel options for your upcoming journey.
-                Compare available itineraries, review your preferred
-                dates, and check the conditions that apply before
-                confirming a booking.
+                Our {category.toLowerCase()} information helps you explore
+                relevant travel options for your upcoming journey. Compare
+                available itineraries, review your preferred dates, and check
+                the conditions that apply before confirming a booking.
               </p>
             </div>
           </section>
@@ -270,9 +394,8 @@ export default async function DealDetailPage({
               <p className="mt-2 text-sm leading-6 text-gray-600">
                 Before making a reservation, review the relevant airline
                 policies, baggage allowance, and ticket conditions. Fare
-                availability, prices, and promotional terms may change.
-                Always verify the applicable details before completing
-                your booking.
+                availability, prices, and promotional terms may change. Always
+                verify the applicable details before completing your booking.
               </p>
 
               <Link href="/flights" className="mt-5 inline-flex">
@@ -339,18 +462,24 @@ export default async function DealDetailPage({
             <div className="space-y-2">
               {otherDeals.map((item) => (
                 <Link
-                  key={item.slug}
+                  key={item.id}
                   href={`/deals/${item.slug}`}
                   className="group flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-2 transition hover:border-[#538440]/50 hover:shadow-sm"
                 >
                   <div className="relative h-12 w-[78px] shrink-0 overflow-hidden rounded-md">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="78px"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                    {item.featuredImage ? (
+                      <Image
+                        src={item.featuredImage}
+                        alt={item.title}
+                        fill
+                        sizes="78px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-[#EAF2E6]">
+                        <Tag size={18} className="text-[#538440]" />
+                      </div>
+                    )}
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -375,10 +504,23 @@ export default async function DealDetailPage({
       </div>
 
       {/* Frequently Asked Questions */}
-      <FlightFAQ
-        destinationSlug="travel-deals"
-        destinationName="Travel Deals"
-      />
+      {faqs.length > 0 && (
+        <>
+          <FlightFAQ
+            destinationSlug={deal.slug}
+            destinationName={deal.title}
+            faqs={faqs}
+          />
+
+          {/* FAQ JSON-LD Structured Data */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
+            }}
+          />
+        </>
+      )}
     </main>
   );
 }

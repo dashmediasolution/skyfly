@@ -16,11 +16,51 @@ import {
 } from "@/components/blog_components/blog-card";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { BlogCategoryNav } from "./blog_components/blog-category-nav";
+ 
 export const metadata: Metadata = {
-  title: "Travel Journal & Flight Tips | SkyFlyWithUs",
-  description:
-    "Explore expert travel advice, flight tips, airline policies, refunds, and smarter ways to plan your next journey with SkyFlyWithUs.",
+  title: "Travel Blog, Flight Tips & Travel Guides | SkyFlyWithUs",
 
+  description:
+    "Explore the SkyFlyWithUs travel blog for practical flight tips, airline policies, baggage information, cancellation and refund guides, and expert travel advice to plan your journey with confidence.",
+
+  keywords: [
+    "Travel Blog",
+    "Flight Tips",
+    "Travel Guides",
+    "Airline Policies",
+    "Flight Booking Tips",
+    "Flight Cancellation Policy",
+    "Flight Refund Guide",
+    "Flight Change Policy",
+    "Airline Baggage Allowance",
+    "Travel Advice",
+    "Air Travel Tips",
+    "SkyFlyWithUs Blog",
+  ],
+
+  alternates: {
+    canonical: "https://skyflywithus.com/blog",
+  },
+
+  openGraph: {
+    title: "Travel Blog, Flight Tips & Travel Guides | SkyFlyWithUs",
+    description:
+      "Discover flight tips, airline policy guides, baggage information, cancellation advice, and useful travel insights on the SkyFlyWithUs blog.",
+    url: "https://skyflywithus.com/blog",
+    siteName: "SkyFlyWithUs",
+    type: "website",
+    locale: "en_US",
+  },
+ 
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 const emptyMetadata = {

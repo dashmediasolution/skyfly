@@ -1,4 +1,4 @@
- 
+
 "use client";
 
 import { useState } from "react";
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import GoogleTranslate from "@/components/GoogleTranslate";
 import Image from "next/image";
-
+import { usePathname } from "next/navigation";
 const navigation = [
     { label: "Home", href: "/" },
     { label: "Flights", href: "/flights" },
@@ -33,7 +33,7 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [mobilePolicyOpen, setMobilePolicyOpen] = useState(false);
     const [desktopPolicyOpen, setDesktopPolicyOpen] = useState(false);
-
+    const pathname = usePathname();
     return (
         <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white shadow-lg">
             <div className="mx-auto flex min-h-[70px] max-w-[1440px] items-center justify-between gap-3 px-4 sm:min-h-[76px] sm:px-8 lg:px-12">
@@ -55,8 +55,10 @@ export default function Navbar() {
                         <Link
                             key={item.label}
                             href={item.href}
-                            className="whitespace-nowrap text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] md:text-base"
-                        >
+                            className={`whitespace-nowrap text-sm font-semibold transition-colors md:text-base ${pathname === item.href
+                                ? "text-[#538440]"
+                                : "text-gray-700 hover:text-[#538440]"
+                                }`}                        >
                             {item.label}
                         </Link>
                     ))}
@@ -73,14 +75,15 @@ export default function Navbar() {
                             onClick={() =>
                                 setDesktopPolicyOpen((open) => !open)
                             }
-                            className="flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] md:text-base"
-                        >
+                            className={`flex w-full items-center justify-between py-4 text-left text-sm font-semibold transition-colors sm:text-base ${policyNavigation.some((item) => pathname === item.href)
+                                    ? "text-[#538440]"
+                                    : "text-gray-700 hover:text-[#538440]"
+                                }`}                        >
                             Airline Policy
                             <ChevronDown
                                 size={16}
-                                className={`transition-transform ${
-                                    desktopPolicyOpen ? "rotate-180" : ""
-                                }`}
+                                className={`transition-transform  ${desktopPolicyOpen ? "rotate-180" : ""
+                                    }`}
                             />
                         </button>
 
@@ -94,8 +97,10 @@ export default function Navbar() {
                                             onClick={() =>
                                                 setDesktopPolicyOpen(false)
                                             }
-                                            className="block px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-[#EAF2E6] hover:text-[#548746]"
-                                        >
+                                            className={`block px-4 py-3 text-sm font-medium transition-colors ${pathname === item.href
+                                                ? "bg-[#EAF2E6] text-[#538440]"
+                                                : "text-gray-700 hover:bg-[#EAF2E6] hover:text-[#538440]"
+                                                }`}                                        >
                                             {item.label}
                                         </Link>
                                     ))}
@@ -161,8 +166,10 @@ export default function Navbar() {
                                 key={item.label}
                                 href={item.href}
                                 onClick={() => setMenuOpen(false)}
-                                className="flex items-center justify-between border-b border-gray-100 py-4 text-sm font-semibold text-gray-700 transition-colors hover:text-[#548746] sm:text-base"
-                            >
+                                className={`flex items-center justify-between border-b border-gray-100 py-4 text-sm font-semibold transition-colors sm:text-base ${pathname === item.href
+                                    ? "text-[#538440]"
+                                    : "text-gray-700 hover:text-[#538440]"
+                                    }`}                            >
                                 {item.label}
                                 <span className="text-lg text-[#548746]">
                                     ›
@@ -183,9 +190,8 @@ export default function Navbar() {
                                 Airline Policy
                                 <ChevronDown
                                     size={18}
-                                    className={`text-[#548746] transition-transform ${
-                                        mobilePolicyOpen ? "rotate-180" : ""
-                                    }`}
+                                    className={`text-[#548746] transition-transform ${mobilePolicyOpen ? "rotate-180" : ""
+                                        }`}
                                 />
                             </button>
 

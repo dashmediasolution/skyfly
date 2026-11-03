@@ -1,22 +1,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import HeroSection from "@/components/homePage/HeroSerction";
-import FlightSearch from "@/components/homePage/FlightSearch";
-import { Metadata } from "next";
-import { Button } from "@/components/ui/button";
+
 import {
     ShieldCheck,
     FileCheck,
     Headset,
     ThumbsUp,
-    ArrowRight,
     MapPin,
 } from "lucide-react";
 
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata("flights");
+
+const SITE_URL =
+    process.env.NEXTAUTH_URL || "http://localhost:3000";
+
+type FlightDestination = {
+    id: string;
+    title: string;
+    slug: string;
+    destination: string;
+    country: string;
+    airportCode?: string | null;
+    excerpt?: string | null;
+    heroImage?: string | null;
+    metaTitle?: string | null;
+    publishedAt?: string | null;
+};
 
 const benefits = [
     {
@@ -41,90 +53,51 @@ const benefits = [
     },
 ];
 
-// Keep all 12 destination cards in this array.
+async function getFlightDestinations(): Promise<FlightDestination[]> {
+    try {
+        const response = await fetch(
+            `${SITE_URL}/api/flight-destinations`,
+            {
+                next: {
+                    revalidate: 300,
+                },
+            }
+        );
 
-const popularRoutes = [
-    {
-        destination: "Amsterdam",
-        image: "/images/routes/amsterdam.webp",
-        description: "Book Now",
-        href: "/flights/amsterdam",
-    },
-    {
-        destination: "Bali",
-        image: "/images/routes/bali.webp",
-        description: "Book Now",
-        href: "/flights/bali",
-    },
-    {
-        destination: "Barcelona",
-        image: "/images/routes/barcelona.webp",
-        description: "Book Now",
-        href: "/flights/barcelona",
-    },
-    {
-        destination: "London",
-        image: "/images/routes/london.webp",
-        description: "Book Now",
-        href: "/flights/london",
-    },
-    {
-        destination: "Paris",
-        image: "/images/routes/image_60.webp",
-        description: "Book Now",
-        href: "/flights/paris",
-    },
-    {
-        destination: "Dubai",
-        image: "/images/routes/dubai.webp",
-        description: "Book Now",
-        href: "/flights/dubai",
-    },
-    {
-        destination: "Singapore",
-        image: "/images/routes/singapore.webp",
-        description: "Book Now",
-        href: "/flights/singapore",
-    },
-    {
-        destination: "New York",
-        image: "/images/routes/new-york.webp",
-        description: "Book Now",
-        href: "/flights/new-york",
-    },
-    {
-        destination: "Rome",
-        image: "/images/routes/rome.webp",
-        description: "Book Now",
-        href: "/flights/rome",
-    },
-    {
-        destination: "Tokyo",
-        image: "/images/routes/tokyo.webp",
-        description: "Book Now",
-        href: "/flights/tokyo",
-    },
-    {
-        destination: "Istanbul",
-        image: "/images/routes/istanbul.webp",
-        description: "Book Now",
-        href: "/flights/istanbul",
-    },
-    {
-        destination: "Bangkok",
-        image: "/images/routes/bangkok.webp",
-        description: "Book Now",
-        href: "/flights/bangkok",
-    },
-];
+        if (!response.ok) {
+            console.error(
+                "Flight destinations API error:",
+                response.status,
+                response.statusText
+            );
 
-export default function FlightBookingPage() {
+            return [];
+        }
+
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.destinations)) {
+            return [];
+        }
+
+        return data.destinations;
+    } catch (error) {
+        console.error("Failed to fetch flight destinations:", error);
+        return [];
+    }
+}
+
+export default async function FlightBookingPage() {
+    const destinations = await getFlightDestinations();
+
     return (
         <main className="flex min-h-screen flex-col items-center bg-white">
-            <section className="relative w-full isolate flex min-h-[310px] items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
+
+            {/* Flight Hero */}
+            <section className="relative isolate flex min-h-[310px] w-full items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
                 <Image
                     src="/images/FlightBanner1.webp"
-                    alt="Luxury beachfront hotel and tropical infinity pool"
+                    alt="Flight travel and destination"
                     fill
                     priority
                     sizes="100vw"
@@ -139,13 +112,12 @@ export default function FlightBookingPage() {
                             FLIGHTS
                         </span>
 
-                        <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-6xl">
-                            Find Flights for Your Next Adventure
+                        <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight  sm:text-5xl lg:text-6xl">
+                            Book Flights Online and Find Cheap Flights <span className="text-[#123C32]">Next Adventure</span>
                         </h1>
 
                         <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
-                            Explore domestic and international flight options, compare available
-                            fares, and discover convenient ways to reach your favorite destinations.
+                            Are you looking to plan your next travel? We can help. Whether you are looking to travel for work, take your family on a break or see friends or go abroad we can help you find great flight options.
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
@@ -191,104 +163,171 @@ export default function FlightBookingPage() {
             {/* Flight Deals Introduction */}
             <section className="w-full px-4 py-8 sm:px-6 md:px-8 lg:px-12 lg:py-12">
                 <div className="mx-auto max-w-[1440px]">
-                    <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2 md:gap-7 lg:gap-10">
-                        <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-[#538440]/20">
-                            <Image
-                                src="/images/flight-deals.webp"
-                                alt="Traveler enjoying a flight"
-                                fill
-                                sizes="(max-width: 767px) 100vw, 50vw"
-                                className="object-cover"
-                            />
-                        </div>
 
-                        <div>
-                            <h2 className="text-2xl font-bold leading-tight text-[#538440] sm:text-3xl lg:text-4xl">
-                                Unbeatable Flight Deals: Discover the Lowest Fare to Your
-                                Favorite Cities
-                            </h2>
+                 
+<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
+  {/* Left Image */}
+  <div className="relative w-full lg:sticky lg:top-24">
+    <div className="relative h-[300px] w-full overflow-hidden rounded-2xl border border-[#538440]/20 sm:h-[420px] lg:h-[560px]">
+      <Image
+        src="/images/flight-deals.webp"
+        alt="Traveler enjoying a flight"
+        fill
+        sizes="(max-width: 1023px) 100vw, 42vw"
+        className="object-cover"
+      />
+    </div>
+  </div>
 
-                            <p className="mt-3 text-sm leading-6 text-gray-600 sm:text-base">
-                                Are you ready to travel at competitive rates? Discover
-                                affordable flights to popular destinations and find deals
-                                suited to your travel plans and budget.
-                            </p>
+  {/* Right Content */}
+  <div className="space-y-7">
+    <div>
+      <h2 className="text-2xl font-bold leading-tight text-[#538440] sm:text-3xl lg:text-4xl">
+        Cheap Flights to Your Most Popular Destinations
+      </h2>
 
-                            <p className="mt-3 text-sm leading-6 text-gray-600 sm:text-base">
-                                From last-minute escapes to carefully planned vacations,
-                                explore flight options to exciting cities around the world.
-                                Start planning your next adventure with a flight that works
-                                for you.
-                            </p>
-                        </div>
-                    </div>
+      <p className="mt-4 text-base leading-8 text-gray-600 lg:text-lg">
+        We can help you find some great cheap flights, whether you are looking
+        to travel to popular destinations within the US or worldwide. Whether
+        you want to fly to New York, Los Angeles and Chicago or overseas to
+        London, Paris, Dubai or Toronto, we have some great travel opportunities.
+      </p>
 
-                    <p className="mt-5 text-sm leading-6 text-gray-500 sm:text-base">
-                        We are here to turn your travel dreams into reality, whether it
-                        is a solo trip or a family holiday. Pack your bags and embark on
-                        your next adventure with us. Your gateway to flight deals starts
-                        here!
-                    </p>
+      <p className="mt-4 text-base leading-8 text-gray-600 lg:text-lg">
+        With us, you can explore the flight options available and compare
+        different travel options. Whether you need a one-way flight, a return
+        flight or help planning a multi-city trip, we can help.
+      </p>
+    </div>
+
+    <div className="border-t border-gray-200 pt-6">
+      <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+        Booking Flights Made Easy!
+      </h3>
+
+      <p className="mt-4 text-base leading-8 text-gray-600 lg:text-lg">
+        We know that sometimes your travel plans can change. We can help with
+        flight bookings, amending bookings, cancellations, name corrections
+        and providing information about airline policies. We want to help you
+        understand your options better.
+      </p>
+
+      <p className="mt-4 text-base leading-8 text-gray-600 lg:text-lg">
+        Before you book, always check baggage allowances, pricing, change
+        policies and cancellation policies. These will depend on the airline
+        and the ticket you purchase.
+      </p>
+    </div>
+
+    <div className="border-t border-gray-200 pt-6">
+      <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+        Plan Your Next Adventure
+      </h3>
+
+      <p className="mt-4 text-base leading-8 text-gray-600 lg:text-lg">
+        Whether you are looking to travel to popular destinations, find cheap
+        flights or need help with your travel plans, SkyFlyWithUs is here to
+        help you explore your options.
+      </p>
+    </div>
+
+    <div className="rounded-xl bg-[#538440]/10 p-5 sm:p-6">
+      <p className="text-base font-semibold leading-8 text-gray-800 lg:text-lg">
+        Call SkyFlyWithUs at{" "}
+        <a
+          href="tel:18555093791"
+          className="font-bold text-[#538440] hover:underline"
+        >
+          1-855-509-3791
+        </a>{" "}
+        so we can help you with your flight bookings.
+      </p>
+    </div>
+  </div>
+</div>
+
+
 
                     {/* Popular Flight Routes */}
                     <div className="mt-12 sm:mt-16 lg:mt-20">
-                        <div className="flex flex-col justify-center gap-5 sm:flex-row sm:items-end">
-                            <div className="max-w-5xl">
-                                <div className="mb-3 inline-flex justify-center w-full items-center  gap-2 rounded-full  px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#538440]">
-                                    <div className=" bg-[#EAF2E6] inline-flex px-3 py-1.5 text-xs rounded-full gap-3">
 
-                                        <MapPin size={14} />
-                                        Travel More
-                                    </div>
+                        <div className="flex flex-col justify-center gap-5">
+                            <div className="mx-auto max-w-5xl text-center">
+                                <div className="mb-3 inline-flex items-center justify-center rounded-full bg-[#EAF2E6] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#538440]">
+                                    <MapPin size={14} className="mr-2" />
+                                    Travel More
                                 </div>
 
-                                <h2 className="text-3xl font-extrabold text-center leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                                <h2 className="text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
                                     Explore Popular Flight Routes
                                 </h2>
 
-                                <p className="mt-3 max-w-full text-center text-sm leading-6 text-gray-600 sm:text-base">
-                                    From bustling cities to serene getaways, discover
-                                    destinations around the world. Find your next flight
-                                    and start planning your adventure.
+                                <p className="mt-3 text-sm leading-6 text-gray-600 sm:text-base">
+                                    From bustling cities to serene getaways,
+                                    discover destinations around the world.
+                                    Find your next flight and start planning
+                                    your adventure.
                                 </p>
                             </div>
-
-
                         </div>
 
-                        {/* All 12 Destination Cards */}
-                        <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 xl:gap-6">
-                            {popularRoutes.map((route) => (
-                                <Link
-                                    key={route.destination}
-                                    href={route.href}
-                                    className="group overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#538440]/50 hover:shadow-lg"
-                                >
-                                    <div className="relative aspect-[16/9] overflow-hidden">
-                                        <Image
-                                            src={route.image}
-                                            alt={`Flights to ${route.destination}`}
-                                            fill
-                                            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                        />
-                                    </div>
+                        {/* Dynamic Destination Cards */}
+                        {destinations.length > 0 ? (
+                            <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 xl:gap-6">
 
-                                    <div className="flex w-full items-center  justify-between gap-3 mr-2 border-l-4 border-[#538440] px-4 py-3">
-                                        <div className="flex w-full flex-col gap-3">
-                                            <p className="text-sm font-semibold text-center text-gray-800 sm:text-base md:text-xl">
-                                                Flight to {route.destination}
-                                            </p>
-                                            <div className="w-full      flex justify-center items-center">
-                                                <Button className="cursor-pointer" >
-                                                    {route.description}
-                                                </Button>
+                                {destinations.map((destination) => (
+                                    <Link
+                                        key={destination.id}
+                                        href={`/flights/${destination.slug}`}
+                                        className="group overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#538440]/50 hover:shadow-lg"
+                                    >
+                                        <div className="relative aspect-[16/9] overflow-hidden bg-[#EAF2E6]">
+
+                                            <Image
+                                                src={
+                                                    destination.heroImage ||
+                                                    "/images/FlightBanner1.webp"
+                                                }
+                                                alt={`Flights to ${destination.destination}`}
+                                                fill
+                                                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            />
+
+                                        </div>
+
+                                        <div className="flex w-full items-center justify-between gap-3 border-l-4 border-[#538440] px-4 py-4">
+                                            <div className="flex w-full flex-col gap-1">
+                                                <h3 className="text-center text-base font-semibold text-gray-800 sm:text-lg">
+                                                    Flights to {destination.destination}
+                                                </h3>
+
+                                                <p className="text-center text-sm text-gray-500">
+                                                    {destination.country}
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    </Link>
+                                ))}
+
+                            </div>
+                        ) : (
+                            <div className="mt-10 border border-dashed border-gray-300 bg-gray-50 px-5 py-12 text-center">
+                                <MapPin
+                                    size={32}
+                                    className="mx-auto text-[#538440]"
+                                />
+
+                                <h3 className="mt-3 text-lg font-bold text-gray-900">
+                                    No destinations available
+                                </h3>
+
+                                <p className="mt-2 text-sm text-gray-500">
+                                    Published flight destinations will appear here.
+                                </p>
+                            </div>
+                        )}
+
                     </div>
                 </div>
             </section>
