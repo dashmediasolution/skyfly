@@ -95,7 +95,7 @@ export default function DealsBookingPage() {
                     className="object-cover object-center"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-r from-[#F4F8F0]/95 via-[#F4F8F0]/55 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#F4F8F0]/85 via-[#F4F8F0]/45 to-transparent" />
 
                 <div className="relative mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 lg:px-12">
                     <div className="max-w-2xl">
@@ -104,41 +104,15 @@ export default function DealsBookingPage() {
                         </span>
 
                         <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-6xl">
-                            Discover Deals for Your Next Journey
+                            Explore the Best Travel Deals and Offers
                         </h1>
 
-                        <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
-                            Explore exciting flight offers, seasonal discounts, and travel deals
-                            to make your next getaway easier on your budget.
-                        </p>
 
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
-                                <ShieldCheck size={17} />
-                                Offers for Every Journey
-                            </div>
-
-                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
-                                Exclusive Travel Offers
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Deals introduction */}
-            <section className="w-[95%] py-3 sm:px-8 md:py-2 lg:pt-20">
-                <h2 className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
-                    Discover Travel Deals for Your Next Adventure
-                </h2>
 
-                <p className="text-base md:text-xl lg:text-lg">
-                    Explore available flight offers, hotel stays, and car
-                    rental options for your next journey. Compare travel
-                    choices, review offer details, and plan your next getaway
-                    with SkyFlyWithUs.
-                </p>
-            </section>
 
             {/* Deal benefits */}
             <section className="w-full px-4 py-5 sm:px-6 md:px-8 lg:px-12">
@@ -173,7 +147,7 @@ export default function DealsBookingPage() {
                     <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2 md:gap-7 lg:gap-10">
                         <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-[#538440]/20">
                             <Image
-                                src="/images/flight-deals.webp"
+                                src="/images/dealsImage.webp"
                                 alt="Travelers planning their next trip"
                                 fill
                                 sizes="(max-width: 767px) 100vw, 50vw"
@@ -182,39 +156,35 @@ export default function DealsBookingPage() {
                         </div>
 
                         <div>
-                            <h2 className="text-2xl font-bold leading-tight text-[#538440] sm:text-3xl lg:text-4xl">
-                                Your Next Trip Starts with the Right Travel Deal
-                            </h2>
 
-                            <p className="mt-3 text-sm leading-6 text-gray-600 sm:text-base">
-                                Whether you are planning a family holiday, a
-                                weekend escape, or an international adventure,
-                                explore travel options that fit your itinerary
-                                and budget.
+
+                            <p className="  text-sm leading-6 text-gray-600 sm:text-base">
+                                At SkyFlyWithUs, we can help you find some great travel offers for your next holiday. Whether you’re looking to plan a family break, romantic getaway, short break or international trip we can help you find the perfect travel options for you within your budget.
                             </p>
 
                             <p className="mt-3 text-sm leading-6 text-gray-600 sm:text-base">
-                                Browse flight deals, discover accommodation
-                                options, and explore car rentals in popular
-                                destinations. Review the details of each offer
-                                before making your travel plans.
+                                Browse through great flight offers to some of the most popular domestic and international destinations. Find great hotel offers to relax in, as well as great car rental options. We have great offers throughout the year, including during special holidays.
                             </p>
+                            <p className="mt-3 text-sm leading-6 text-gray-600 sm:text-base">
+                                We believe that planning your next trip should be easy. Browse through our offers and terms to see what is available. Prices, availability and travel conditions may vary so always double-check the latest details before booking.
+                                If you need any help planning your trip contact SkyFlyWithUs.                            </p>
 
-                            <Link href="/flights">
-                                <Button className="mt-5 bg-[#538440] text-white hover:bg-[#426D33]">
-                                    Explore Flights
-                                    <ArrowRight className="ml-2 size-4" />
-                                </Button>
-                            </Link>
+                            <div className="mt-3  rounded-xl bg-[#538440]/10 p-5 sm:p-6">
+                                <p className="text-base font-semibold leading-8 text-gray-800 lg:text-lg">
+                                    Call us on{" "}
+                                    <a
+                                        href="tel:18555093791"
+                                        className="font-bold text-[#538440] hover:underline"
+                                    >
+                                        1-855-509-3791
+                                    </a>{" "}
+                                    to get started on finding travel options.
+                                </p>
+                            </div>
                         </div>
                     </div>
 
-                    <p className="mt-5 text-sm leading-6 text-gray-500 sm:text-base">
-                        Make your next journey memorable with travel options
-                        for every kind of traveler. Explore new destinations,
-                        compare available offers, and find the right starting
-                        point for your next adventure with SkyFlyWithUs.
-                    </p>
+
 
                     {/* Deals grid */}
                     <div className="mt-12 sm:mt-16 lg:mt-20">

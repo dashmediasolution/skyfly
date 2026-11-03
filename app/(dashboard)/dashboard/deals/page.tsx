@@ -45,7 +45,7 @@ export default function DealsPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/deals", {
+      const response = await fetch("/api/admin/deals", {
         cache: "no-store",
       });
 
@@ -104,7 +104,7 @@ export default function DealsPage() {
     setDeletingId(deal.id);
 
     try {
-      const response = await fetch(`/api/deals/${deal.id}`, {
+      const response = await fetch(`/api/admin/deals/${deal.id}`, {
         method: "DELETE",
       });
 

@@ -22,7 +22,7 @@ export default function EditDealPage() {
             try {
                 setLoading(true);
 
-                const response = await fetch(`/api/deals/${id}`, {
+                const response = await fetch(`/api/admin/deals/${id}`, {
                     cache: "no-store",
                 });
 

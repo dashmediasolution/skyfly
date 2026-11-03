@@ -183,20 +183,7 @@ export default function GroupTravelPage() {
                 </div>
             </section>
 
-            {/* Group Travel Introduction */}
-            <section className="mx-auto w-full max-w-[1440px] px-5 py-6 sm:px-8 lg:px-12 lg:pt-12">
-                <h2 className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
-                    Plan Your Next Group Travel Experience
-                </h2>
-
-                <p className="mt-2 max-w-5xl text-base leading-7 text-gray-600 md:text-lg">
-                    Planning a trip with friends, family, or a larger group?
-                    Explore group travel options for your next journey. Get
-                    assistance with coordinating travel arrangements,
-                    comparing available options, and organizing a smooth
-                    travel experience with SkyFlyWithUs.
-                </p>
-            </section>
+       
 
             {/* Group Travel Benefits */}
             <section className="w-full px-4 py-5 sm:px-6 md:px-8 lg:px-12">

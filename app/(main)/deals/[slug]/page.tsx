@@ -16,7 +16,7 @@ import {
 import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import FlightFAQ from "@/components/FlightFAQ";
-
+import sanitizeHtml from "sanitize-html";
 const SITE_URL = "https://skyflywithus.com";
 
 type DealPageProps = {
@@ -49,9 +49,46 @@ function getDealDescription(deal: {
   excerpt: string | null;
   content: string | null;
 }) {
-  return deal.excerpt?.trim() || getPlainText(deal.content);
-}
+  const description = deal.excerpt?.trim() || deal.content || "";
 
+  return description;
+}
+function getSafeHtml(value: string | null | undefined) {
+  if (!value) return "";
+
+  return sanitizeHtml(value, {
+    allowedTags: [
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "p",
+      "br",
+      "strong",
+      "b",
+      "em",
+      "i",
+      "u",
+      "ul",
+      "ol",
+      "li",
+      "a",
+      "blockquote",
+      "span",
+      "div",
+    ],
+    allowedAttributes: {
+      a: ["href", "target", "rel"],
+      "*": ["class"],
+    },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    transformTags: {
+      a: sanitizeHtml.simpleTransform("a", {
+        rel: "nofollow noopener noreferrer",
+      }),
+    },
+  });
+}
 // Validate FAQ JSON from MongoDB.
 function getSafeFaqs(value: unknown): DealFAQ[] {
   if (!Array.isArray(value)) return [];
@@ -127,8 +164,8 @@ export async function generateMetadata({
 
     ...(deal.metaKeywords
       ? {
-          keywords: deal.metaKeywords,
-        }
+        keywords: deal.metaKeywords,
+      }
       : {}),
 
     openGraph: {
@@ -140,13 +177,13 @@ export async function generateMetadata({
 
       ...(image
         ? {
-            images: [
-              {
-                url: image,
-                alt: deal.title,
-              },
-            ],
-          }
+          images: [
+            {
+              url: image,
+              alt: deal.title,
+            },
+          ],
+        }
         : {}),
     },
 
@@ -157,8 +194,8 @@ export async function generateMetadata({
 
       ...(image
         ? {
-            images: [image],
-          }
+          images: [image],
+        }
         : {}),
     },
   };
@@ -223,55 +260,15 @@ export default async function DealDetailPage({
     })),
   };
 
-  const contentSections = [
-    {
-      title: "Explore Available Flights",
-      description: `Explore flight options related to ${deal.title}. Compare available routes, departure times, travel dates, and fare conditions to find an itinerary that suits your plans.`,
-      bullets: [
-        "Compare available flight schedules and routes.",
-        "Consider flexible travel dates when possible.",
-        "Review baggage allowances and stopover details.",
-      ],
-    },
-    {
-      title: "How to Make the Most of This Deal",
-      description:
-        "Planning ahead can help you compare available fares and understand the conditions associated with your journey.",
-      bullets: [
-        "Check the total fare, including applicable taxes and charges.",
-        "Review offer validity and eligibility requirements.",
-        "Confirm the passenger details before completing a reservation.",
-      ],
-    },
-    {
-      title: "Review Booking Conditions",
-      description:
-        "Every airline and fare type may have different booking conditions. Review the applicable terms before confirming your travel arrangements.",
-      bullets: [
-        "Check ticket change and cancellation policies.",
-        "Confirm baggage limits and additional fees.",
-        "Review refund eligibility and payment conditions.",
-      ],
-    },
-    {
-      title: "Prepare for Your Journey",
-      description:
-        "Keep your travel information organized and review the requirements that apply to your selected route before departure.",
-      bullets: [
-        "Verify passenger names and travel documents.",
-        "Check airline check-in requirements.",
-        "Keep your booking confirmation accessible.",
-      ],
-    },
-  ];
+ 
 
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Banner */}
-      <section className="relative isolate flex min-h-[310px] w-full items-center overflow-hidden sm:min-h-[360px] lg:min-h-[390px]">
+      <section className="relative isolate flex min-h-[310px] w-full items-center overflow-hidden sm:min-h-[360px] lg:min-h-[430px]">
         <Image
-          src="/images/dealsBanner.webp"
-          alt="Luxury beachfront hotel and tropical infinity pool"
+          src={`${deal?.featuredImage}`}
+          alt={`${deal?.title}`}
           fill
           priority
           sizes="100vw"
@@ -281,30 +278,17 @@ export default async function DealDetailPage({
         <div className="absolute inset-0 bg-gradient-to-r from-[#F4F8F0]/95 via-[#F4F8F0]/55 to-transparent" />
 
         <div className="relative mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 lg:px-12">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full bg-[#DCEFD2] px-3 py-1.5 text-xs font-bold tracking-wide text-[#315F2A]">
               TRAVEL DEALS
             </span>
 
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-6xl">
-              Discover Deals for Your Next Journey
+            <h1 className="mt-4 text-xl font-extrabold leading-tight tracking-tight text-[#123C32] sm:text-5xl lg:text-4xl">
+            {deal?.title}
             </h1>
+ 
 
-            <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
-              Explore exciting flight offers, seasonal discounts, and travel
-              deals to make your next getaway easier on your budget.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
-                <ShieldCheck size={17} />
-                Offers for Every Journey
-              </div>
-
-              <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
-                Exclusive Travel Offers
-              </div>
-            </div>
+         
           </div>
         </div>
       </section>
@@ -315,97 +299,63 @@ export default async function DealDetailPage({
         <div className="min-w-0 space-y-7">
           {/* Introduction */}
           <section className="flex items-start gap-3 sm:gap-4">
-            <div className="mt-1 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#EAF2E6] text-[#538440]">
-              <Tag size={18} />
-            </div>
+          
 
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-extrabold uppercase tracking-wider text-[#538440]">
-                Discover the Offer
-              </p>
+              
 
-              <h2 className="mt-2 text-xl font-bold leading-tight text-[#538440] sm:text-2xl">
-                {deal.title}
-              </h2>
 
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                {description} Whether you are planning a family holiday, a
-                business trip, a weekend escape, or a visit to a new
-                destination, exploring available flight options can help you
-                make an informed travel decision.
-              </p>
+              <div
+                className="
+    deal-content
+    
+    text-base
+    leading-7
+    
+    [&_h1]:mb-4
+    [&_h1]:mt-6
+    [&_h1]:text-2xl
+    [&_h1]:font-bold
+    [&_h1]:text-[#123C32]
+    [&_h2]:mb-3
+    [&_h2]:mt-6
+    [&_h2]:text-xl
+    [&_h2]:font-bold
+    [&_h2]:text-[#123C32]
+    [&_h3]:mb-2
+    [&_h3]:mt-5
+    [&_h3]:text-lg
+    [&_h3]:font-semibold
+    [&_h3]:text-[#123C32]
+    [&_p]:mb-4
+    [&_ul]:mb-4
+    [&_ul]:ml-5
+    [&_ul]:list-disc
+    [&_ol]:mb-4
+    [&_ol]:ml-5
+    [&_ol]:list-decimal
+    [&_li]:mb-2
+    [&_a]:font-medium
+    [&_a]:text-[#538440]
+    [&_a]:underline
+    [&_strong]:font-bold
+    [&_blockquote]:my-4
+    [&_blockquote]:border-l-4
+    [&_blockquote]:border-[#538440]
+    [&_blockquote]:pl-4
+  "
+                dangerouslySetInnerHTML={{
+                  __html: getSafeHtml(description),
+                }}
+              />
 
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                Our {category.toLowerCase()} information helps you explore
-                relevant travel options for your upcoming journey. Compare
-                available itineraries, review your preferred dates, and check
-                the conditions that apply before confirming a booking.
-              </p>
+
             </div>
           </section>
 
-          {/* Content Sections */}
-          {contentSections.map((section, index) => (
-            <section
-              key={section.title}
-              className="flex items-start gap-3 sm:gap-4"
-            >
-              <div className="mt-1 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#EAF2E6] text-[#538440]">
-                {index === 0 ? (
-                  <Plane size={18} />
-                ) : index === 1 ? (
-                  <Tag size={18} />
-                ) : index === 2 ? (
-                  <ShieldCheck size={18} />
-                ) : (
-                  <CheckCircle2 size={18} />
-                )}
-              </div>
 
-              <div className="min-w-0 flex-1">
-                <h2 className="text-xl font-bold leading-tight text-[#538440] sm:text-2xl">
-                  {section.title}
-                </h2>
 
-                <p className="mt-2 text-sm leading-6 text-gray-600">
-                  {section.description}
-                </p>
 
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-gray-600 marker:text-[#538440]">
-                  {section.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-          ))}
-
-          {/* Travel Assistance */}
-          <section className="flex items-start gap-3 sm:gap-4">
-            <div className="mt-1 flex size-9 shrink-0 items-center justify-center rounded-full bg-[#EAF2E6] text-[#538440]">
-              <ShieldCheck size={18} />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <h2 className="text-xl font-bold leading-tight text-[#538440] sm:text-2xl">
-                Travel Assistance for Your Journey
-              </h2>
-
-              <p className="mt-2 text-sm leading-6 text-gray-600">
-                Before making a reservation, review the relevant airline
-                policies, baggage allowance, and ticket conditions. Fare
-                availability, prices, and promotional terms may change. Always
-                verify the applicable details before completing your booking.
-              </p>
-
-              <Link href="/flights" className="mt-5 inline-flex">
-                <Button className="h-11 bg-[#538440] px-5 text-sm font-bold text-white hover:bg-[#3F6632]">
-                  Explore Flights
-                  <ArrowRight className="ml-2 size-4" />
-                </Button>
-              </Link>
-            </div>
-          </section>
         </div>
 
         {/* Right Sidebar */}

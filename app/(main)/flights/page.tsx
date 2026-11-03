@@ -107,29 +107,18 @@ export default async function FlightBookingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#F4F8F0]/95 via-[#F4F8F0]/55 to-transparent" />
 
                 <div className="relative mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 lg:px-12">
-                    <div className="max-w-2xl">
+                    <div className="max-w-3xl">
                         <span className="inline-flex items-center gap-2 rounded-full bg-[#DCEFD2] px-3 py-1.5 text-xs font-bold tracking-wide text-[#315F2A]">
                             FLIGHTS
                         </span>
 
                         <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight  sm:text-5xl lg:text-6xl">
-                            Book Flights Online and Find Cheap Flights <span className="text-[#123C32]">Next Adventure</span>
+                        Cheap Flights to Your Most Popular Destinations
                         </h1>
 
-                        <p className="mt-3 max-w-lg text-sm leading-6 text-[#344740] sm:text-base">
-                            Are you looking to plan your next travel? We can help. Whether you are looking to travel for work, take your family on a break or see friends or go abroad we can help you find great flight options.
-                        </p>
+                        
 
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
-                                <ShieldCheck size={17} />
-                                Explore Flight Options
-                            </div>
-
-                            <div className="flex items-center gap-2 rounded-full border border-[#538440]/20 bg-white/80 px-4 py-2 text-sm text-[#315F2A] shadow-sm">
-                                Domestic & International
-                            </div>
-                        </div>
+                     
                     </div>
                 </div>
             </section>
@@ -182,9 +171,7 @@ export default async function FlightBookingPage() {
   {/* Right Content */}
   <div className="space-y-7">
     <div>
-      <h2 className="text-2xl font-bold leading-tight text-[#538440] sm:text-3xl lg:text-4xl">
-        Cheap Flights to Your Most Popular Destinations
-      </h2>
+      
 
       <p className="mt-4 text-base leading-8 text-gray-600 lg:text-lg">
         We can help you find some great cheap flights, whether you are looking

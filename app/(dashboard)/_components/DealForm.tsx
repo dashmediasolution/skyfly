@@ -239,8 +239,8 @@ const handleImageUpload = async (
 
       const response = await fetch(
         isEdit
-          ? `/admin/api/deals/${initialData?.id}`
-          : "/admin/api/deals",
+          ? `/api/admin/deals/${initialData?.id}`
+          : "/api/admin/deals",
         {
           method: isEdit ? "PATCH" : "POST",
           headers: {
