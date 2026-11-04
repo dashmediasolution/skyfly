@@ -10,8 +10,9 @@ import {
     Trash2,
     Save,
     Loader2,
+    Upload,
+    Image as ImageIcon,
 } from "lucide-react";
-
 import TiptapEditor from "./TiptapEditor";
 
 type Section = {
@@ -87,7 +88,8 @@ export default function DestinationForm({
     edit?: boolean;
 }) {
     const router = useRouter();
-
+const [heroUploading, setHeroUploading] = useState(false);
+const [flightUploading, setFlightUploading] = useState<string | null>(null);
     const [form, setForm] = useState<Destination>(
         initialData || emptyDestination
     );
@@ -103,6 +105,48 @@ export default function DestinationForm({
         }
     }, [initialData]);
 
+
+async function uploadImage(
+    file: File,
+    onSuccess: (url: string) => void
+) {
+    if (!file.type.startsWith("image/")) {
+        toast.error("Please select a valid image.");
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size must be less than 5 MB.");
+        return;
+    }
+
+    const data = new FormData();
+    data.append("file", file);
+    data.append("folder", "skyfly_flights");
+
+    try {
+        const response = await fetch("/api/upload", {
+            method: "POST",
+            body: data,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Image upload failed.");
+        }
+
+        onSuccess(result.imageUrl);
+
+        toast.success("Image uploaded successfully.");
+    } catch (error) {
+        toast.error(
+            error instanceof Error
+                ? error.message
+                : "Failed to upload image."
+        );
+    }
+}
     function update<K extends keyof Destination>(
         key: K,
         value: Destination[K]
@@ -380,36 +424,76 @@ export default function DestinationForm({
             </section>
 
             {/* Hero Image */}
-            <section className="space-y-4 rounded-xl border bg-white p-5 md:p-6">
-                <h2 className="text-lg font-semibold">Hero Image</h2>
+         {/* Hero Image */}
+<section className="space-y-4 rounded-xl border bg-white p-5 md:p-6">
+    <div>
+        <h2 className="text-lg font-semibold">Hero Image</h2>
+        <p className="text-sm text-gray-500">
+            Upload the main destination banner image.
+        </p>
+    </div>
 
-                <div>
-                    <label className={labelClass}>Image URL</label>
-                    <input
-                        className={inputClass}
-                        placeholder="https://example.com/london.webp"
-                        value={form.heroImage || ""}
-                        onChange={(e) => update("heroImage", e.target.value)}
-                    />
-                </div>
+    <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 transition hover:border-[#538440] hover:bg-green-50">
+        {heroUploading ? (
+            <Loader2 size={30} className="mb-3 animate-spin text-[#538440]" />
+        ) : (
+            <Upload size={30} className="mb-3 text-gray-500" />
+        )}
 
-                {form.heroImage && (
-                    <div className="relative max-w-xl overflow-hidden rounded-lg border">
-                        <img
-                            src={form.heroImage}
-                            alt="Destination preview"
-                            className="h-52 w-full object-cover"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => update("heroImage", "")}
-                            className="absolute right-2 top-2 rounded-lg bg-white p-2 text-red-600 shadow"
-                        >
-                            <Trash2 size={16} />
-                        </button>
-                    </div>
-                )}
-            </section>
+        <span className="text-sm font-semibold text-gray-700">
+            {heroUploading ? "Uploading image..." : "Click to upload hero image"}
+        </span>
+
+        <span className="mt-1 text-xs text-gray-400">
+            JPG, PNG, WEBP, GIF or AVIF · Maximum 5 MB
+        </span>
+
+        <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+            className="hidden"
+            disabled={heroUploading}
+            onChange={async (e) => {
+                const file = e.target.files?.[0];
+
+                if (!file) return;
+
+                setHeroUploading(true);
+
+                try {
+                    await uploadImage(file, (url) => {
+                        update("heroImage", url);
+                    });
+                } finally {
+                    setHeroUploading(false);
+                    e.target.value = "";
+                }
+            }}
+        />
+    </label>
+
+    {form.heroImage && (
+        <div className="relative max-w-xl overflow-hidden rounded-xl border">
+            <img
+                src={form.heroImage}
+                alt="Destination hero preview"
+                className="h-56 w-full object-cover"
+            />
+
+            <button
+                type="button"
+                onClick={() => update("heroImage", "")}
+                className="absolute right-3 top-3 rounded-lg bg-white p-2 text-red-600 shadow-md transition hover:bg-red-50"
+            >
+                <Trash2 size={17} />
+            </button>
+
+            <div className="bg-gray-50 px-3 py-2 text-xs text-gray-500">
+                Hero image uploaded successfully
+            </div>
+        </div>
+    )}
+</section>
 
             {/* Main Article */}
             <section className="space-y-4 rounded-xl border bg-white p-5 md:p-6">
@@ -509,59 +593,133 @@ export default function DestinationForm({
                     </button>
                 </div>
 
-                {form.relatedFlights.map((flight, index) => (
-                    <div key={flight.id} className="space-y-3 rounded-lg border p-4">
-                        <div className="flex justify-between">
-                            <h3 className="font-medium">Flight {index + 1}</h3>
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    update("relatedFlights", form.relatedFlights.filter(
-                                        (item) => item.id !== flight.id
-                                    ))
-                                }
-                                className="text-red-500"
-                            >
-                                <Trash2 size={17} />
-                            </button>
-                        </div>
+              {form.relatedFlights.map((flight, index) => (
+    <div key={flight.id} className="space-y-4 rounded-lg border p-4">
+        <div className="flex justify-between">
+            <h3 className="font-medium">Flight {index + 1}</h3>
 
-                        <div className="grid gap-3 md:grid-cols-2">
-                            <input
-                                className={inputClass}
-                                placeholder="From: New York"
-                                value={flight.from}
-                                onChange={(e) => updateFlight(flight.id, "from", e.target.value)}
-                            />
-                            <input
-                                className={inputClass}
-                                placeholder="To: London"
-                                value={flight.to}
-                                onChange={(e) => updateFlight(flight.id, "to", e.target.value)}
-                            />
-                            <input
-                                className={inputClass}
-                                placeholder="Offer or starting price"
-                                value={flight.offer}
-                                onChange={(e) => updateFlight(flight.id, "offer", e.target.value)}
-                            />
-                            <input
-                                className={inputClass}
-                                placeholder="Image URL"
-                                value={flight.image}
-                                onChange={(e) => updateFlight(flight.id, "image", e.target.value)}
-                            />
-                        </div>
+            <button
+                type="button"
+                onClick={() =>
+                    update(
+                        "relatedFlights",
+                        form.relatedFlights.filter(
+                            (item) => item.id !== flight.id
+                        )
+                    )
+                }
+                className="text-red-500 hover:text-red-700"
+            >
+                <Trash2 size={17} />
+            </button>
+        </div>
 
-                        <input
-                            className={inputClass}
-                            placeholder="Flight page URL"
-                            value={flight.href}
-                            onChange={(e) => updateFlight(flight.id, "href", e.target.value)}
+        <div className="grid gap-3 md:grid-cols-2">
+            <input
+                className={inputClass}
+                placeholder="From: New York"
+                value={flight.from}
+                onChange={(e) =>
+                    updateFlight(flight.id, "from", e.target.value)
+                }
+            />
+
+            <input
+                className={inputClass}
+                placeholder="To: London"
+                value={flight.to}
+                onChange={(e) =>
+                    updateFlight(flight.id, "to", e.target.value)
+                }
+            />
+
+            <input
+                className={inputClass}
+                placeholder="Offer or starting price"
+                value={flight.offer}
+                onChange={(e) =>
+                    updateFlight(flight.id, "offer", e.target.value)
+                }
+            />
+
+            {/* Flight Image Upload */}
+            <div className="space-y-2">
+                <label className={labelClass}>Flight Image</label>
+
+                <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-3 text-sm text-gray-600 transition hover:border-[#538440] hover:bg-green-50">
+                    {flightUploading === flight.id ? (
+                        <Loader2
+                            size={18}
+                            className="animate-spin text-[#538440]"
                         />
-                    </div>
-                ))}
+                    ) : (
+                        <Upload size={18} />
+                    )}
 
+                    {flightUploading === flight.id
+                        ? "Uploading..."
+                        : "Choose Flight Image"}
+
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                        className="hidden"
+                        disabled={flightUploading === flight.id}
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+
+                            if (!file) return;
+
+                            setFlightUploading(flight.id);
+
+                            try {
+                                await uploadImage(file, (url) => {
+                                    updateFlight(
+                                        flight.id,
+                                        "image",
+                                        url
+                                    );
+                                });
+                            } finally {
+                                setFlightUploading(null);
+                                e.target.value = "";
+                            }
+                        }}
+                    />
+                </label>
+
+                {flight.image && (
+                    <div className="relative overflow-hidden rounded-lg border">
+                        <img
+                            src={flight.image}
+                            alt={`${flight.from} to ${flight.to}`}
+                            className="h-36 w-full rounded-lg object-cover"
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                updateFlight(flight.id, "image", "")
+                            }
+                            className="absolute right-2 top-2 rounded-lg bg-white p-2 text-red-600 shadow-md hover:bg-red-50"
+                        >
+                            <Trash2 size={15} />
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <input
+            className={inputClass}
+            placeholder="Flight page URL"
+            value={flight.href}
+            onChange={(e) =>
+                updateFlight(flight.id, "href", e.target.value)
+            }
+        />
+    </div>
+))}
                 {form.relatedFlights.length === 0 && (
                     <p className="rounded-lg bg-gray-50 p-5 text-center text-sm text-gray-500">
                         No related flights added.

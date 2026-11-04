@@ -95,8 +95,7 @@ export async function GET(request: Request) {
         const search = searchParams.get("search")?.trim();
         const excludeId = searchParams.get("excludeId");
         const limitParam = searchParams.get("limit");
-        console.log(policyType,"ksldfjklsjfklsdjflksdfklsdf")
-        
+         
         if (id && !isValidObjectId(id)) {
             return NextResponse.json({ error: "Invalid policy ID." }, { status: 400 });
         }

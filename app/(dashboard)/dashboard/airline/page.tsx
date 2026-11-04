@@ -40,7 +40,7 @@ const policyLabels: Record<PolicyType, string> = {
 
 const policyRoutes: Record<PolicyType, string> = {
   FLIGHT: "flight-change",
-  NAME: "name-correction",
+  NAME: "name-change",
   CANCELLATION: "cancellation",
   BAGGAGE: "baggage",
 };

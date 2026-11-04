@@ -20,8 +20,30 @@ const staticRoutes = [
   { path: "/sitemap", priority: 0.3, changeFrequency: "monthly" as const },
 ];
 
+const policyTypeRoutes: Record<string, string> = {
+  FLIGHT: "flight-change",
+  NAME: "name-correction",
+  CANCELLATION: "cancellation-and-refund",
+  BAGGAGE: "baggage",
+};
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [categories, blogs] = await Promise.all([
+  const [
+    categories,
+    blogs,
+    destinations,
+    deals,
+    airlinePolicies,
+  ] = await Promise.all([
     prisma.blogCategory.findMany({
       select: {
         slug: true,
@@ -35,6 +57,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         updatedAt: true,
       },
     }),
+
+    prisma.flightDestination.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+
+    prisma.deal.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+
+    prisma.airlinePolicy.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      select: {
+        policyType: true,
+        updatedAt: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    }),
   ]);
 
   const routes: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
@@ -44,13 +101,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }));
 
-  const categoryRoutes: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${BASE_URL}/blog/category/${category.slug}`,
-    lastModified: category.updatedAt,
-    changeFrequency: "weekly",
-    priority: 0.6,
-  }));
+  // Blog category URLs
+  const categoryRoutes: MetadataRoute.Sitemap = categories.map(
+    (category) => ({
+      url: `${BASE_URL}/blog/category/${category.slug}`,
+      lastModified: category.updatedAt,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    })
+  );
 
+  // Blog detail URLs
   const blogRoutes: MetadataRoute.Sitemap = blogs.map((blog) => ({
     url: `${BASE_URL}/blog/${blog.slug}`,
     lastModified: blog.updatedAt,
@@ -58,5 +119,54 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...routes, ...categoryRoutes, ...blogRoutes];
+  // Flight destination URLs
+  const destinationRoutes: MetadataRoute.Sitemap = destinations.map(
+    (destination) => ({
+      url: `${BASE_URL}/flights/${destination.slug}`,
+      lastModified: destination.updatedAt,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    })
+  );
+
+  // Travel deal URLs
+  const dealRoutes: MetadataRoute.Sitemap = deals.map((deal) => ({
+    url: `${BASE_URL}/deals/${deal.slug}`,
+    lastModified: deal.updatedAt,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+  // Airline policy URLs
+  // URL format: /policy-type/airline-name
+  const airlinePolicyRoutes: MetadataRoute.Sitemap =
+    airlinePolicies.map((policy) => {
+      const type = policy.policyType.toUpperCase();
+
+      const policySlug =
+        policyTypeRoutes[type] || slugify(type);
+
+      const airlineSlug = slugify(policy.category.name);
+
+      return {
+        url: `${BASE_URL}/${policySlug}/${airlineSlug}`,
+        lastModified: policy.updatedAt,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      };
+    });
+
+  // Remove duplicate URLs
+  const allRoutes = [
+    ...routes,
+    ...categoryRoutes,
+    ...blogRoutes,
+    ...destinationRoutes,
+    ...dealRoutes,
+    ...airlinePolicyRoutes,
+  ];
+
+  return Array.from(
+    new Map(allRoutes.map((route) => [route.url, route])).values()
+  );
 }
