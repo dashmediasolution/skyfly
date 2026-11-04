@@ -28,9 +28,9 @@ const quickLinks = [
 ];
 
 const policyTypeRoutes: Record<string, string> = {
-  FLIGHT: "flight-change",
+   FLIGHT: "flight-change",
   NAME: "name-change",
-  CANCELLATION: "cancellation-and-refund",
+  CANCELLATION: "cancellation",
   BAGGAGE: "baggage",
 };
 
