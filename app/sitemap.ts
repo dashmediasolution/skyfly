@@ -22,8 +22,8 @@ const staticRoutes = [
 
 const policyTypeRoutes: Record<string, string> = {
   FLIGHT: "flight-change",
-  NAME: "name-correction",
-  CANCELLATION: "cancellation-and-refund",
+  NAME: "name-change",
+  CANCELLATION: "cancellation",
   BAGGAGE: "baggage",
 };
 

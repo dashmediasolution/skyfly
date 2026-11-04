@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
@@ -7,12 +8,14 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-type DestinationCardProps = {
+export type DestinationCardProps = {
+  id?: string;
   name: string;
   country: string;
   tagline: string;
   overlayTitle: string;
   image: string;
+  slug?: string;
 };
 
 export default function DestinationCard({
@@ -21,11 +24,12 @@ export default function DestinationCard({
   tagline,
   overlayTitle,
   image,
+  slug,
 }: DestinationCardProps) {
   return (
-    <Card className="group overflow-hidden  rounded-none  border border-slate-200/80 bg-white p-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-      <Link  
-        href={`/flights/${name.toLowerCase().replace(/\s+/g, "-")}`}
+    <Card className="group overflow-hidden rounded-none border border-slate-200/80 bg-white p-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      <Link
+        href={`/flights/${slug || name.toLowerCase().replace(/\s+/g, "-")}`}
         aria-label={`Explore ${name}, ${country}`}
         className="block"
       >
@@ -45,13 +49,14 @@ export default function DestinationCard({
               <MapPin className="h-4 w-4 shrink-0" />
               {overlayTitle}
             </p>
+
             <p className="ml-5 mt-1 text-sm font-medium">
               {country}
             </p>
           </div>
         </div>
 
-        <CardContent className="flex min-h-[88px] items-center gap-3 p-4 rounded-none">
+        <CardContent className="flex min-h-[88px] items-center gap-3 rounded-none p-4">
           <div className="min-w-0 flex-1">
             <p className="flex items-center gap-2 text-base font-bold text-slate-900">
               <MapPin className="h-4 w-4 shrink-0 text-emerald-600" />
