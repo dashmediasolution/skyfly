@@ -7,7 +7,7 @@ import {
   ArrowLeft,
   ArrowRight,
   CalendarDays,
-  Clock,
+  Clock,Headset,Phone,
   BookOpen,
 } from "lucide-react";
 
@@ -198,14 +198,41 @@ export default async function IndividualBlogPage({
         <div className="min-w-0">
           <article className="rounded-3xl border border-[#ECECE4] bg-white p-5 shadow-sm sm:p-8 lg:p-10">
             <div
-              className="blog-content prose prose-lg max-w-none
-                prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-[#17211D]
-                prose-p:leading-8 prose-p:text-[#505A53]
-                prose-a:text-[#538440] prose-a:no-underline hover:prose-a:underline
-                prose-strong:text-[#17211D]
-                prose-li:text-[#505A53]
-                prose-blockquote:border-l-[#538440]
-                prose-img:rounded-2xl"
+              className="
+    blog-content
+    prose prose-lg max-w-none
+    prose-headings:font-bold
+    prose-headings:tracking-tight
+    prose-headings:text-[#17211D]
+    prose-p:leading-8
+    prose-p:text-[#505A53]
+    prose-a:text-[#538440]
+    prose-a:no-underline
+    hover:prose-a:underline
+    prose-strong:text-[#17211D]
+    prose-li:text-[#505A53]
+    prose-blockquote:border-l-[#538440]
+    prose-img:rounded-2xl
+    prose-table:w-full
+    prose-table:border-collapse
+    prose-th:border
+    prose-th:border-[#DDE5D8]
+    prose-th:bg-[#EAF2E6]
+    prose-th:px-4
+    prose-th:py-3
+    prose-th:text-left
+    prose-th:text-sm
+    prose-th:font-bold
+    prose-th:text-[#20331D]
+    prose-td:border
+    prose-td:border-[#DDE5D8]
+    prose-td:px-4
+    prose-td:py-3
+    prose-td:text-sm
+    prose-td:text-[#505A53]
+    prose-tr:border-b
+    prose-tr:border-[#DDE5D8]
+  "
               dangerouslySetInnerHTML={{
                 __html: post.content || "",
               }}
@@ -233,32 +260,40 @@ export default async function IndividualBlogPage({
         {/* Sticky right sidebar */}
         <aside className="h-fit space-y-6 lg:sticky lg:top-24">
           {/* Blog CTA */}
-          <div className="rounded-3xl border border-[#E5E9DF] bg-[#EAF2E6] p-6">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[#538440]">
-              <BookOpen size={22} />
-            </div>
+ 
+                        {/* Assistance Card */}
+                        <div className="rounded-xl border border-[#538440]/30 bg-[#F0F6EC] p-4 text-center">
 
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#538440]">
-              SkyFlyWithUs
-            </p>
+                            <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-[#538440] text-white">
+                                <Headset size={20} />
+                            </div>
 
-            <h2 className="mt-3 text-xl font-bold leading-snug text-[#17211D]">
-              Travel smarter with the right information
-            </h2>
+                            <h2 className="mt-3 text-base font-bold text-[#538440]">
+                                Need Help Booking Flights?
+                            </h2>
 
-            <p className="mt-3 text-sm leading-6 text-[#68716A]">
-              Explore practical travel guides, flight tips, and helpful advice
-              for your next journey.
-            </p>
+                            <p className="mt-2 text-xs leading-5 text-gray-600">
+                                Speak with our travel team for help with your flight plans.
+                            </p>
 
-            <Link
-              href="/blog"
-              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#538440] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3F6632]"
-            >
-              Explore All Articles
-              <ArrowRight size={16} />
-            </Link>
-          </div>
+                            <a
+                                href="tel:+18555093791"
+                                className="mt-3 flex items-center justify-center gap-2 text-base font-bold text-gray-800 hover:text-[#538440]"
+                            >
+                                <Phone size={16} />
+                                1-855-509-3791
+                            </a>
+
+                            <a
+                                href="tel:+18555093791"
+                                className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#538440] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3F6632]"
+                            >
+                                <Phone size={15} />
+                                Call for Assistance
+                            </a>
+                        </div>
+
+                    
 
           {/* Related articles */}
           <div className="rounded-3xl border border-[#ECECE4] bg-white p-5 shadow-sm">
@@ -320,23 +355,7 @@ export default async function IndividualBlogPage({
             </div>
           </div>
 
-          {/* Additional sidebar CTA */}
-          <div className="rounded-3xl bg-[#17211D] p-6 text-white">
-            <h2 className="text-lg font-bold">More Travel Insights</h2>
-
-            <p className="mt-2 text-sm leading-6 text-white/70">
-              Find more guides and useful tips to help you prepare for your
-              next trip.
-            </p>
-
-            <Link
-              href="/blog"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#B9D7A8] transition hover:text-white"
-            >
-              Visit Our Blog
-              <ArrowRight size={16} />
-            </Link>
-          </div>
+      
         </aside>
       </div>
     </main>

@@ -71,16 +71,14 @@ export function BlogCategoryNav({
     }`;
 
   return (
-    <section className="border-b border-[#E7EDE3] bg-white">
+    <section className=" border-[#E7EDE3] bg-white">
       <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-12">
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-[#53684D]">
             Browse by topic
           </h2>
 
-          <span className="text-xs text-[#858D83]">
-            Find what you need
-          </span>
+          
         </div>
 
         <nav
