@@ -1,16 +1,19 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 // @ts-ignore
 import { authOptions } from "@/lib/auth.config";
-import { revalidatePath } from 'next/cache';
-import { revalidateTag } from 'next/cache';
-// Define the type for the dynamic parameter
+import { revalidatePath, revalidateTag } from "next/cache";
+
 interface Params {
   slug: string;
 }
 
-// --- GET (Fetch a single blog post by slug) ---
+// ==========================================
+// GET - Fetch single blog by slug or ID
+// ==========================================
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<Params> }
@@ -28,9 +31,13 @@ export async function GET(
 
   try {
     const blog = await prisma.blog.findUnique({
-      where: isId ? { id: slug } : { slug: slug },
+      where: isId ? { id: slug } : { slug },
       include: {
-        author: { select: { name: true } },
+        author: {
+          select: {
+            name: true,
+          },
+        },
         faqs: {
           select: {
             id: true,
@@ -43,49 +50,59 @@ export async function GET(
     });
 
     if (!blog) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Post not found" },
+        { status: 404 }
+      );
     }
 
-    // Format the data for the frontend Article interface
     const formattedBlog = {
       id: blog.id,
       title: blog.title,
       slug: blog.slug,
-      
-      // Handle Array -> Single string for frontend display
-      category: blog.categories[0] || "Uncategorized", 
-      categories: blog.categories, // Pass the full array if needed
-      
-      // Generate slug from the first category
-      categorySlug: (blog.categories[0] || "").toLowerCase().replace(/\s+/g, "-"),
-      
+
+      category: blog.categories[0] || "Uncategorized",
+      categories: blog.categories,
+
+      categorySlug: (blog.categories[0] || "")
+        .toLowerCase()
+        .replace(/\s+/g, "-"),
+
       description: blog.metaDesc,
       imageUrl: blog.image,
+
       authorName: blog.author?.name || "Unknown Author",
-      publishDate: new Date(blog.createdAt).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
+
+      publishDate: new Date(blog.createdAt).toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      ),
+
       content: blog.content,
-      
-      // 👇 NEW: Return focusKeyword to frontend (default empty string)
+
       focusKeyword: blog.focusKeyword || "",
 
       metaTitle: blog.metaTitle,
       metaDesc: blog.metaDesc,
       metaKeywords: blog.metaKeywords,
-      // Map FAQs
-      faqs: blog.faqs.map((f) => ({
-        id: f.id,
-        question: f.question,
-        answer: f.answer,
+
+      faqs: blog.faqs.map((faq) => ({
+        id: faq.id,
+        question: faq.question,
+        answer: faq.answer,
       })),
     };
 
-    return NextResponse.json(formattedBlog, { status: 200 });
+    return NextResponse.json(formattedBlog, {
+      status: 200,
+    });
   } catch (error) {
     console.error("Single Blog Fetch Error:", error);
+
     return NextResponse.json(
       { error: "Failed to fetch post" },
       { status: 500 }
@@ -93,12 +110,21 @@ export async function GET(
   }
 }
 
-// --- PATCH (Update a blog post - used by Dashboard) ---
-export async function PATCH(req: Request, { params }: { params: Promise<{ slug: string }> }) {
+// ==========================================
+// PATCH - Update blog and its FAQs
+// ==========================================
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<Params> }
+) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: "Not authenticated" },
+      { status: 401 }
+    );
   }
 
   const { slug: blogSlug } = await params;
@@ -106,46 +132,120 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
   try {
     const data = await req.json();
 
-    // 1. Check for slug conflict
-    const existingSlug = await prisma.blog.findFirst({
-      where: {
-        slug: data.slug,
-        NOT: { slug: blogSlug },
-      },
-    });
-
-    if (existingSlug) {
+    // Validate FAQs
+    if (
+      data.faqs !== undefined &&
+      !Array.isArray(data.faqs)
+    ) {
       return NextResponse.json(
-        { error: "This slug is already in use by another post." },
-        { status: 409 }
+        { error: "FAQs must be an array." },
+        { status: 400 }
       );
     }
 
-    // 2. Perform the update
+    const faqs =
+      data.faqs?.map((faq: any) => ({
+        question: String(faq.question || "").trim(),
+        answer: String(faq.answer || "").trim(),
+      })) ?? [];
+
+    if (
+      faqs.some(
+        (faq: { question: string; answer: string }) =>
+          !faq.question || !faq.answer
+      )
+    ) {
+      return NextResponse.json(
+        {
+          error: "Every FAQ must have a question and answer.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check whether blog exists
+    const existingBlog = await prisma.blog.findUnique({
+      where: {
+        slug: blogSlug,
+      },
+    });
+
+    if (!existingBlog) {
+      return NextResponse.json(
+        { error: "Blog not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check slug conflict
+    if (data.slug && data.slug !== blogSlug) {
+      const existingSlug = await prisma.blog.findUnique({
+        where: {
+          slug: data.slug,
+        },
+      });
+
+      if (existingSlug) {
+        return NextResponse.json(
+          {
+            error: "This slug is already in use by another post.",
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Update blog and FAQs together
     const updatedBlog = await prisma.blog.update({
-      where: { slug: blogSlug },
+      where: {
+        slug: blogSlug,
+      },
+
       data: {
         title: data.title,
         slug: data.slug,
-        categories: data.categories, 
+        categories: data.categories,
         content: data.content,
         image: data.image,
-        
-        // 👇 NEW: Allow updating the focusKeyword
+
         focusKeyword: data.focusKeyword,
 
         metaTitle: data.metaTitle,
         metaDesc: data.metaDesc,
         metaKeywords: data.metaKeywords,
+
+        // Update FAQs only when provided
+        ...(data.faqs !== undefined && {
+          faqs: {
+            deleteMany: {},
+            create: faqs,
+          },
+        }),
+
         updatedAt: new Date(),
       },
+
+      include: {
+        faqs: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
-revalidateTag("blogs");
-revalidateTag("homepage-recent-blogs");
-revalidatePath("/");
-    return NextResponse.json(updatedBlog, { status: 200 });
+
+    // Revalidate Next.js cache
+    revalidateTag("blogs");
+    revalidateTag("homepage-recent-blogs");
+    revalidatePath("/");
+
+    return NextResponse.json(updatedBlog, {
+      status: 200,
+    });
   } catch (error) {
     console.error("Blog Update Error:", error);
+
     return NextResponse.json(
       { error: "Failed to update post" },
       { status: 500 }
@@ -153,46 +253,74 @@ revalidatePath("/");
   }
 }
 
-// --- DELETE (Delete a blog post - used by Dashboard) ---
-export async function DELETE(req: Request, { params }: { params: Promise<{ slug: string }> }) {
+// ==========================================
+// DELETE - Delete blog and associated FAQs
+// ==========================================
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<Params> }
+) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: "Not authenticated" },
+      { status: 401 }
+    );
   }
 
   const { slug: blogSlug } = await params;
 
   try {
     const blogToDelete = await prisma.blog.findUnique({
-      where: { slug: blogSlug },
+      where: {
+        slug: blogSlug,
+      },
     });
 
     if (!blogToDelete) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Blog not found" },
+        { status: 404 }
+      );
     }
 
-    // Delete associated FAQs first
+    // Delete FAQs first
     await prisma.faq.deleteMany({
-      where: { blogId: blogToDelete.id },
+      where: {
+        blogId: blogToDelete.id,
+      },
     });
 
-    // Delete the blog post
-    const deletedBlog = await prisma.blog.delete({
-      where: { id: blogToDelete.id },
+    // Delete blog
+    await prisma.blog.delete({
+      where: {
+        id: blogToDelete.id,
+      },
     });
-revalidateTag("blogs");
-revalidateTag("homepage-recent-blogs");
-revalidatePath("/");
+
+    // Revalidate cache
+    revalidateTag("blogs");
+    revalidateTag("homepage-recent-blogs");
+    revalidatePath("/");
+
     return NextResponse.json(
-      { message: "Blog and associated FAQs deleted successfully" },
+      {
+        message: "Blog and associated FAQs deleted successfully",
+      },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Blog Delete Error:", error);
-    if ((error as any).code === "P2025") {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+
+    if (error.code === "P2025") {
+      return NextResponse.json(
+        { error: "Blog not found" },
+        { status: 404 }
+      );
     }
+
     return NextResponse.json(
       { error: "Failed to delete post" },
       { status: 500 }

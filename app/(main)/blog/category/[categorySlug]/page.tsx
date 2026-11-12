@@ -169,142 +169,45 @@ export default async function CategoryBlogPage({
 
   return (
     <main className="min-h-screen w-full overflow-hidden bg-[#FFFCF8] text-[#17211D]">
-      <section className="relative border-b border-[#E7EDE3]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(83,132,64,0.13),_transparent_55%)]" />
+       <section
+        className="relative flex h-[45vh] min-h-0 items-center overflow-hidden border-b border-[#E7EDE3] bg-[#F5F8F2]"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=2000&q=85')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* Background Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F8F2] via-[#F5F8F2]/95 via-45% to-[#F5F8F2]/10" />
 
-        <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-8 sm:pb-20 sm:pt-28 lg:px-12 lg:pb-24 lg:pt-32">
-          <nav
-            aria-label="Breadcrumb"
-            className="mb-10 flex flex-wrap items-center gap-2 text-sm"
-          >
-            <Link
-              href="/blog"
-              className="font-medium text-[#68716A] transition hover:text-[#538440]"
-            >
-              Journal
-            </Link>
+        {/* Decorative Circles */}
+        <div className="pointer-events-none absolute -right-20 -top-32 h-96 w-96 rounded-full border border-[#DCE8D5]/60" />
+        <div className="pointer-events-none absolute -right-8 -top-20 h-72 w-72 rounded-full border border-[#DCE8D5]/60" />
 
-            <span className="text-[#B6C0B1]">/</span>
+        {/* Content */}
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="max-w-2xl">
 
-            <span
-              aria-current="page"
-              className="font-semibold text-[#538440]"
-            >
-              {category.name}
-            </span>
-          </nav>
-
-          <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
-            <div>
-              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#D6E5CF] bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3F6632]">
-                <Sparkles size={14} />
-                Explore our journal
-              </div>
-
-              <h1 className="max-w-3xl text-4xl font-semibold leading-[1.12] tracking-[-0.05em] sm:text-5xl lg:text-7xl">
-                {category.name}
-                <span className="text-[#538440]">.</span>
-                <br />
-                <span className="font-serif font-normal italic text-[#538440]">
-                  Made clearer.
-                </span>
-              </h1>
-
-              <p className="mt-7 max-w-xl text-base leading-8 text-[#68716A] sm:text-lg">
-                Explore helpful articles, expert insights, and practical
-                travel guides about {category.name.toLowerCase()}. Find the
-                information you need to make your next journey easier.
-              </p>
-
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <a
-                  href="#category-articles"
-                  className="inline-flex items-center gap-3 rounded-full bg-[#538440] px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-[#538440]/15 transition duration-300 hover:-translate-y-0.5 hover:bg-[#3F6632]"
-                >
-                  Explore articles
-                  <ArrowRight size={17} />
-                </a>
-
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#DDE6D8] bg-white px-6 py-4 text-sm font-semibold text-[#3F6632] transition hover:bg-[#EAF2E6]"
-                >
-                  <ArrowLeft size={16} />
-                  All topics
-                </Link>
-              </div>
-
-              <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-[#E7EDE3] pt-6">
-                <div className="flex items-center gap-2 text-sm text-[#68716A]">
-                  <BookOpen size={17} className="text-[#538440]" />
-                  Helpful guides
-                </div>
-
-                <div className="flex items-center gap-2 text-sm text-[#68716A]">
-                  <CheckCircle2 size={17} className="text-[#538440]" />
-                  Practical insights
-                </div>
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-[#538440]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#538440] sm:text-xs">
+                Our Blog
+              </span>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-              <div className="absolute -right-3 -top-3 h-24 w-24 rounded-full bg-[#D6E5CF]/80 blur-2xl" />
+            <h1 className="mt-4 text-4xl font-semibold leading-[1.15] tracking-tight text-[#20331D] sm:text-4xl lg:text-5xl">
+              Travel tips, guides {" "}
+              <span className="mt-1  font-serif font-normal italic text-[#538440]">
+                and stories.
+              </span>
+            </h1>
 
-              <div className="relative overflow-hidden rounded-[2rem] border border-[#DDE7D7] bg-[#EAF2E6] p-7 sm:p-10">
-                <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full border border-white/80" />
-                <div className="absolute -right-3 top-2 h-40 w-40 rounded-full border border-white/80" />
-                <div className="absolute bottom-10 left-10 h-36 w-36 rounded-full bg-white/50 blur-3xl" />
+            <p className="mt-2 max-w-xl text-xs leading-6 text-[#53634F] sm:text-sm md:text-base sm:leading-7">
+              Read our latest blogs for travel tips, flight information,
+              airline guides, and ideas for your next trip.
+            </p>
 
-                <div className="relative flex min-h-[270px] flex-col justify-between sm:min-h-[320px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#3F6632]">
-                      Your travel guide
-                    </span>
-
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#538440] shadow-sm">
-                      {category.slug === "airport" ? (
-                        <Plane size={22} />
-                      ) : (
-                        <Compass size={22} />
-                      )}
-                    </span>
-                  </div>
-
-                  <div>
-                    <p className="font-serif text-4xl leading-tight tracking-tight text-[#20331D] sm:text-5xl">
-                      Know more.
-                      <br />
-                      Travel smarter.
-                    </p>
-
-                    <p className="mt-5 max-w-xs text-sm leading-7 text-[#687A62]">
-                      Discover the answers, tips, and insights that help you
-                      prepare for the journey ahead.
-                    </p>
-                  </div>
-
-                  <div className="mt-8 flex items-center justify-between border-t border-[#CCDCC5] pt-5">
-                    <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#53684D]">
-                      SkyFlyWithUs journal
-                    </span>
-
-                    <ArrowRight size={19} className="text-[#538440]" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-5 -left-2 rounded-2xl border border-[#E5E9E1] bg-white px-5 py-4 shadow-[0_12px_35px_rgba(23,33,29,0.08)] sm:-left-5">
-                <p className="text-xs font-medium text-[#858D83]">
-                  Browse this topic
-                </p>
-
-                <p className="mt-1 text-sm font-bold text-[#20331D]">
-                  {metadata.totalPosts}{" "}
-                  {metadata.totalPosts === 1 ? "article" : "articles"} to
-                  explore
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -313,32 +216,12 @@ export default async function CategoryBlogPage({
 
       <section
         id="category-articles"
-        className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+        className="mx-auto max-w-7xl px-5  sm:px-8 mb-10  "
       >
-        <div className="mb-10 flex flex-col justify-between gap-5 border-b border-[#E7EDE3] pb-8 sm:flex-row sm:items-end">
-          <div>
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#538440]">
-              Curated for you
-            </p>
+        <div className="mb-7 flex flex-col justify-between gap-5 border-b border-[#E7EDE3]   sm:flex-row sm:items-end">
+ 
 
-            <h2 className="text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
-              Explore the insights
-              <span className="text-[#538440]">.</span>
-            </h2>
-
-            <p className="mt-3 max-w-lg text-sm leading-7 text-[#68716A] sm:text-base">
-              Browse our latest articles on {category.name.toLowerCase()} and
-              find useful information for your travels.
-            </p>
-          </div>
-
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E3E9DE] bg-white px-4 py-2.5 text-sm text-[#53684D]">
-            <BookOpen size={16} className="text-[#538440]" />
-            <span>
-              {metadata.totalPosts}{" "}
-              {metadata.totalPosts === 1 ? "article" : "articles"}
-            </span>
-          </div>
+            
         </div>
 
         {filteredBlogs.length > 0 ? (
