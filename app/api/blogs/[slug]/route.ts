@@ -3,7 +3,8 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from "next-auth/next";
 // @ts-ignore
 import { authOptions } from "@/lib/auth.config";
-
+import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 // Define the type for the dynamic parameter
 interface Params {
   slug: string;
@@ -139,7 +140,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
         updatedAt: new Date(),
       },
     });
-
+revalidateTag("blogs");
+revalidateTag("homepage-recent-blogs");
+revalidatePath("/");
     return NextResponse.json(updatedBlog, { status: 200 });
   } catch (error) {
     console.error("Blog Update Error:", error);
@@ -178,7 +181,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ slug:
     const deletedBlog = await prisma.blog.delete({
       where: { id: blogToDelete.id },
     });
-
+revalidateTag("blogs");
+revalidateTag("homepage-recent-blogs");
+revalidatePath("/");
     return NextResponse.json(
       { message: "Blog and associated FAQs deleted successfully" },
       { status: 200 }

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'; 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth.config"; 
-
+import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 // --- POST (Create Blog with Multiple Categories + Focus Keyword) ---
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -46,7 +47,9 @@ export async function POST(req: Request) {
         authorId: session.user.id,
       },
     });
-
+revalidateTag("blogs");
+revalidateTag("homepage-recent-blogs");
+revalidatePath("/");
     return NextResponse.json(newBlog, { status: 201 });
 
   } catch (error: any) {
