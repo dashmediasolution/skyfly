@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import sanitizeHtml from "sanitize-html";
 import { Prisma } from "@prisma/client";
-
 import prisma from "@/lib/prisma";
+import { submitToIndexNow } from "@/lib/indexnow";
 import { authOptions } from "@/lib/auth.config";
 
 export const dynamic = "force-dynamic";
@@ -228,7 +228,10 @@ export async function POST(request: NextRequest) {
                     cleanStatus === "PUBLISHED" ? new Date() : null,
             },
         });
-
+  await submitToIndexNow([
+    `https://skyflywithus.com/deals/${deal.slug}`,
+  ]);
+ 
         return NextResponse.json(
             {
                 success: true,

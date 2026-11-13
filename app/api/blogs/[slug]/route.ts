@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth/next";
 // @ts-ignore
 import { authOptions } from "@/lib/auth.config";
 import { revalidatePath, revalidateTag } from "next/cache";
-
+import { submitToIndexNow } from "@/lib/indexnow";
 interface Params {
   slug: string;
 }
@@ -239,7 +239,11 @@ export async function PATCH(
     revalidateTag("blogs");
     revalidateTag("homepage-recent-blogs");
     revalidatePath("/");
-
+ 
+  await submitToIndexNow([
+    `https://skyflywithus.com/blogs/${updatedBlog.slug}`,
+  ]);
+ 
     return NextResponse.json(updatedBlog, {
       status: 200,
     });

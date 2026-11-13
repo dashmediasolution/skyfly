@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import sanitizeHtml from "sanitize-html";
 import { Prisma } from "@prisma/client";
-
+import { submitToIndexNow } from "@/lib/indexnow";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/auth.config";
 type RouteContext = {
@@ -317,7 +317,9 @@ if (body.featuredImage !== undefined) {
             where: { id },
             data,
         });
-
+  await submitToIndexNow([
+    `https://skyflywithus.com/deals/${updatedDeal.slug}`,
+  ]);
         return NextResponse.json({
             success: true,
             message: "Deal updated successfully.",

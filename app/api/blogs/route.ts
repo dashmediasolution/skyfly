@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth.config";
 import { revalidatePath, revalidateTag } from "next/cache";
-
+import { submitToIndexNow } from "@/lib/indexnow";
 // ==========================================
 // POST - Create Blog with Multiple Categories + FAQs
 // ==========================================
@@ -120,6 +120,10 @@ export async function POST(req: Request) {
     revalidateTag("blogs");
     revalidateTag("homepage-recent-blogs");
     revalidatePath("/");
+ 
+  await submitToIndexNow([
+    `https://skyflywithus.com/blog/${newBlog?.slug}`,
+  ]);
 
     return NextResponse.json(newBlog, {
       status: 201,
