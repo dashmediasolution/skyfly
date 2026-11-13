@@ -10,7 +10,7 @@ import {
   Clock,Headset,Phone,
   BookOpen,
 } from "lucide-react";
-
+import FAQSchema from "../blog_components/faq-schema";
 import { LetterAvatar } from "@/components/ui/letter-avatar";
 import { Article } from "@/components/blog_components/blog-card";
 import { ArticleFaqs } from "@/components/blog_components/article-faq";
@@ -179,7 +179,7 @@ export default async function IndividualBlogPage({
   return (
     <main className="min-h-screen bg-[#FFFCF8]">
       <ArticleSchema article={post} />
-
+ <FAQSchema faqs={post?.faqs} />
       {/* Full-width banner */}
       <section className="w-full overflow-hidden bg-[#17211D]">
         <Image
