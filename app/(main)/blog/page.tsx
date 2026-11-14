@@ -1,12 +1,16 @@
 
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BookOpen, Plane } from "lucide-react";
+import { unstable_cache } from "next/cache";
+import { ArrowRight, BookOpen } from "lucide-react";
+
+import prisma from "@/lib/prisma";
 
 import {
   BlogCard,
   type Article,
 } from "@/components/blog_components/blog-card";
+
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { BlogCategoryNav } from "./blog_components/blog-category-nav";
 
@@ -50,11 +54,13 @@ export const metadata: Metadata = {
   },
 };
 
+const LIMIT = 6;
+
 const emptyMetadata = {
   totalPosts: 0,
   totalPages: 1,
   currentPage: 1,
-  limit: 6,
+  limit: LIMIT,
 };
 
 type BlogResponse = {
@@ -62,38 +68,61 @@ type BlogResponse = {
   metadata: typeof emptyMetadata;
 };
 
-async function getAllBlogs(page: number): Promise<BlogResponse> {
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL;
+const getBlogsPage = unstable_cache(
+  async (page: number): Promise<BlogResponse> => {
+    const skip = (page - 1) * LIMIT;
 
-    if (!baseUrl) {
-      console.error("NEXTAUTH_URL is not configured.");
-      return { data: [], metadata: emptyMetadata };
-    }
+    const [blogs, totalPosts] = await Promise.all([
+      prisma.blog.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: LIMIT,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          image: true,
+          categories: true,
+          metaDesc: true,
+          createdAt: true,
+        },
+      }),
 
-    const response = await fetch(
-      `${baseUrl}/api/blogs?page=${page}&limit=6`,
-      { cache: "no-store" }
-    );
+      prisma.blog.count(),
+    ]);
 
-    if (!response.ok) {
-      return { data: [], metadata: emptyMetadata };
-    }
-
-    const result = await response.json();
+    const articles: Article[] = blogs.map((blog) => ({
+      id: blog.id,
+      slug: blog.slug,
+      title: blog.title,
+      categories: blog.categories ?? [],
+      imageUrl: blog.image || null,
+      metaDesc: blog.metaDesc || "",
+      publishDate: new Intl.DateTimeFormat("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(blog.createdAt),
+    }));
 
     return {
-      data: Array.isArray(result.data) ? result.data : [],
+      data: articles,
       metadata: {
-        ...emptyMetadata,
-        ...(result.metadata ?? {}),
+        totalPosts,
+        totalPages: Math.max(1, Math.ceil(totalPosts / LIMIT)),
+        currentPage: page,
+        limit: LIMIT,
       },
     };
-  } catch (error) {
-    console.error("All Blogs Page Fetch Error:", error);
-    return { data: [], metadata: emptyMetadata };
+  },
+  ["published-blog-listing"],
+  {
+    revalidate: 3600,
+    tags: ["blogs"],
   }
-}
+);
 
 export default async function BlogPage({
   searchParams,
@@ -112,18 +141,16 @@ export default async function BlogPage({
       ? parsedPage
       : 1;
 
-  const { data: allBlogs, metadata } = await getAllBlogs(currentPage);
-
+  const {
+    data: allBlogs,
+    metadata,
+  } = await getBlogsPage(currentPage);
 
   return (
-    <main className="min-h-screen bg-white text-[#17211D] by-6">
-
-      {/* HERO SECTION - 50% VIEWPORT HEIGHT */}
-
-
-
+    <main className="min-h-screen bg-white py-6 text-[#17211D]">
+      {/* HERO SECTION */}
       <section
-        className="relative flex h-[45vh] min-h-0 items-center overflow-hidden border-b border-[#E7EDE3] bg-[#F5F8F2]"
+        className="relative flex h-[45vh] min-h-[300px] items-center overflow-hidden border-b border-[#E7EDE3] bg-[#F5F8F2]"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=2000&q=85')",
@@ -136,55 +163,54 @@ export default async function BlogPage({
 
         {/* Decorative Circles */}
         <div className="pointer-events-none absolute -right-20 -top-32 h-96 w-96 rounded-full border border-[#DCE8D5]/60" />
+
         <div className="pointer-events-none absolute -right-8 -top-20 h-72 w-72 rounded-full border border-[#DCE8D5]/60" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
           <div className="max-w-2xl">
-
             <div className="flex items-center gap-3">
               <span className="h-px w-8 bg-[#538440]" />
+
               <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#538440] sm:text-xs">
                 Our Blog
               </span>
             </div>
 
             <h1 className="mt-4 text-4xl font-semibold leading-[1.15] tracking-tight text-[#20331D] sm:text-4xl lg:text-5xl">
-              Travel tips, guides {" "}
-              <span className="mt-1  font-serif font-normal italic text-[#538440]">
+              Travel tips, guides{" "}
+              <span className="mt-1 font-serif font-normal italic text-[#538440]">
                 and stories.
               </span>
             </h1>
 
-            <p className="mt-2 max-w-xl text-xs leading-6 text-[#53634F] sm:text-sm md:text-base sm:leading-7">
+            <p className="mt-2 max-w-xl text-xs leading-6 text-[#53634F] sm:text-sm sm:leading-7 md:text-base">
               Read our latest blogs for travel tips, flight information,
               airline guides, and ideas for your next trip.
             </p>
-
           </div>
         </div>
       </section>
 
-
-
       {/* BLOG CONTENT */}
-      <section className="mx-auto max-w-7xl  ">
-
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <BlogCategoryNav />
 
-
         {/* LATEST ARTICLES */}
-        <div id="latest-articles" className="scroll-mt-6 mb-16">
-
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-[#E7EDE3] pb-4">
-
-          </div>
+        <div
+          id="latest-articles"
+          className="mb-16 scroll-mt-6"
+        >
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-[#E7EDE3] pb-4" />
 
           {allBlogs.length > 0 ? (
             <>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {allBlogs.map((article) => (
-                  <BlogCard key={article.id} article={article} />
+                  <BlogCard
+                    key={article.id}
+                    article={article}
+                  />
                 ))}
               </div>
 
@@ -199,7 +225,10 @@ export default async function BlogPage({
             </>
           ) : (
             <div className="rounded-xl border border-dashed border-[#D6E5CF] bg-[#F8FAF6] px-5 py-10 text-center">
-              <BookOpen className="mx-auto text-[#538440]" size={26} />
+              <BookOpen
+                className="mx-auto text-[#538440]"
+                size={26}
+              />
 
               <h3 className="mt-3 text-lg font-semibold text-[#20331D]">
                 Articles coming soon.
@@ -220,9 +249,7 @@ export default async function BlogPage({
             </div>
           )}
         </div>
-
       </section>
     </main>
   );
-
 }

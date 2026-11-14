@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
+import { revalidateTag } from "next/cache";
+import { toSlug } from "@/lib/detail-airline-policy-cache";
 
 const validPolicyTypes = ["FLIGHT", "NAME", "CANCELLATION", "BAGGAGE"] as const;
 type PolicyType = (typeof validPolicyTypes)[number];
@@ -287,7 +289,11 @@ export async function POST(request: Request) {
                 },
             },
         });
-
+revalidateTag(
+    `airline-policy-detail-${policy.policyType}-${toSlug(
+        policy.category.name
+    )}`
+);
         return NextResponse.json({ policy }, { status: 201 });
     } catch (error) {
         console.error("Failed to create airline policy:", error);
@@ -375,7 +381,11 @@ faqs: parsedFaqs.faqs as unknown as Prisma.InputJsonValue,
     },
   },
 });
-
+revalidateTag(
+    `airline-policy-detail-${policy.policyType}-${toSlug(
+        policy.category.name
+    )}`
+);
         return NextResponse.json({ policy });
     } catch (error) {
         console.error("Failed to update airline policy:", error);
@@ -402,6 +412,7 @@ export async function DELETE(request: Request) {
         }
 
         await prisma.airlinePolicy.delete({ where: { id } });
+        revalidateTag("airline-policies");
         return NextResponse.json({ message: "Airline policy deleted successfully." });
     } catch (error) {
         console.error("Failed to delete airline policy:", error);

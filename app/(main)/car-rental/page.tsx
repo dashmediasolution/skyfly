@@ -7,17 +7,12 @@ import {
     Headset,
     Gift,
     CalendarCheck,
-    Fuel,
-    Users,
-    BriefcaseBusiness,
-    Gauge,
-    CheckCircle2,
-    Plane,
-    Clock,
-    KeyRound,
+ 
 } from "lucide-react";
 import { createPageMetadata } from "@/lib/seo";
 export const metadata = createPageMetadata("carRental");
+export const dynamic = "force-static";
+
 const cars = [
     {
         category: "ECONOMY CARS",
@@ -140,28 +135,28 @@ const cars = [
 
 const destinations = [
     {
-        name: "Los Angeles",
-        image: "https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?auto=format&fit=crop&w=700&q=85",
+        name: "Paris",
+        image: "/images/destinations/paris.webp",
     },
     {
-        name: "New York",
-        image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=700&q=85",
+        name: "Singapore",
+         image: "/images/destinations/singapore.webp",
     },
     {
-        name: "Miami",
-        image: "https://images.unsplash.com/photo-1535498730771-e735b998cd64?auto=format&fit=crop&w=700&q=85",
+        name: "Tokyo",
+       image: "/images/destinations/tokyo.png",
     },
     {
-        name: "Las Vegas",
-        image: "https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?auto=format&fit=crop&w=700&q=85",
+        name: "London",
+        image: "/images/destinations/london2.webp",
     },
     {
-        name: "San Francisco",
-        image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=700&q=85",
+        name: "Dubai",
+       image: "/images/destinations/image002.webp",
     },
     {
-        name: "Orlando",
-        image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=700&q=85",
+        name: "Bali",
+    image: "/images/destinations/bali.png",
     },
 ];
 

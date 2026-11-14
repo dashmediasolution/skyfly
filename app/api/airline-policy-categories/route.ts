@@ -1,7 +1,7 @@
  import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
-
+import { revalidateTag } from "next/cache";
 export async function GET() {
   try {
     const categories = await prisma.airlinePolicyCategory.findMany({
@@ -59,7 +59,9 @@ export async function POST(request: Request) {
         name,
       },
     });
-
+revalidateTag(
+    `airline-policy-categories-${category.name}`
+);
     return NextResponse.json({ category }, { status: 201 });
   } catch (error) {
     if (

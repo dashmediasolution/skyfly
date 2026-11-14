@@ -1,19 +1,14 @@
-
 import Image from "next/image";
-import Link from "next/link";
-import {
+ import {
   BedDouble,
-  CalendarDays,
-  MapPin,
+   MapPin,
   Tag,
   ShieldCheck,
   Headset,
   Gift,
   CalendarCheck,
-  ArrowRight,
-  Plane,
-  CheckCircle2,
 } from "lucide-react";
+
 import {
   Carousel,
   CarouselContent,
@@ -21,8 +16,13 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+
 import { createPageMetadata } from "@/lib/seo";
+
 export const metadata = createPageMetadata("hotels");
+
+export const dynamic = "force-static";
+
 const hotels = [
   {
     category: "TOP AIRPORT HOTELS",

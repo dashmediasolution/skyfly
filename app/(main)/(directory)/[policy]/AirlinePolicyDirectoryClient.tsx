@@ -1,11 +1,8 @@
- 
+
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import { Metadata } from "next";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
     ArrowUpRight,
     Search,
@@ -18,14 +15,10 @@ import { Input } from "@/components/ui/input";
 
 type PolicyType = "FLIGHT" | "NAME" | "CANCELLATION" | "BAGGAGE";
 
-type AirlineCategory = {
+export type AirlineCategory = {
     id: string;
     name: string;
-    _count?: {
-        policies: number;
-    };
-};
- 
+}
 const policyConfig: Record<
     string,
     {
@@ -92,68 +85,18 @@ function toSlug(value: string) {
         .replace(/^-+|-+$/g, "");
 }
 
-export default function AirlinePolicyDirectoryPage() {
-    const params = useParams<{ policy: string }>();
-    const policyRoute = params?.policy?.toLowerCase();
-    const config = policyRoute ? policyConfig[policyRoute] : undefined;
+interface AirlinePolicyDirectoryClientProps {
+    policyRoute: string;
+    categories: AirlineCategory[];
+}
+
+export default function AirlinePolicyDirectoryClient({
+    policyRoute,
+    categories,
+}: AirlinePolicyDirectoryClientProps) {
+    const config = policyConfig[policyRoute];
 
     const [search, setSearch] = useState("");
-    const [categories, setCategories] = useState<AirlineCategory[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-
-  
-useEffect(() => {
-    const controller = new AbortController();
-
-    async function fetchCategories() {
-        try {
-            setLoading(true);
-            setError("");
-
-            const response = await fetch(
-                "/api/airline-policy-categories",
-                {
-                    method: "GET",
-                    signal: controller.signal,
-                    next: { revalidate: 3600 },
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Unable to load airline categories.");
-            }
-
-            const data: { categories?: AirlineCategory[] } =
-                await response.json();
-
-            setCategories(
-                Array.isArray(data.categories) ? data.categories : []
-            );
-        } catch (err) {
-            if (
-                err instanceof Error &&
-                err.name === "AbortError"
-            ) {
-                return;
-            }
-
-            setError(
-                err instanceof Error
-                    ? err.message
-                    : "Something went wrong while loading airline categories."
-            );
-        } finally {
-            if (!controller.signal.aborted) {
-                setLoading(false);
-            }
-        }
-    }
-
-    fetchCategories();
-
-    return () => controller.abort();
-}, []);
 
     const filteredCategories = useMemo(() => {
         const normalizedSearch = search.trim().toLowerCase();
@@ -175,9 +118,9 @@ useEffect(() => {
             category.name.toLowerCase().includes(normalizedSearch)
         );
     }, [categories, search]);
- 
-    if (!config || !policyRoute) {
-         return (
+
+    if (!config) {
+        return (
             <main className="flex min-h-[50vh] items-center justify-center bg-slate-50 px-5">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-slate-900">
@@ -203,8 +146,6 @@ useEffect(() => {
         <main className="min-h-screen bg-slate-50">
             {/* Hero */}
             <section className="relative isolate overflow-hidden bg-slate-950">
- 
-
                 <div className="relative mx-auto flex min-h-[250px] max-w-7xl flex-col justify-center px-5 py-12 sm:px-8 lg:min-h-[300px] lg:px-12">
                     <div className="mb-5 flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-md">
                         <FileText className="h-4 w-4" />
@@ -246,8 +187,6 @@ useEffect(() => {
                         <h2 className="text-sm font-bold uppercase tracking-[0.18em] text-teal-700">
                             Browse by airline
                         </h2>
-
- 
                     </div>
 
                     {/* Search */}
@@ -268,9 +207,7 @@ useEffect(() => {
 
                         <div className="mt-3 flex items-center justify-between px-1 text-sm text-slate-500">
                             <span>
-                                {loading
-                                    ? "Loading airlines..."
-                                    : `${filteredCategories.length} airlines listed`}
+                                {filteredCategories.length} airlines listed
                             </span>
 
                             <span className="hidden items-center gap-1 sm:flex">
@@ -280,102 +217,63 @@ useEffect(() => {
                         </div>
                     </div>
 
-                    {/* Loading */}
-                    {loading && (
-                        <div className="flex flex-col items-center justify-center py-16">
-                            <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-teal-700" />
-
-                            <p className="mt-4 text-sm text-slate-500">
-                                Loading airline categories...
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Error */}
-                    {!loading && error && (
-                        <div
-                            role="alert"
-                            className="rounded-2xl border border-red-200 bg-red-50 px-5 py-10 text-center"
-                        >
-                            <h3 className="text-lg font-bold text-red-800">
-                                Unable to load airline categories
-                            </h3>
-
-                            <p className="mt-2 text-sm text-red-700">
-                                {error}
-                            </p>
-
-                            <button
-                                type="button"
-                                onClick={() => window.location.reload()}
-                                className="mt-4 rounded-lg bg-red-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-800"
-                            >
-                                Try again
-                            </button>
-                        </div>
-                    )}
-
                     {/* Dynamic Category Cards */}
-                    {!loading &&
-                        !error &&
-                        filteredCategories.length > 0 && (
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-                                {filteredCategories.map((category) => (
-                                    <Link
-                                        key={category.id}
-                                        href={`/${policyRoute}/${toSlug(category.name)}`}
-                                        className="group flex min-h-[88px] items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5"
-                                    >
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-primary transition-colors group-hover:bg-teal-700 group-hover:text-white">
-                                            <Plane className="h-5 w-5" />
-                                        </div>
+                    {filteredCategories.length > 0 && (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+                            {filteredCategories.map((category) => (
+                                <Link
+                                    key={category.id}
+                                    href={`/${policyRoute}/${toSlug(category.name)}`}
+                                    className="group flex min-h-[88px] items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5"
+                                >
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-primary transition-colors group-hover:bg-teal-700 group-hover:text-white">
+                                        <Plane className="h-5 w-5" />
+                                    </div>
 
-                                        <div className="min-w-0 flex-1">
-                                            <h3 className="break-words text-sm font-bold leading-5 text-slate-900 transition-colors group-hover:text-primary sm:text-base">
-                                                {category.name}
-                                            </h3>
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="break-words text-sm font-bold leading-5 text-slate-900 transition-colors group-hover:text-primary sm:text-base">
+                                            {category.name}
+                                        </h3>
 
-                                            <p className="mt-1 text-xs text-slate-500">
-                                                {config.cardDescription}
-                                            </p>
-                                        </div>
+                                        <p className="mt-1 text-xs text-slate-500">
+                                            {config.cardDescription}
+                                        </p>
+                                    </div>
 
-                                        <ArrowUpRight className="h-5 w-5 shrink-0 text-slate-400 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-teal-700" />
-                                    </Link>
-                                ))}
-                            </div>
-                        )}
+                                    <ArrowUpRight className="h-5 w-5 shrink-0 text-slate-400 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-teal-700" />
+                                </Link>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Empty State */}
-                    {!loading &&
-                        !error &&
-                        filteredCategories.length === 0 && (
-                            <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-14 text-center">
-                                <Search className="mx-auto h-8 w-8 text-slate-400" />
+                    {filteredCategories.length === 0 && (
+                        <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-14 text-center">
+                            <Search className="mx-auto h-8 w-8 text-slate-400" />
 
-                                <h3 className="mt-4 text-lg font-bold text-slate-900">
-                                    {search
-                                        ? "No airlines found"
-                                        : "No airline categories available"}
-                                </h3>
+                            <h3 className="mt-4 text-lg font-bold text-slate-900">
+                                {search
+                                    ? "No airlines found"
+                                    : "No airline categories available"}
+                            </h3>
 
-                                <p className="mt-2 text-sm text-slate-500">
-                                    {search
-                                        ? "Try searching with another airline name."
-                                        : "Airline categories will appear here when they are added."}
-                                </p>
+                            <p className="mt-2 text-sm text-slate-500">
+                                {search
+                                    ? "Try searching with another airline name."
+                                    : "Airline categories will appear here when they are added."}
+                            </p>
 
-                                {search && (
-                                    <button
-                                        type="button"
-                                        onClick={() => setSearch("")}
-                                        className="mt-4 text-sm font-semibold text-primary hover:text-teal-900"
-                                    >
-                                        Clear search
-                                    </button>
-                                )}
-                            </div>
-                        )}
+                            {search && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSearch("")}
+                                    className="mt-4 text-sm font-semibold text-primary hover:text-teal-900"
+                                >
+                                    Clear search
+                                </button>
+                            )}
+                        </div>
+                    )}
 
                     {/* Information Note */}
                     <div className="mt-10 flex gap-4 rounded-2xl border border-teal-100 bg-teal-50/70 p-5 sm:p-6">

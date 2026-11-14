@@ -235,10 +235,8 @@ export async function PATCH(
       },
     });
 
-    // Revalidate Next.js cache
-    revalidateTag("blogs");
-    revalidateTag("homepage-recent-blogs");
-    revalidatePath("/");
+revalidateTag("blogs");
+revalidatePath("/blog");
  
   await submitToIndexNow([
     `https://skyflywithus.com/blogs/${updatedBlog.slug}`,
@@ -304,10 +302,8 @@ export async function DELETE(
       },
     });
 
-    // Revalidate cache
-    revalidateTag("blogs");
-    revalidateTag("homepage-recent-blogs");
-    revalidatePath("/");
+revalidateTag("blogs" );
+revalidatePath("/blog");
 
     return NextResponse.json(
       {

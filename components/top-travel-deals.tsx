@@ -1,96 +1,41 @@
 
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Tag,
-} from "lucide-react";
+import { ArrowRight, Tag } from "lucide-react";
+import { unstable_cache } from "next/cache";
 
-import TravelDealCard from "./travel-deal-card";
+import  prisma  from "@/lib/prisma";
+import TravelDealsCarousel from "./travel-deals-carousel";
 
 const PRIMARY = "#538440";
 
-type Deal = {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt?: string | null;
-  featuredImage?: string | null;
-  publishedAt?: string | null;
-};
-
-export default function TopTravelDeals() {
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  const [deals, setDeals] = useState<Deal[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchDeals = async () => {
-      try {
-        const response = await fetch("/api/deals", {
-          cache: "no-store",
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch deals");
-        }
-
-        const result = await response.json();
-
-        const data = Array.isArray(result)
-          ? result
-          : result.deals ?? [];
-
-        const latestDeals = [...data]
-          .sort(
-            (a, b) =>
-              new Date(b.publishedAt || 0).getTime() -
-              new Date(a.publishedAt || 0).getTime()
-          )
-          .slice(0, 3);
-
-        setDeals(latestDeals);
-      } catch (error) {
-        if (error instanceof Error && error.name !== "AbortError") {
-          console.error("Deals API error:", error);
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchDeals();
-
-    return () => controller.abort();
-  }, []);
-
-  const scrollCarousel = (direction: "left" | "right") => {
-    const container = carouselRef.current;
-    if (!container) return;
-
-    const card = container.querySelector<HTMLElement>(
-      "[data-deal-card]"
-    );
-
-    const scrollAmount = card
-      ? card.getBoundingClientRect().width + 16
-      : container.clientWidth;
-
-    container.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
-      behavior: "smooth",
+const getTopDeals = unstable_cache(
+  async () => {
+    return prisma.deal.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      orderBy: {
+        publishedAt: "desc",
+      },
+      take: 3,
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        excerpt: true,
+        featuredImage: true,
+      },
     });
-  };
+  },
+  ["homepage-top-travel-deals"],
+  {
+    revalidate: 432000,
+    tags: ["travel-deals"],
+  }
+);
+
+export default async function TopTravelDeals() {
+  const deals = await getTopDeals();
 
   return (
     <section
@@ -136,99 +81,9 @@ export default function TopTravelDeals() {
           </div>
         </div>
 
-        {/* Loading Skeleton */}
-        {loading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={index}
-                className="animate-pulse overflow-hidden border border-gray-100"
-              >
-                <div className="h-[170px] bg-slate-200 sm:h-[145px] lg:h-[152px]" />
-                <div className="space-y-3 p-4">
-                  <div className="h-5 w-2/3 rounded bg-slate-200" />
-                  <div className="h-4 w-full rounded bg-slate-100" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : deals.length > 0 ? (
-          <>
-            {/* Carousel */}
-            <div className="relative">
-
-              {/* Left Arrow */}
-              {deals.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel("left")}
-                  aria-label="Previous travel deals"
-                  className="absolute -left-3 top-[42%] z-10 hidden size-9 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-md transition hover:border-[#538440] hover:bg-[#538440] hover:text-white sm:flex lg:-left-4"
-                >
-                  <ChevronLeft className="size-5" />
-                </button>
-              )}
-
-              {/* Scrollable Cards */}
-              <div
-                ref={carouselRef}
-                className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              >
-                {deals.map((deal) => (
-                  <div
-                    key={deal.id || deal.slug}
-                    data-deal-card
-                    className="w-[88%] shrink-0 snap-start sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-10.667px)]"
-                  >
-                    <TravelDealCard
-                      slug={deal.slug}
-                      name={deal.title}
-                      destination=""
-                      tagline={deal.excerpt || ""}
-                      overlayTitle={deal.title}
-                      discount=""
-                      image={deal.featuredImage || ""}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Arrow */}
-              {deals.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel("right")}
-                  aria-label="Next travel deals"
-                  className="absolute -right-3 top-[42%] z-10 hidden size-9 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-md transition hover:border-[#538440] hover:bg-[#538440] hover:text-white sm:flex lg:-right-4"
-                >
-                  <ChevronRight className="size-5" />
-                </button>
-              )}
-            </div>
-
-            {/* Mobile Controls */}
-            {deals.length > 1 && (
-              <div className="mt-2 flex justify-center gap-3 sm:hidden">
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel("left")}
-                  aria-label="Previous travel deals"
-                  className="flex size-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-[#538440] hover:text-white"
-                >
-                  <ChevronLeft className="size-5" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel("right")}
-                  aria-label="Next travel deals"
-                  className="flex size-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-[#538440] hover:text-white"
-                >
-                  <ChevronRight className="size-5" />
-                </button>
-              </div>
-            )}
-          </>
+        {/* Deals */}
+        {deals.length > 0 ? (
+          <TravelDealsCarousel deals={deals} />
         ) : (
           <p className="py-10 text-center text-sm text-slate-500">
             No travel deals available.

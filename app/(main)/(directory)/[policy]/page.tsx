@@ -1,124 +1,63 @@
 
 import type { Metadata } from "next";
-import AirlinePolicyDirectoryPage from "./AirlinePolicyDirectoryPage";
+import { notFound } from "next/navigation";
 
-const SITE_URL = "https://skyflywithus.com";
+import AirlinePolicyDirectoryClient from "./AirlinePolicyDirectoryClient";
+import { getAirlinePolicyCategories } from "@/lib/airline-policy-cache";
 
-const policyMetadata: Record<
-  string,
-  {
-    title: string;
-    description: string;
-    keywords: string[];
-  }
-> = {
-  "flight-change": {
-    title: "Flight Change Policies by Airline | SkyFlyWithUs",
-    description:
-      "Explore airline flight change policies, ticket conditions, change fees, and rebooking requirements. Review applicable rules before changing your flight.",
-    keywords: [
-      "flight change policy",
-      "airline flight change policies",
-      "flight rescheduling policy",
-      "flight change fees",
-      "airline ticket change rules",
-      "flight rebooking",
-      "SkyFlyWithUs",
-    ],
-  },
+const policyRoutes = {
+    "flight-change": "FLIGHT",
+    "name-change": "NAME",
+    cancellation: "CANCELLATION",
+    baggage: "BAGGAGE",
+} as const;
 
-  "name-change": {
-    title: "Airline Name Change and Correction Policies | SkyFlyWithUs",
-    description:
-      "Find airline name correction policies, passenger name spelling rules, ticket requirements, and applicable fees before requesting a correction.",
-    keywords: [
-      "airline name change policy",
-      "flight ticket name correction",
-      "passenger name correction",
-      "airline name correction rules",
-      "flight ticket spelling mistake",
-      "name correction fees",
-      "SkyFlyWithUs",
-    ],
-  },
+type PolicyRoute = keyof typeof policyRoutes;
 
-  cancellation: {
-    title: "Airline Cancellation and Refund Policies | SkyFlyWithUs",
-    description:
-      "Explore airline cancellation and refund policies, ticket refund conditions, cancellation fees, and fare rules before cancelling your flight.",
-    keywords: [
-      "airline cancellation policy",
-      "flight cancellation policy",
-      "airline refund policy",
-      "flight cancellation fees",
-      "flight refund rules",
-      "ticket refund conditions",
-      "SkyFlyWithUs",
-    ],
-  },
-
-  baggage: {
-    title: "Airline Baggage Allowance and Policies | SkyFlyWithUs",
-    description:
-      "Check airline baggage policies, cabin baggage allowances, checked luggage limits, weight restrictions, and applicable excess baggage fees.",
-    keywords: [
-      "airline baggage policy",
-      "baggage allowance",
-      "cabin baggage allowance",
-      "checked baggage limits",
-      "airline luggage restrictions",
-      "excess baggage fees",
-      "SkyFlyWithUs",
-    ],
-  },
-};
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ policy: string }>;
-}): Promise<Metadata> {
-  const { policy } = await params;
-  const slug = policy.toLowerCase();
-  const metadata = policyMetadata[slug];
-
-  if (!metadata) {
-    return {
-      title: "Policy Directory Not Found | SkyFlyWithUs",
-      robots: {
-        index: false,
-        follow: false,
-      },
-    };
-  }
-
-  const canonicalUrl = `${SITE_URL}/${slug}`;
-
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    keywords: metadata.keywords,
-
-    alternates: {
-      canonical: canonicalUrl,
-    },
-
-    openGraph: {
-      title: metadata.title,
-      description: metadata.description,
-      url: canonicalUrl,
-      siteName: "SkyFlyWithUs",
-      type: "website",
-    },
-
-    twitter: {
-      card: "summary",
-      title: metadata.title,
-      description: metadata.description,
-    },
-  };
+interface PageProps {
+    params: Promise<{
+        policy: string;
+    }>;
 }
 
-export default function Page() {
-  return <AirlinePolicyDirectoryPage />;
+export async function generateMetadata({
+    params,
+}: PageProps): Promise<Metadata> {
+    const { policy } = await params;
+
+    const titles: Record<PolicyRoute, string> = {
+        "flight-change": "Flight Change",
+        "name-change": "Name Change",
+        cancellation: "Cancellation & Refund",
+        baggage: "Baggage",
+    };
+
+    if (!(policy in titles)) {
+        return { title: "Policy Directory Not Found" };
+    }
+
+    return {
+        title: `${titles[policy as PolicyRoute]} Airline Policies`,
+    };
+}
+
+export default async function AirlinePolicyDirectoryPage({
+    params,
+}: PageProps) {
+    const { policy } = await params;
+
+    if (!(policy in policyRoutes)) {
+        notFound();
+    }
+
+    const policyType = policyRoutes[policy as PolicyRoute];
+
+    const categories = await getAirlinePolicyCategories(policyType);
+
+    return (
+        <AirlinePolicyDirectoryClient
+            policyRoute={policy}
+            categories={categories}
+        />
+    );
 }

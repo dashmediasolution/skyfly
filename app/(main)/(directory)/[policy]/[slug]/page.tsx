@@ -1,214 +1,164 @@
 
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
 import AirlinePolicyDetailPage from "./AirlinePolicyDetailPage";
+
+import {
+    policyRoutes,
+    getAirlinePolicyDetail,
+    getRelatedAirlinePolicies,
+} from "@/lib/detail-airline-policy-cache";
 
 const SITE_URL = "https://skyflywithus.com";
 
-const policyConfig: Record<
-  string,
-  {
-    type: string;
-    label: string;
-  }
-> = {
-  "flight-change": {
-    type: "FLIGHT",
-    label: "Flight Change Policy",
-  },
-  "name-change": {
-    type: "NAME",
-    label: "Name Change Policy",
-  },
-  cancellation: {
-    type: "CANCELLATION",
-    label: "Cancellation Policy",
-  },
-  baggage: {
-    type: "BAGGAGE",
-    label: "Baggage Policy",
-  },
-};
-
 type PageProps = {
-  params: Promise<{
-    policy: string;
-    slug: string;
-  }>;
+    params: Promise<{
+        policy: string;
+        slug: string;
+    }>;
 };
 
-type AirlineCategory = {
-  id: string;
-  name: string;
+const policyLabels = {
+    FLIGHT: "Flight Change Policy",
+    NAME: "Name Change Policy",
+    CANCELLATION: "Cancellation Policy",
+    BAGGAGE: "Baggage Policy",
 };
 
-type AirlinePolicy = {
-  id: string;
-  airlineName: string;
-  slug: string;
-  excerpt?: string | null;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  metaKeywords?: string[] | null;
-  status: string;
-  categoryId: string;
-  category?: {
-    id: string;
-    name: string;
-  };
-};
+async function getPageData(policy: string, slug: string) {
+    const policyType = policyRoutes[policy];
 
-function toSlug(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    if (!policyType) {
+        return null;
+    }
+
+    const result = await getAirlinePolicyDetail(
+        policyType,
+        slug
+    );
+
+    if (!result?.airline || !result.policy) {
+        return null;
+    }
+
+    const relatedPolicies = await getRelatedAirlinePolicies(
+        policyType,
+        result.airline.id
+    );
+
+    return {
+        policyType,
+        airline: result.airline,
+        policy: result.policy,
+        relatedPolicies,
+    };
 }
 
 export async function generateMetadata({
-  params,
+    params,
 }: PageProps): Promise<Metadata> {
-  const { policy, slug } = await params;
+    const { policy, slug } = await params;
 
-  const policyRoute = policy.toLowerCase();
-  const airlineSlug = slug.toLowerCase();
-  const config = policyConfig[policyRoute];
+    const policyType = policyRoutes[policy];
 
-  if (!config) {
-    return {
-      title: "Policy Not Found | SkyFlyWithUs",
-      
-    };
-  }
-
-  const canonicalUrl =
-    `${SITE_URL}/${policyRoute}/${airlineSlug}`;
-
-  const fallbackTitle =
-    `${airlineSlug
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ")} ${config.label} | SkyFlyWithUs`;
-
-  const fallbackDescription =
-    `Read airline-specific ${config.label.toLowerCase()} information, applicable ticket conditions, and important travel requirements. Check the airline's current rules before making changes to your booking.`;
-
-  try {
-    const categoriesResponse = await fetch(
-      `${SITE_URL}/api/airline-policy-categories`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!categoriesResponse.ok) {
-      throw new Error("Unable to fetch airline categories");
+    if (!policyType) {
+        return {
+            title: "Policy Not Found | SkyFlyWithUs",
+        };
     }
 
-    const categoriesData = await categoriesResponse.json();
+    const canonicalUrl = `${SITE_URL}/${policy}/${slug}`;
 
-    const categories: AirlineCategory[] =
-      categoriesData.categories ?? [];
+    const label = policyLabels[policyType];
 
-    const airline = categories.find(
-      (category) => toSlug(category.name) === airlineSlug
-    );
+    const fallbackTitle =
+        `${slug.split("-").map(
+            (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(" ")} ${label} | SkyFlyWithUs`;
 
-    if (!airline) {
-      return {
-        title: fallbackTitle,
-        description: fallbackDescription,
-        alternates: {
-          canonical: canonicalUrl,
-        },
-      };
+    const fallbackDescription =
+        `Read airline-specific ${label.toLowerCase()} information, applicable ticket conditions, and important travel requirements.`;
+
+    try {
+        const result = await getAirlinePolicyDetail(
+            policyType,
+            slug
+        );
+
+        if (!result?.policy) {
+            return {
+                title: fallbackTitle,
+                description: fallbackDescription,
+                alternates: {
+                    canonical: canonicalUrl,
+                },
+            };
+        }
+
+        const airlinePolicy = result.policy;
+
+        const title =
+            airlinePolicy.metaTitle?.trim() || fallbackTitle;
+
+        const description =
+            airlinePolicy.metaDescription?.trim() ||
+            airlinePolicy.excerpt?.trim() ||
+            fallbackDescription;
+
+        const keywords =
+            airlinePolicy.metaKeywords?.filter(
+                (keyword) => keyword.trim().length > 0
+            ) ?? [];
+
+        return {
+            title,
+            description,
+            ...(keywords.length > 0 ? { keywords } : {}),
+            alternates: {
+                canonical: canonicalUrl,
+            },
+            openGraph: {
+                title,
+                description,
+                url: canonicalUrl,
+                siteName: "SkyFlyWithUs",
+                type: "article",
+            },
+            twitter: {
+                card: "summary",
+                title,
+                description,
+            },
+        };
+    } catch {
+        return {
+            title: fallbackTitle,
+            description: fallbackDescription,
+            alternates: {
+                canonical: canonicalUrl,
+            },
+        };
     }
-
-    const query = new URLSearchParams({
-      categoryId: airline.id,
-      policyType: config.type,
-      status: "PUBLISHED",
-    });
-
-    const policyResponse = await fetch(
-      `${SITE_URL}/api/airline-policies?${query.toString()}`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!policyResponse.ok) {
-      throw new Error("Unable to fetch airline policy");
-    }
-
-    const policyData = await policyResponse.json();
-
-    const policies: AirlinePolicy[] =
-      policyData.policies ?? [];
-
-    const airlinePolicy = policies.find(
-      (item) =>
-        item.categoryId === airline.id &&
-        item.status === "PUBLISHED"
-    );
-
-    if (!airlinePolicy) {
-      return {
-        title: fallbackTitle,
-        description: fallbackDescription,
-        alternates: {
-          canonical: canonicalUrl,
-        },
-      };
-    }
-
-    const title =
-      airlinePolicy.metaTitle?.trim() || fallbackTitle;
-
-    const description =
-      airlinePolicy.metaDescription?.trim() ||
-      airlinePolicy.excerpt?.trim() ||
-      fallbackDescription;
-
-    const keywords =
-      airlinePolicy.metaKeywords?.filter(
-        (keyword) => keyword.trim().length > 0
-      ) ?? [];
-
-    return {
-      title,
-      description,
-      ...(keywords.length > 0 ? { keywords } : {}),
-
-      alternates: {
-        canonical: canonicalUrl,
-      },
-
-      openGraph: {
-        title,
-        description,
-        url: canonicalUrl,
-        siteName: "SkyFlyWithUs",
-        type: "article",
-      },
-
-      twitter: {
-        card: "summary",
-        title,
-        description,
-      },
-    };
-  } catch {
-    return {
-      title: fallbackTitle,
-      description: fallbackDescription,
-      alternates: {
-        canonical: canonicalUrl,
-      },
-    };
-  }
 }
 
-export default function Page() {
-  return <AirlinePolicyDetailPage />;
+export default async function Page({ params }: PageProps) {
+    const { policy, slug } = await params;
+
+    const data = await getPageData(policy, slug);
+
+    if (!data) {
+        notFound();
+    }
+
+    return (
+        <AirlinePolicyDetailPage
+            airline={data.airline}
+            policy={data.policy}
+            relatedPolicies={data.relatedPolicies}
+            policyType={data.policyType}
+            policyRoute={policy}
+        />
+    );
 }

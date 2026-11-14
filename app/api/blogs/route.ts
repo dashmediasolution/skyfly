@@ -117,9 +117,8 @@ export async function POST(req: Request) {
     });
 
     // 5. Revalidate cache
-    revalidateTag("blogs");
-    revalidateTag("homepage-recent-blogs");
-    revalidatePath("/");
+ revalidateTag("blogs");
+revalidatePath("/blog");
  
   await submitToIndexNow([
     `https://skyflywithus.com/blog/${newBlog?.slug}`,

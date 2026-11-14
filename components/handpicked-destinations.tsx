@@ -1,54 +1,40 @@
 
-"use client";
-
-import { useEffect, useState } from "react";
 import { Plane } from "lucide-react";
 
-import DestinationCard, {
-  type DestinationCardProps,
-} from "./destination-card";
+import prisma from "@/lib/prisma";
+import DestinationCard from "./destination-card";
 
-export default function HandpickedDestinations() {
-  const [destinations, setDestinations] = useState<DestinationCardProps[]>([]);
-  const [loading, setLoading] = useState(true);
+export const revalidate = 432000; // 5 days
 
-  useEffect(() => {
-    const fetchDestinations = async () => {
-      try {
-        const response = await fetch("/api/flight-destinations", {
-          cache: "no-store",
-        });
+export default async function HandpickedDestinations() {
+  const data = await prisma.flightDestination.findMany({
+    where: {
+      status: "PUBLISHED",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 8,
+    select: {
+      id: true,
+      destination: true,
+      country: true,
+      excerpt: true,
+      title: true,
+      heroImage: true,
+      slug: true,
+    },
+  });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch destinations");
-        }
-
-        const result = await response.json();
-
-        const data = Array.isArray(result)
-          ? result
-          : result.destinations ?? [];
-
-        const latestDestinations = data.slice(0, 8).map((item: any) => ({
-          id: item.id || item._id,
-          name: item.destination,
-          country: item.country,
-          tagline: item.excerpt || "",
-          overlayTitle: item.title,
-          image: item.heroImage || "/images/destination-placeholder.jpg",
-          slug: item.slug,
-        }));
-
-        setDestinations(latestDestinations);
-      } catch (error) {
-        console.error("Destination API error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDestinations();
-  }, []);
+  const destinations = data.map((item) => ({
+    id: item.id,
+    name: item.destination,
+    country: item.country,
+    tagline: item.excerpt || "",
+    overlayTitle: item.title,
+    image: item.heroImage || "/images/destination-placeholder.jpg",
+    slug: item.slug,
+  }));
 
   return (
     <section
@@ -56,7 +42,6 @@ export default function HandpickedDestinations() {
       className="relative isolate overflow-hidden bg-white px-3 py-9 sm:px-5 sm:py-6 md:px-6 md:py-8 lg:px-8 lg:py-10"
     >
       <div className="mx-auto w-full max-w-7xl">
-
         {/* Heading */}
         <div className="mb-6 text-center sm:mb-8 lg:mb-10">
           <div className="mb-3 flex items-center justify-center gap-2.5 text-emerald-600 sm:gap-3">
@@ -78,23 +63,8 @@ export default function HandpickedDestinations() {
           </p>
         </div>
 
-        {/* Loading */}
-        {loading ? (
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="animate-pulse overflow-hidden border border-slate-200"
-              >
-                <div className="h-44 bg-slate-200" />
-                <div className="space-y-3 p-4">
-                  <div className="h-5 w-2/3 rounded bg-slate-200" />
-                  <div className="h-4 w-full rounded bg-slate-100" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : destinations.length > 0 ? (
+        {/* Destinations */}
+        {destinations.length > 0 ? (
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
             {destinations.map((destination) => (
               <DestinationCard
