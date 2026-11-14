@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
 import Script from 'next/script';
 import { GoogleAnalytics } from "@next/third-parties/google";
-
+import Dialog from '@/components/main_components/MainDialog';
 
 
 
@@ -147,6 +147,7 @@ export default async function RootLayout({
         {/* SessionProvider and Toaster wrap EVERYTHING */}
         <SessionProvider session={session}>
           {children} {/* <-- This will be your (main) or (dashboard) layout */}
+          <Dialog/>
           <Toaster />
         </SessionProvider>
         <GoogleAnalytics gaId="G-XJF89G4WG3" />

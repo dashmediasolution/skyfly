@@ -11,13 +11,16 @@ import HandpickedDestinations from "@/components/handpicked-destinations";
 import TopTravelDeals from "@/components/top-travel-deals";
 import TravelInformation from "@/components/homePage/TravelInformation";
 import { createPageMetadata } from "@/lib/seo";
+import Dialog from "@/components/main_components/MainDialog";
 export const metadata = createPageMetadata("home");
- 
+
 
 export default function Home() {
   return (
 
     <main className="flex min-h-screen bg-white flex-col items-center justify-between ">
+   
+        
       <HeroSection
         image="/images/HeroBanner.webp"
         alt="Explore destinations around the world"
