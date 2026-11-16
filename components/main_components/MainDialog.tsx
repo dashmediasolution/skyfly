@@ -4,122 +4,150 @@
 import { useState } from "react";
 import {
     X,
-    Megaphone,
     Phone,
-    RefreshCw,
+    Megaphone,
     ShieldCheck,
+    RefreshCw,
     Clock3,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function Dialog() {
     const [flag, setFlag] = useState(true);
-
-    if (!flag) return null;
-
     const phoneNumber = "+18555093791";
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-350/60 px-4 py-5 backdrop-blur-sm">
-            <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="dialog-title"
-                className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl"
-            >
-                {/* Close Button */}
-                <button
-                    type="button"
-                    onClick={() => setFlag(false)}
-                    aria-label="Close dialog"
-                    className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+        <AnimatePresence>
+            {flag && (
+                <motion.div
+                    key="dialog-backdrop"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 px-4 py-3 backdrop-blur-sm"
                 >
-                    <X size={17} />
-                </button>
+                    <motion.div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="dialog-title"
+                        initial={{
+                            opacity: 0,
+                            scale: 0.85,
+                            y: 25,
+                        }}
+                        animate={{
+                            opacity: 1,
+                            scale: 1,
+                            y: 0,
+                        }}
+                        exit={{
+                            opacity: 0,
+                            scale: 0.9,
+                            y: 20,
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 25,
+                        }}
+                        className="relative flex min-h-0 w-full max-w-sm flex-col items-center justify-evenly rounded-2xl bg-white px-5 py-6 text-center shadow-2xl"
+                    >
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setFlag(false)}
+                            aria-label="Close dialog"
+                            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+                        >
+                            <X size={17} />
+                        </button>
 
-                <div className="px-5 pb-6 pt-9 sm:px-7 sm:pb-7 sm:pt-10">
+                        {/* Offer Badge */}
+                        <div className="flex w-fit items-center gap-2 rounded-full bg-[#E6F6F2] px-3 py-2 text-[11px] font-bold text-[#00876A]">
+                            <Megaphone size={14} />
+                            Call Us Today
+                        </div>
 
-                    {/* Badge */}
-                    <div className="mx-auto flex w-fit items-center gap-2 rounded-full bg-[#E6F6F2] px-4 py-2 text-xs font-bold text-[#00876A]">
-                        <Megaphone size={16} />
-                        Call Us Today!
-                    </div>
-
-                    {/* Heading */}
-                    <div className="mt-5 text-center">
+                        {/* Heading */}
                         <h2
                             id="dialog-title"
-                            className="text-2xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-3xl"
+                            className="mt-2 text-lg font-extrabold leading-snug text-slate-900 sm:text-xl"
                         >
-                            Plan Your Trip
-                            <span className="block text-[#009966]">
-                                with Confidence!
+                            Limited-Time{" "}
+                            <span className="text-[#008F70]">
+                                Phone-Only Deal!
                             </span>
                         </h2>
 
-                        <div className="mx-auto mt-3 h-1 w-16 rounded-full bg-[#009966]" />
+                        {/* Discount */}
+                        <h3 className="flex flex-col items-center gap-2 text-5xl font-black leading-none text-[#008F70]">
+                            <span className="text-2xl">Up to</span>
+                            50% OFF
+                        </h3>
 
+                        {/* Offer Details */}
+                        <div>
+                            <p className="mt-2 text-base font-semibold text-slate-700">
+                                Flight Ticket Reservations
+                            </p>
 
-                    </div>
-
-                    {/* Description */}
-                    <p className="mx-auto mt-3 max-w-sm text-sm flex justify-center items-center md:text-base leading-5 text-slate-600">
-                    Need help with your travel plans? Our dedicated travel assistance team is here to make your journey easier. 
-                     Whether you need help with travel-related questions, we're just a call away.
-                    </p>
-
-                    <a
-                        href="tel:+18555093791"
-                        className="mt-3  flex w-full justify-center items-center gap-2 text-lg md:text-xl font-extrabold text-[#008F70]"
-                    >
-                        <Phone size={18} />
-                        +1 (855) 509-3791
-                    </a>
-
-                    {/* Compact Trust Indicators */}
-                    <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[#EAF7F3] px-5 py-3">
-                        <div className="flex flex-col items-center gap-1.5">
-                            <ShieldCheck size={22} className="text-[#00876A]" />
-                            <span className="text-[10px] font-semibold text-slate-700 sm:text-xs">
-                                Reliable Support
-                            </span>
+                            <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-slate-600">
+                                Planning your next trip? Call our travel assistance
+                                team to explore exclusive phone-only deals and
+                                available savings on flight reservations.
+                            </p>
                         </div>
 
-                        <div className="flex flex-col items-center gap-1.5">
-                            <Clock3 size={22} className="text-[#00876A]" />
-                            <span className="text-[10px] font-semibold text-slate-700 sm:text-xs">
-                                24/7 Assistance
-                            </span>
-                        </div>
-
-                        <div className="flex flex-col items-center gap-1.5">
-                            <RefreshCw size={22} className="text-[#00876A]" />
-                            <span className="text-[10px] font-semibold text-slate-700 sm:text-xs">
-                                Easy Rebooking
-                            </span>
-                        </div>
-                    </div>
-                    {/* Call Button */}
-                    <div className="mt-6 border-t border-slate-200 pt-5 text-center">
-                        <p className="mb-3 text-xs font-medium text-slate-600">
-                            Talk to a travel expert today
-                        </p>
-
+                        {/* Phone Number */}
                         <a
                             href={`tel:${phoneNumber}`}
-                            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#008F70] px-4 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#00765C] sm:text-base"
+                            className="my-3 flex items-center justify-center gap-2 text-lg font-extrabold text-[#008F70]"
                         >
-                            <Phone size={18} />
+                            <Phone size={19} />
                             +1 (855) 509-3791
                         </a>
 
-                        <p className="mt-3 text-[11px] text-slate-500">
-                            Speak with our travel assistance team
-                        </p>
-                    </div>
-                </div>
+                        {/* Trust Indicators */}
+                        <div className="grid w-full grid-cols-3 items-center gap-1 rounded-xl bg-[#EAF7F3] px-2 py-4">
+                            <div className="flex flex-col items-center gap-2">
+                                <ShieldCheck size={22} className="text-[#00876A]" />
+                                <span className="text-center text-[10px] font-semibold text-slate-700 sm:text-xs">
+                                    Reliable Support
+                                </span>
+                            </div>
 
-                <div className="h-1 w-full bg-gradient-to-r from-[#B9E8D9] via-[#009966] to-[#B9E8D9]" />
-            </div>
-        </div>
+                            <div className="flex flex-col items-center gap-2">
+                                <Clock3 size={22} className="text-[#00876A]" />
+                                <span className="text-center text-[10px] font-semibold text-slate-700 sm:text-xs">
+                                    24/7 Assistance
+                                </span>
+                            </div>
+
+                            <div className="flex flex-col items-center gap-2">
+                                <RefreshCw size={22} className="text-[#00876A]" />
+                                <span className="text-center text-[10px] font-semibold text-slate-700 sm:text-xs">
+                                    Rebooking Help
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Call Button */}
+                        <div className="mt-3 w-full">
+                            <a
+                                href={`tel:${phoneNumber}`}
+                                className="flex w-full items-center justify-center gap-2 rounded-full bg-[#008F70] px-3 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#00765C] sm:text-base"
+                            >
+                                <Phone size={17} />
+                                Call Now to Claim Your Deal!
+                            </a>
+
+                            <p className="mt-3 text-[11px] text-slate-500">
+                                Speak with our travel assistance team
+                            </p>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
