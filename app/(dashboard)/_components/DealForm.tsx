@@ -160,8 +160,7 @@ const handleImageUpload = async (
       id: toastId,
     });
 
-    console.log("Deal image uploaded:", data.imageUrl);
-    console.log("Cloudinary public ID:", data.publicId);
+ 
   } catch (error) {
     console.error("Deal image upload error:", error);
 

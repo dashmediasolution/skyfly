@@ -11,12 +11,20 @@ import {
     Clock3,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-
+import { useSelectedLayoutSegments } from "next/navigation";
+import { usePathname } from "next/navigation";
 export default function Dialog() {
+    const pathName = usePathname()
+    const segments = useSelectedLayoutSegments();
     const [flag, setFlag] = useState(true);
     const phoneNumber = "+18555093791";
-
+    const  path = pathName?.split("/")?.[1]
+      if(path === "dashboard" || path === "login"  || segments?.includes("__PAGE_NOT_FOUND__"))
+     {
+        return null
+     }
     return (
+       
         <AnimatePresence>
             {flag && (
                 <motion.div

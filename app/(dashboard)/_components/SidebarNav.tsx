@@ -7,7 +7,8 @@ import {
   MessageSquare,
   FileText,
   Plane,
-  FolderOpen,MapPin ,Tag
+  FolderOpen,MapPin ,Tag,
+  Users
 } from "lucide-react";
 
 const navLinks = [
@@ -30,6 +31,11 @@ const navLinks = [
   href: "/dashboard/deals",
   label: "Manage Deals",
   icon: Tag,
+},
+ {
+  href: "/dashboard/group-travel",
+  label: "Manage Group Travel",
+  icon: Users,
 },
   {
     href: "/dashboard/flight-destinations",

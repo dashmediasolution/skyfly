@@ -3,7 +3,8 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /admin/
+Disallow: /admin/ 
+Disallow: /dashboard/
 Disallow: /private/
 Disallow: /_next/static/chunks/
 

@@ -500,8 +500,7 @@ async function main() {
             });
 
             updatedCount++;
-            console.log(`Updated baggage policy: ${airlineName}`);
-        } else {
+         } else {
             await prisma.airlinePolicy.create({
                 data: {
                     ...policyData,
@@ -512,14 +511,9 @@ async function main() {
             });
 
             createdCount++;
-            console.log(`Created baggage policy: ${airlineName}`);
-        }
+         }
     }
 
-    console.log("\nBaggage policy seeding completed.");
-    console.log(`Created: ${createdCount}`);
-    console.log(`Updated: ${updatedCount}`);
-    console.log(`Total categories: ${categories.length}`);
 }
 
 main()

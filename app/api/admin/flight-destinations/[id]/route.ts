@@ -11,8 +11,7 @@ export const dynamic = "force-dynamic";
 
 async function checkAdmin() {
     const session = await getServerSession(authOptions);
-    console.log(session)
-    if (!session?.user?.email) {
+     if (!session?.user?.email) {
         return false;
     }
 

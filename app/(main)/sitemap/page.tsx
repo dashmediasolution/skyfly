@@ -8,7 +8,7 @@ import prisma from "@/lib/prisma";
 export const metadata: Metadata = {
   title: "Sitemap | SkyFlyWithUs",
   description:
-    "Explore SkyFlyWithUs pages, flight destinations, airline policies, and travel deals.",
+    "Explore SkyFlyWithUs pages, flight destinations, airline policies, group travel pages, and travel deals.",
 };
 
 const quickLinks = [
@@ -28,7 +28,7 @@ const quickLinks = [
 ];
 
 const policyTypeRoutes: Record<string, string> = {
-   FLIGHT: "flight-change",
+  FLIGHT: "flight-change",
   NAME: "name-change",
   CANCELLATION: "cancellation",
   BAGGAGE: "baggage",
@@ -118,7 +118,12 @@ function SitemapLinkGrid({
 }
 
 export default async function SitemapPage() {
-  const [destinations, deals, airlinePolicies] = await Promise.all([
+  const [
+    destinations,
+    deals,
+    groupTravels,
+    airlinePolicies,
+  ] = await Promise.all([
     // Published flight destinations
     prisma.flightDestination.findMany({
       where: {
@@ -135,6 +140,20 @@ export default async function SitemapPage() {
 
     // Published travel deals
     prisma.deal.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      select: {
+        title: true,
+        slug: true,
+      },
+      orderBy: {
+        title: "asc",
+      },
+    }),
+
+    // Published group travel pages
+    prisma.groupTravel.findMany({
       where: {
         status: "PUBLISHED",
       },
@@ -175,6 +194,12 @@ export default async function SitemapPage() {
     href: `/deals/${deal.slug}`,
   }));
 
+  // Dynamic group travel links
+  const groupTravelLinks = groupTravels.map((groupTravel) => ({
+    label: groupTravel.title,
+    href: `/group-travel/${groupTravel.slug}`,
+  }));
+
   // Group airline policies by policy type
   const groupedPolicies: Record<
     string,
@@ -208,7 +233,7 @@ export default async function SitemapPage() {
     ).sort((a, b) => a.label.localeCompare(b.label));
   });
 
-  // Include standard policy types first, followed by any additional types
+  // Include standard policy types first
   const availablePolicyTypes = [
     ...policyOrder,
     ...Object.keys(groupedPolicies)
@@ -254,7 +279,6 @@ export default async function SitemapPage() {
 
       {/* Sitemap Links */}
       <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
-
         {/* Quick Links */}
         <SitemapSection title="Quick Links">
           <SitemapLinkGrid
@@ -279,6 +303,16 @@ export default async function SitemapPage() {
             <SitemapLinkGrid
               items={travelDeals}
               label="Travel deals"
+            />
+          </SitemapSection>
+        )}
+
+        {/* Dynamic Group Travel Pages */}
+        {groupTravelLinks.length > 0 && (
+          <SitemapSection title="Group Travel">
+            <SitemapLinkGrid
+              items={groupTravelLinks}
+              label="Group travel pages"
             />
           </SitemapSection>
         )}

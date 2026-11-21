@@ -83,8 +83,7 @@ async function getDestination(
         if (!data.success || !data.destination) {
             return null;
         }
-        console.log(data, "response123")
-        return {
+         return {
             destination: data.destination,
             relatedFlights: Array.isArray(data.relatedFlights)
                 ? data.relatedFlights
@@ -200,8 +199,7 @@ export default async function PopularRoutePage({
     const faqs = Array.isArray(destination.faqs)
         ? destination.faqs
         : [];
-    console.log(faqs,"hgjhj")
-    return (
+     return (
         <main className="min-h-screen bg-white">
 
             {/* Destination Hero */}

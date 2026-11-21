@@ -16,9 +16,7 @@ export default function FlightFAQ({
     destinationName,
     faqs,
 }: FlightFAQProps) {
-    console.log(  destinationSlug,
-    destinationName,
-    faqs , "all data")
+    
     const [openFAQs, setOpenFAQs] = useState<number[]>([]);
 
     
